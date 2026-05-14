@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "command": "echo File changed - remember to verify in browser before commit"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "echo Turn complete. Have you (1) verified in UI? (2) run code-reviewer? (3) committed?"
+      }
+    ]
+  }
+}
