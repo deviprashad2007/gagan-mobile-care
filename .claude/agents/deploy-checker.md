@@ -34,7 +34,6 @@ UX:
 - Booking form works end-to-end on mobile
 - WhatsApp button opens correct number
 - Map shows correct location
-- All forms send confirmation (test with real phone)
 - 404 page exists
 - Loading states present on slow connections
 

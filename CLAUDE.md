@@ -12,7 +12,7 @@ A website for Gagan Mobile Care, a mobile phone repair shop in Delhi. Public mar
 - Supabase (Postgres + Auth + Storage)
 - Tailwind CSS + shadcn/ui
 - React Hook Form + Zod
-- MSG91 for SMS + WhatsApp Business
+- No automated messaging in v1 — customer sees confirmation screen; Gagan calls back manually
 - Vercel hosting, Sentry errors, Plausible analytics
 
 ## Non-negotiable rules
@@ -31,7 +31,7 @@ A website for Gagan Mobile Care, a mobile phone repair shop in Delhi. Public mar
 
 /app — Next.js pages (marketing + admin + api)
 /components — UI primitives and feature components
-/lib — supabase, msg91, seo, validations, utilities
+/lib — supabase, seo, validations, utilities
 /db — numbered SQL migrations
 /docs — planning documents
 /reference — OLD PROTOTYPE, read-only inspiration only

@@ -4,7 +4,7 @@
 
 ## What we're building
 
-A public website and owner dashboard for Gagan Mobile Care, a phone repair shop at Lajpat Nagar Central Market, New Delhi. Customers book repairs online or by phone; Gagan manages bookings and tracks repairs through a private admin dashboard. The site replaces a non-functional prototype with a real, production system that writes to a database, sends SMS confirmations, and ranks on Google for repair searches across India.
+A public website and owner dashboard for Gagan Mobile Care, a phone repair shop at Lajpat Nagar Central Market, New Delhi. Customers book repairs online or by phone; Gagan manages bookings and tracks repairs through a private admin dashboard. The site replaces a non-functional prototype with a real, production system that writes to a database and ranks on Google for repair searches across India.
 
 ---
 
@@ -24,7 +24,7 @@ Gagan opens his shop at 10am and immediately needs to know: who called overnight
 
 1. **Book a repair**
    Every rupee of revenue starts here. A customer who books is 10x more likely to show up than one who just reads the site.
-   Success: Booking form submits, writes to Supabase, and triggers an MSG91 WhatsApp/SMS confirmation to the customer within 60 seconds — all without Gagan doing anything.
+   Success: Booking form submits, writes to Supabase, and shows the customer a confirmation screen with their booking ID and price estimate. The booking appears in Gagan's admin dashboard immediately. Gagan calls the customer back manually.
 
 2. **Show a real price before asking for a phone number**
    Customers who see a specific price convert better than customers who see "call for quote." It also lets repair pages rank for searches like "iPhone 14 screen repair price Delhi."
@@ -58,7 +58,8 @@ Gagan opens his shop at 10am and immediately needs to know: who called overnight
 
 ## What we are NOT building in v1
 
-- Customer-facing repair status lookup — customers receive WhatsApp/SMS updates instead (v2)
+- Automated SMS or WhatsApp confirmation on booking — customer sees a confirmation screen instead; Gagan calls back manually (v2)
+- Customer-facing repair status lookup (v2)
 - Online payment / Razorpay integration — bookings are quote-first, payment happens at the shop (v2)
 - Multi-language versions — Hindi, Marathi, or other regional languages (v2)
 - Newsletter or email marketing (v2)
@@ -78,7 +79,7 @@ These are testable on launch day. Each one is either pass or fail.
 
 1. Homepage loads under 2.5 seconds on a 4G connection (tested via WebPageTest with an Indian server node)
 2. Booking form submits and the record appears in Supabase within 1 second
-3. Customer receives a WhatsApp or SMS confirmation from MSG91 within 60 seconds of booking
+3. Customer sees a confirmation screen with their booking ID and price estimate immediately after submitting
 4. Gagan can log in to the admin dashboard from his phone using a magic link
 5. Gagan can see new bookings, change a repair status, and add a manual booking — all from a mobile browser
 6. All 195 repair pages (`/repairs/[brand]/[issue]`) render server-side — `view-source` shows the price and content, not a blank shell
@@ -115,7 +116,6 @@ Nothing ships until these are done. Each is binary — done or not done.
 - [ ] Real GST number from Gagan added to the footer, or the placeholder line removed entirely
 - [ ] All `/admin` routes return 401 to unauthenticated requests — tested with an incognito browser
 - [ ] Booking form writes to Supabase — verified by checking the database after a test submission
-- [ ] MSG91 confirmation fires on booking — verified by submitting a test booking with a real phone number and receiving the message
 - [ ] Every WhatsApp button and every phone number manually clicked on mobile and verified to work
 - [ ] Admin "New booking" modal saves to the database — verified by checking Supabase after submission
 - [ ] Repair status changes in the admin persist across a page reload
