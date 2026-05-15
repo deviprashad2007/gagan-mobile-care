@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Brand tokens ─────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Fonts — mapped from next/font CSS variables */
+  --font-body:    var(--font-inter);
+  --font-display: var(--font-instrument-serif);
+  --font-mono:    var(--font-jetbrains-mono);
+
+  /* Colors — accent (LOCKED: matches Gagan's shop signage, do not change) */
+  --color-accent:      #E63329;
+  --color-accent-soft: #FDE3E1;
+
+  /* Colors — ink scale */
+  --color-ink:      #0A0A0A;
+  --color-ink-2:    #1A1A1A;
+  --color-ink-3:    #6B6B6B;
+  --color-ink-4:    #A8A8A8;
+
+  /* Colors — backgrounds */
+  --color-bg:       #FFFFFF;
+  --color-bg-card:  #FFFFFF;
+  --color-bg-soft:  #F5F5F5;
+  --color-bg-ink:   #0A0A0A;
+
+  /* Colors — status */
+  --color-success:  #22A06B;
+  --color-info:     #0A66C2;
+
+  /* Colors — brand / third-party */
+  --color-wa:       #25D366;
+
+  /* Colors — border */
+  --color-line:     #E5E5E5;
+
+  /* Radii */
+  --radius-pill:    999px;
+  --radius-card:    16px;
+  --radius-hero:    20px;
+
+  /* Shadows */
+  --shadow-float: 0 1px 2px rgba(20,20,30,.04), 0 12px 32px -12px rgba(20,20,30,.10);
+  --shadow-soft:  0 1px 2px rgba(20,20,30,.04), 0 6px 18px -8px rgba(20,20,30,.08);
+  --shadow-cta:   0 12px 28px -10px rgba(0,0,0,.35);
+  --font-sans:    var(--font-inter);
+  --color-sidebar-ring:    var(--sidebar-ring);
+  --color-sidebar-border:    var(--sidebar-border);
+  --color-sidebar-accent-foreground:    var(--sidebar-accent-foreground);
+  --color-sidebar-accent:    var(--sidebar-accent);
+  --color-sidebar-primary-foreground:    var(--sidebar-primary-foreground);
+  --color-sidebar-primary:    var(--sidebar-primary);
+  --color-sidebar-foreground:    var(--sidebar-foreground);
+  --color-sidebar:    var(--sidebar);
+  --color-chart-5:    var(--chart-5);
+  --color-chart-4:    var(--chart-4);
+  --color-chart-3:    var(--chart-3);
+  --color-chart-2:    var(--chart-2);
+  --color-chart-1:    var(--chart-1);
+  --color-ring:    var(--ring);
+  --color-input:    var(--input);
+  --color-border:    var(--border);
+  --color-destructive:    var(--destructive);
+  --color-accent-foreground:    var(--accent-foreground);
+  --color-muted-foreground:    var(--muted-foreground);
+  --color-muted:    var(--muted);
+  --color-secondary-foreground:    var(--secondary-foreground);
+  --color-secondary:    var(--secondary);
+  --color-primary-foreground:    var(--primary-foreground);
+  --color-primary:    var(--primary);
+  --color-popover-foreground:    var(--popover-foreground);
+  --color-popover:    var(--popover);
+  --color-card-foreground:    var(--card-foreground);
+  --color-card:    var(--card);
+  --color-foreground:    var(--foreground);
+  --color-background:    var(--background);
+  --radius-sm:    calc(var(--radius) * 0.6);
+  --radius-md:    calc(var(--radius) * 0.8);
+  --radius-lg:    var(--radius);
+  --radius-xl:    calc(var(--radius) * 1.4);
+  --radius-2xl:    calc(var(--radius) * 1.8);
+  --radius-3xl:    calc(var(--radius) * 2.2);
+  --radius-4xl:    calc(var(--radius) * 2.6);
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────────── */
+@layer base {
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ─── Map background decoration ─────────────────────────────────────────────── */
+/* TODO: delete after real Google Maps iframe ships in Phase 1 */
+.map-bg {
+  background-image:
+    linear-gradient(rgba(229,229,229,.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(229,229,229,.5) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+:root {
+  /* ── shadcn semantic tokens — reconciled with Gagan Mobile Care brand ─────── */
+  --background:             #FFFFFF;        /* --color-bg */
+  --foreground:             #0A0A0A;        /* --color-ink */
+  --card:                   #FFFFFF;
+  --card-foreground:        #0A0A0A;
+  --popover:                #FFFFFF;
+  --popover-foreground:     #0A0A0A;
+  --primary:                #E63329;        /* brand red — LOCKED */
+  --primary-foreground:     #FFFFFF;        /* white on red */
+  --secondary:              #F5F5F5;        /* --color-bg-soft */
+  --secondary-foreground:   #0A0A0A;
+  --muted:                  #F5F5F5;
+  --muted-foreground:       #6B6B6B;        /* --color-ink-3 */
+  --accent:                 #FDE3E1;        /* --color-accent-soft (hover tints) */
+  --accent-foreground:      #E63329;
+  --destructive:            #E63329;
+  --border:                 #E5E5E5;        /* --color-line */
+  --input:                  #E5E5E5;
+  --ring:                   #E63329;        /* brand red focus ring */
+  --chart-1:    oklch(0.87 0 0);
+  --chart-2:    oklch(0.556 0 0);
+  --chart-3:    oklch(0.439 0 0);
+  --chart-4:    oklch(0.371 0 0);
+  --chart-5:    oklch(0.269 0 0);
+  --radius:                 0.625rem;
+  --sidebar:                #F5F5F5;
+  --sidebar-foreground:     #0A0A0A;
+  --sidebar-primary:        #E63329;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent:         #FDE3E1;
+  --sidebar-accent-foreground: #E63329;
+  --sidebar-border:         #E5E5E5;
+  --sidebar-ring:           #E63329;
+}
+
+/* No dark mode — this site is light-only */
