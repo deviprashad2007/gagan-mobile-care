@@ -1,4 +1,4 @@
-export const BUSINESS_NAME = "Gagan Mobile Care" as const;
+export const BUSINESS_NAME = "Gagan Mobile Hospital" as const;
 export const BUSINESS_ADDRESS = "Shop 14, Lajpat Nagar Central Market, New Delhi – 110024" as const;
 export const BUSINESS_PHONE = "+91 98112 00410" as const;
 export const BUSINESS_PHONE_RAW = "919811200410" as const;
