@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Nav from "@/components/marketing/nav";
+import Footer from "@/components/marketing/footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -27,7 +29,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Gagan Mobile Care",
-  description: "Phone repair shop in Lajpat Nagar, New Delhi. Screen replacement, battery, charging port and more.",
+  description:
+    "Phone repair shop in Lajpat Nagar, New Delhi. Screen replacement, battery, charging port and more.",
 };
 
 export default function RootLayout({
@@ -38,9 +41,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(inter.variable, instrumentSerif.variable, jetbrainsMono.variable)}
+      className={cn(
+        inter.variable,
+        instrumentSerif.variable,
+        jetbrainsMono.variable
+      )}
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <Nav />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

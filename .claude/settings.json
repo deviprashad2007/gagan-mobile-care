@@ -11,5 +11,10 @@
         "command": "echo Turn complete. Have you (1) verified in UI? (2) run code-reviewer? (3) committed?"
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(jsx|js\\)$\")"
+    ]
   }
 }
