@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
-import Nav from "@/components/marketing/nav";
-import Footer from "@/components/marketing/footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -41,17 +39,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(
-        inter.variable,
-        instrumentSerif.variable,
-        jetbrainsMono.variable
-      )}
+      className={cn(inter.variable, instrumentSerif.variable, jetbrainsMono.variable)}
     >
-      <body className="antialiased">
-        <Nav />
-        {children}
-        <Footer />
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
