@@ -62,7 +62,7 @@ export default async function RepairsPage() {
             <p className="text-sm text-[var(--color-ink-3)] mt-1">Call or WhatsApp us — we repair most Android and iOS devices.</p>
           </div>
           <a
-            href="tel:+919811200410"
+            href="tel:+919814036114"
             className="inline-flex items-center gap-2 text-sm font-medium bg-[var(--color-ink)] text-white rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity shrink-0"
           >
             Call for a quote

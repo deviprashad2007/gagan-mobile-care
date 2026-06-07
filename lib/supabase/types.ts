@@ -75,6 +75,114 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_users: {
+        Row: {
+          id: string
+          email: string
+          role: string
+          invited_by: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          email: string
+          role?: string
+          invited_by?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          email?: string
+          role?: string
+          invited_by?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          excerpt: string | null
+          content: string
+          cover_image_url: string | null
+          cover_storage_path: string | null
+          published: boolean
+          published_at: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          excerpt?: string | null
+          content: string
+          cover_image_url?: string | null
+          cover_storage_path?: string | null
+          published?: boolean
+          published_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          excerpt?: string | null
+          content?: string
+          cover_image_url?: string | null
+          cover_storage_path?: string | null
+          published?: boolean
+          published_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: []
+      }
+      gallery_images: {
+        Row: {
+          id: string
+          url: string
+          storage_path: string
+          caption: string | null
+          sort_order: number
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          url: string
+          storage_path: string
+          caption?: string | null
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          url?: string
+          storage_path?: string
+          caption?: string | null
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_ref: string

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Gagan Mobile Care",
+  title: "Privacy Policy — Gagan Mobile Hospital",
   description: "Privacy policy for Gagan Mobile Care, compliant with India's Digital Personal Data Protection Act 2023.",
   alternates: { canonical: "https://gaganmobilecare.in/privacy" },
 };
@@ -22,8 +22,8 @@ export default function PrivacyPage() {
         <section>
           <h2 className="font-semibold text-lg mb-2">1. Who we are</h2>
           <p>
-            Gagan Mobile Care operates a mobile phone repair shop at Shop 14, Lajpat Nagar Central
-            Market, New Delhi – 110024. This policy explains what personal data we collect, why, and
+            Gagan Mobile Hospital operates a mobile phone repair shop at Village Baran, Sirhand Road,
+            Patiala, Punjab – 147004. This policy explains what personal data we collect, why, and
             how we protect it, in compliance with India&apos;s Digital Personal Data Protection Act 2023
             (DPDP Act).
           </p>
@@ -69,15 +69,14 @@ export default function PrivacyPage() {
           <p>
             Under the DPDP Act 2023, you have the right to access, correct, or request deletion of
             your personal data. To exercise these rights, call or WhatsApp us at{" "}
-            <a href="tel:+919811200410" className="underline">+91 98112 00410</a>.
+            <a href="tel:+919814036114" className="underline">+91 98140 36114</a>.
           </p>
         </section>
 
         <section>
           <h2 className="font-semibold text-lg mb-2">7. Contact</h2>
           <p>
-            Questions about this policy? Contact us at Shop 14, Lajpat Nagar Central Market, New
-            Delhi – 110024, or call +91 98112 00410.
+            Questions about this policy? Contact us at Village Baran, Sirhand Road, Patiala, Punjab – 147004, or call +91 98140 36114.
           </p>
         </section>
       </div>

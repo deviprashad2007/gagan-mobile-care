@@ -1,9 +1,9 @@
 "use server";
 
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/service";
+import { requireAdmin } from "@/lib/auth/require-admin";
 
 const schema = z.object({
   modelId: z.string().uuid(),
@@ -17,9 +17,8 @@ export async function upsertPrice(data: unknown): Promise<UpsertPriceResult> {
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { success: false, error: "Invalid price data." };
 
-  const authClient = await createClient();
-  const { data: { user } } = await authClient.auth.getUser();
-  if (!user) return { success: false, error: "Unauthorized." };
+  const admin = await requireAdmin();
+  if (!admin.ok) return { success: false, error: admin.error };
 
   const { modelId, issueId, price } = parsed.data;
   const supabase = createServiceClient();
@@ -45,5 +44,6 @@ export async function upsertPrice(data: unknown): Promise<UpsertPriceResult> {
   }
 
   revalidatePath("/admin/catalog");
+  revalidateTag("catalog");
   return { success: true };
 }

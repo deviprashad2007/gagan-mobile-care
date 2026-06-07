@@ -355,7 +355,7 @@ function StepService({
             </p>
             <p className="font-semibold text-[var(--color-ink)] mb-1">Visit our store</p>
             <p className="text-[13px] text-[var(--color-ink-3)]">
-              Shop 14, Lajpat Nagar Central Market, New Delhi 110024
+              Village Baran, Sirhand Road, Patiala, Punjab 147004
             </p>
             <p className="text-[12px] text-[var(--color-ink-3)] mt-2">Mon–Sat 10am–9pm · Sun 11am–7pm</p>
           </div>
@@ -540,7 +540,7 @@ function StepContact({
         </div>
 
         <div className="flex items-center gap-2 text-[13px] text-[var(--color-ink)] pb-4 border-b border-[var(--color-line)]">
-          {serviceType === "walkin" ? "🏪 Walk-in at Lajpat Nagar" : "📦 Send by Speed Post"}
+          {serviceType === "walkin" ? "🏪 Walk-in at Patiala" : "📦 Send by Speed Post"}
         </div>
 
         <div className="flex items-baseline justify-between">

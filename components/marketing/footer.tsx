@@ -66,7 +66,7 @@ export default function Footer() {
 
               <div className="flex flex-wrap gap-3 mt-6">
                 <a
-                  href="#book"
+                  href="/#book"
                   className="inline-flex items-center justify-center bg-accent text-white font-semibold rounded-lg px-4 py-2.5 text-sm no-underline transition-opacity hover:opacity-90"
                 >
                   Book a repair
@@ -124,8 +124,7 @@ export default function Footer() {
                 fontSize: 12,
               }}
             >
-              {/* TODO: replace with real GST from Gagan */}
-              <span>GST &middot; Add real GST here</span>
+              {/* GST number pending from Gagan — add as <span>GST · XXXXXXXXXXXXXXX</span> once provided */}
               <Link
                 href="/admin"
                 className="text-white/40 hover:text-white/70 transition-colors no-underline flex items-center gap-1"

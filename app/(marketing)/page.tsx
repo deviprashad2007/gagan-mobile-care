@@ -9,12 +9,17 @@ import { Testimonials } from "@/components/marketing/testimonials";
 import { PostFlow } from "@/components/marketing/post-flow";
 import { FaqSection } from "@/components/marketing/faq-section";
 import { BookingTrigger } from "@/components/marketing/booking-trigger";
-import { getBrands, getIssues } from "@/lib/repairs";
+import { GallerySection } from "@/components/marketing/gallery-section";
+import { getBrands, getIssues, getGalleryImages } from "@/lib/repairs";
 
 export const metadata: Metadata = generateHomeMetadata();
 
 export default async function HomePage() {
-  const [brands, issues] = await Promise.all([getBrands(), getIssues()]);
+  const [brands, issues, galleryImages] = await Promise.all([
+    getBrands(),
+    getIssues(),
+    getGalleryImages(),
+  ]);
 
   return (
     <>
@@ -25,6 +30,7 @@ export default async function HomePage() {
         <HowItWorks />
         <ServicesGrid />
         <Testimonials />
+        <GallerySection images={galleryImages} />
         <PostFlow />
         <FaqSection />
 

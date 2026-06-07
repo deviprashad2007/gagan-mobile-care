@@ -62,7 +62,7 @@ export default async function BrandRepairsPage({ params }: Props) {
         </div>
 
         <p className="text-[var(--color-ink-3)] text-base mb-12 max-w-xl">
-          Select the issue to see model-by-model prices. Walk in to our Lajpat Nagar shop or send your phone by post from anywhere in India.
+          Select the issue to see model-by-model prices. Walk in to our Patiala shop or send your phone by post from anywhere in India.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

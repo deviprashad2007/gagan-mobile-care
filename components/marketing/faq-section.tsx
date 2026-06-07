@@ -21,8 +21,8 @@ const faqs = [
     a: "No fix, no fee. We ship it back free with a full diagnostic report.",
   },
   {
-    q: "Do you offer pickup in Delhi NCR?",
-    a: "Yes — within 8 km of Lajpat Nagar, our courier picks up and drops free. Beyond that, the post option is faster and cheaper.",
+    q: "Do you offer pickup in Patiala?",
+    a: "Yes — within Patiala city, our courier picks up and drops free. From other cities, the post option is faster and cheaper.",
   },
 ] as const;
 

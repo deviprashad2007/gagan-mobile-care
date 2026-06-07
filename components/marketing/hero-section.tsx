@@ -10,7 +10,7 @@ export function HeroSection() {
           {/* Status badge */}
           <div className="inline-flex items-center gap-2 self-start px-3 py-1.5 bg-white border border-[var(--color-line)] rounded-full text-sm text-[var(--color-ink-2)]">
             <span className="w-2 h-2 rounded-full bg-[var(--color-success)] animate-pulse flex-shrink-0" />
-            Open now · Lajpat Nagar
+            Open now · Patiala
           </div>
 
           {/* H1 */}
@@ -27,7 +27,7 @@ export function HeroSection() {
           {/* Subtext */}
           <p className="text-[var(--color-ink-3)] text-base max-w-lg leading-relaxed">
             Free quote in 60 seconds. Genuine parts. 6-month warranty.
-            Delhi&apos;s most trusted repair shop — 50,000+ phones fixed
+            Patiala&apos;s most trusted repair shop — 50,000+ phones fixed
             since 2014.
           </p>
 
@@ -48,10 +48,9 @@ export function HeroSection() {
           </div>
 
           {/* Stats strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[var(--color-line)] border border-[var(--color-line)] rounded-2xl overflow-hidden mt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-[var(--color-line)] border border-[var(--color-line)] rounded-2xl overflow-hidden mt-2">
             {[
               { value: "50,000+", label: "phones repaired" },
-              { value: "4.8 / 5", label: "2,100 Google reviews" },
               { value: "6 months", label: "parts warranty" },
               { value: "90 min", label: "avg walk-in" },
             ].map((stat) => (

@@ -9,22 +9,16 @@ import {
 } from "@/lib/seo/business-info";
 
 const NAV_LINKS = [
-  { label: "How it works", href: "#how", n: "01" },
-  { label: "Pricing", href: "#prices", n: "02" },
-  { label: "Send by post", href: "#post", n: "03" },
-  { label: "Reviews", href: "#stories", n: "04" },
-  { label: "FAQ", href: "#faq", n: "05" },
+  { label: "How it works", href: "/#how", n: "01" },
+  { label: "Pricing", href: "/#prices", n: "02" },
+  { label: "Gallery", href: "/gallery", n: "03" },
+  { label: "Blog", href: "/blog", n: "04" },
+  { label: "Reviews", href: "/#stories", n: "05" },
+  { label: "FAQ", href: "/#faq", n: "06" },
 ] as const;
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobOpen, setMobOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = mobOpen ? "hidden" : "";
@@ -35,20 +29,13 @@ export default function Nav() {
 
   return (
     <>
-      <nav
-        className={[
-          "sticky top-0 z-40 w-full border-b transition-all duration-200",
-          scrolled
-            ? "bg-white/95 backdrop-blur-sm border-line"
-            : "bg-white border-transparent",
-        ].join(" ")}
-      >
+      <nav className="sticky top-0 z-40 w-full border-b border-line bg-white will-change-transform">
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-14 gap-3">
           {/* Logo + Logotype */}
           <Link
             href="/"
             className="flex items-center gap-2.5 min-w-0 no-underline text-inherit"
-            aria-label="Gagan Mobile Care — home"
+            aria-label="Gagan Mobile Hospital — home"
           >
             {/* Logo mark */}
             <div className="relative w-8 h-8 bg-ink rounded-lg flex-shrink-0 flex items-center justify-center">
@@ -72,13 +59,13 @@ export default function Nav() {
                   fontSize: 15,
                 }}
               >
-                Gagan Mobile Care
+                Gagan Mobile Hospital
               </div>
 
               {/* Status badge — desktop only */}
               <div className="hidden md:flex items-center gap-1.5 mt-0.5">
-                <span className="w-2 h-2 bg-success rounded-full animate-pulse" />
-                <span className="text-ink-3 text-xs">Open · Lajpat Nagar</span>
+                <span className="w-2 h-2 bg-success rounded-full" />
+                <span className="text-ink-3 text-xs">Open · Patiala</span>
               </div>
             </div>
           </Link>
@@ -86,13 +73,13 @@ export default function Nav() {
           {/* Center nav links — desktop only */}
           <div className="hidden md:flex bg-bg-soft border border-line rounded-full px-1 py-1 gap-1">
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="text-sm text-ink-2 hover:text-ink px-3 py-1.5 rounded-full hover:bg-white transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -105,7 +92,7 @@ export default function Nav() {
               {BUSINESS_PHONE}
             </a>
             <a
-              href="#book"
+              href="/#book"
               className={buttonVariants({ size: "sm" })}
             >
               Book repair
@@ -143,7 +130,7 @@ export default function Nav() {
           {/* Nav links */}
           <nav className="flex flex-col flex-1">
             {NAV_LINKS.map((link, i) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobOpen(false)}
@@ -168,14 +155,14 @@ export default function Nav() {
                 >
                   {link.n}
                 </span>
-              </a>
+              </Link>
             ))}
           </nav>
 
           {/* Mobile CTAs */}
           <div className="mt-auto pt-8 flex flex-col gap-3">
             <a
-              href="#book"
+              href="/#book"
               onClick={() => setMobOpen(false)}
               className="w-full flex items-center justify-center bg-accent text-white font-semibold rounded-xl py-4 text-base no-underline"
             >
@@ -188,7 +175,7 @@ export default function Nav() {
               Call {BUSINESS_PHONE}
             </a>
             <p className="text-white/40 text-xs tracking-widest uppercase mt-2">
-              Shop 14 · Lajpat Nagar Central Market · 110024
+              Village Baran · Sirhand Road · Patiala 147004
             </p>
           </div>
         </div>

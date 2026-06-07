@@ -1,10 +1,10 @@
-# Gagan Mobile Care — Claude Code Project Rules
+# Gagan Mobile Hospital — Claude Code Project Rules
 
 Read this file at the start of every session. Source of truth for how this codebase is built.
 
 ## What we're building
 
-A website for Gagan Mobile Care, a mobile phone repair shop in Delhi. Public marketing site + admin dashboard for the owner to manage bookings, repairs, and catalog.
+A website for Gagan Mobile Hospital, a mobile phone repair shop in Patiala, Punjab. Public marketing site + admin dashboard for the owner to manage bookings, repairs, and catalog.
 
 ## Stack (do not deviate without asking)
 

@@ -9,7 +9,7 @@ const walkinSteps = [
     n: "02",
     title: "Walk in",
     description:
-      "Bring your phone to our Lajpat Nagar shop. We show you parts and the bill — nothing hidden.",
+      "Bring your phone to our Patiala shop. We show you parts and the bill — nothing hidden.",
   },
   {
     n: "03",
@@ -67,7 +67,7 @@ export function HowItWorks() {
             Drop by the shop.
           </h3>
           <p className="text-sm text-[var(--color-ink-3)] mb-6 leading-relaxed max-w-sm">
-            Lajpat Nagar Central Market. We show you the parts and bill —
+            Village Baran, Sirhand Road, Patiala. We show you the parts and bill —
             nothing&apos;s hidden.
           </p>
           <div className="flex flex-col">

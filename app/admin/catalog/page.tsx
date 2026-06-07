@@ -16,7 +16,7 @@ export default async function CatalogPage() {
         Catalog
       </h1>
       <p className="text-sm text-[var(--color-ink-3)] mb-5">
-        Edit repair prices. Select a brand on the left, then tap any price cell to update it.
+        Select a brand, then tap any price cell to update it.
       </p>
       <CatalogEditor brands={brands} issues={issues} models={models} prices={prices} />
     </div>

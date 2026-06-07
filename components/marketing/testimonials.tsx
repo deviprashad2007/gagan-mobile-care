@@ -9,7 +9,7 @@ const reviews = [
   },
   {
     name: "Aman K.",
-    location: "Delhi",
+    location: "Patiala",
     stars: 5,
     badge: "Walk-in" as const,
     quote:
@@ -25,7 +25,7 @@ const reviews = [
   },
   {
     name: "Sahil J.",
-    location: "Delhi",
+    location: "Patiala",
     stars: 4,
     badge: "Walk-in" as const,
     quote:
@@ -60,23 +60,13 @@ export function Testimonials() {
       className="py-16 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto"
     >
       {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
-        <div>
-          <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
-            What people say
-          </p>
-          <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)]">
-            2,143 Google reviews.{" "}
-            <em>Most start with &ldquo;honest&rdquo;.</em>
-          </h2>
-        </div>
-        <div className="flex items-center gap-2">
-          <StarRating count={5} />
-          <span className="font-semibold text-sm text-[var(--color-ink)]">
-            4.8
-          </span>
-          <span className="text-sm text-[var(--color-ink-3)]">average</span>
-        </div>
+      <div className="mb-8">
+        <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
+          What people say
+        </p>
+        <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)]">
+          Real customers. <em>Real repairs.</em>
+        </h2>
       </div>
 
       {/* Grid */}

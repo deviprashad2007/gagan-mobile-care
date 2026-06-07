@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth/require-admin";
 
 const schema = z.object({
   id: z.string().uuid(),
@@ -16,9 +17,10 @@ export async function updateBookingStatus(data: unknown): Promise<UpdateBookingR
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { success: false, error: "Invalid data." };
 
+  const admin = await requireAdmin();
+  if (!admin.ok) return { success: false, error: admin.error };
+
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Unauthorized." };
 
   const { error } = await supabase
     .from("bookings")

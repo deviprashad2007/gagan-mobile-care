@@ -26,9 +26,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gagan Mobile Care",
+  title: "Gagan Mobile Hospital",
   description:
-    "Phone repair shop in Lajpat Nagar, New Delhi. Screen replacement, battery, charging port and more.",
+    "Phone repair shop in Patiala, Punjab. Screen replacement, battery, charging port and more.",
 };
 
 export default function RootLayout({

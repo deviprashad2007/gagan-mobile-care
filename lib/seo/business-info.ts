@@ -1,7 +1,7 @@
-export const BUSINESS_NAME = "Gagan Mobile Care" as const;
-export const BUSINESS_ADDRESS = "Shop 14, Lajpat Nagar Central Market, New Delhi – 110024" as const;
-export const BUSINESS_PHONE = "+91 98112 00410" as const;
-export const BUSINESS_PHONE_RAW = "919811200410" as const;
+export const BUSINESS_NAME = "Gagan Mobile Hospital" as const;
+export const BUSINESS_ADDRESS = "Village Baran, Sirhand Road, Patiala, Punjab – 147004" as const;
+export const BUSINESS_PHONE = "+91 98140 36114" as const;
+export const BUSINESS_PHONE_RAW = "919814036114" as const;
 export const WHATSAPP_URL = `https://wa.me/${BUSINESS_PHONE_RAW}` as const;
 export const BUSINESS_EMAIL = "" as const; // Not yet confirmed with Gagan
 export const BUSINESS_HOURS = [
