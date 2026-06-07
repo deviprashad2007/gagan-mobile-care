@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { signOut } from "@/lib/actions/sign-out";
 
 export default function DeniedPage() {

@@ -201,13 +201,13 @@ export default function Nav() {
 
             {/* Mobile CTAs */}
             <div className="mt-auto pt-8 flex flex-col gap-3">
-              <a
+              <Link
                 href="/#book"
                 onClick={() => setMobOpen(false)}
                 className="w-full flex items-center justify-center bg-accent text-white font-semibold rounded-xl py-4 text-base no-underline"
               >
                 Book a repair
-              </a>
+              </Link>
               <a
                 href={`tel:+${BUSINESS_PHONE_RAW}`}
                 className="w-full flex items-center justify-center border border-white/20 text-white rounded-xl py-3.5 text-sm no-underline"

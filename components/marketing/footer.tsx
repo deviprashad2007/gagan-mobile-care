@@ -67,12 +67,12 @@ export default function Footer() {
               </p>
 
               <div className="flex flex-wrap gap-3 mt-6">
-                <a
+                <Link
                   href="/#book"
                   className="inline-flex items-center justify-center bg-accent text-white font-semibold rounded-lg px-4 py-2.5 text-sm no-underline transition-all hover:opacity-90 hover:scale-[1.04] active:scale-[0.97]"
                 >
                   Book a repair
-                </a>
+                </Link>
                 <a
                   href={`tel:+${BUSINESS_PHONE_RAW}`}
                   className="inline-flex items-center justify-center border border-white/20 text-white rounded-lg px-4 py-2.5 text-sm no-underline hover:border-white/40 transition-colors"
