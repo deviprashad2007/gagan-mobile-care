@@ -1,3 +1,5 @@
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+
 const walkinSteps = [
   {
     n: "01",
@@ -47,19 +49,19 @@ export function HowItWorks() {
       className="py-16 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto"
     >
       {/* Header */}
-      <div className="mb-10">
+      <Reveal as="div" className="mb-10">
         <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
           Two ways, one promise
         </p>
         <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)]">
           Come to <em>us</em>, or your phone <em>comes to us.</em>
         </h2>
-      </div>
+      </Reveal>
 
       {/* Two cards */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <RevealGroup className="grid lg:grid-cols-2 gap-6">
         {/* Walk-in card */}
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl p-7">
+        <RevealItem className="bg-white border border-[var(--color-line)] rounded-2xl p-7 transition-shadow hover:shadow-[var(--shadow-float)]">
           <p className="font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink-3)] mb-5">
             Walk-in repair · ~90 min
           </p>
@@ -90,10 +92,10 @@ export function HowItWorks() {
               </div>
             ))}
           </div>
-        </div>
+        </RevealItem>
 
         {/* Post card */}
-        <div className="bg-[var(--color-bg-ink)] rounded-2xl p-7">
+        <RevealItem className="bg-[var(--color-bg-ink)] rounded-2xl p-7 transition-shadow hover:shadow-[var(--shadow-float)]">
           <p className="font-mono text-[11px] uppercase tracking-widest text-white/60 mb-5">
             Send by post · 4–6 days
           </p>
@@ -124,8 +126,8 @@ export function HowItWorks() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        </RevealItem>
+      </RevealGroup>
     </section>
   );
 }

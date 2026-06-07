@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import type { Brand, Issue } from "@/lib/repairs";
 import { createBooking } from "@/lib/actions/create-booking";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
@@ -73,7 +74,13 @@ export function BookingFlow({ brands, issues, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-bg)] z-50 flex flex-col">
+    <motion.div
+      className="fixed inset-0 bg-[var(--color-bg)] z-50 flex flex-col"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 24 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       {/* Top bar */}
       <div className="flex items-center gap-3 px-5 md:px-8 py-4 border-b border-[var(--color-line)] bg-[var(--color-bg)]/90 backdrop-blur-sm shrink-0">
         {!confirmed && stepIndex > 0 ? (
@@ -123,55 +130,65 @@ export function BookingFlow({ brands, issues, onClose }: Props) {
       {/* Body */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-5 md:px-8 py-10 pb-24">
-          {confirmed ? (
-            <ConfirmationScreen confirmed={confirmed} onClose={onClose} />
-          ) : step === "brand" ? (
-            <StepBrand
-              brands={brands}
-              onPick={(b) => {
-                setBrand(b);
-                setStep("issue");
-              }}
-            />
-          ) : step === "issue" ? (
-            <StepIssue
-              issues={issues}
-              brand={brand!}
-              selected={issueIds}
-              onToggle={(id) =>
-                setIssueIds((prev) =>
-                  prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-                )
-              }
-              onContinue={() => setStep("service")}
-            />
-          ) : step === "service" ? (
-            <StepService
-              selected={serviceType}
-              onPick={(s) => {
-                setServiceType(s);
-                setStep("contact");
-              }}
-            />
-          ) : (
-            <StepContact
-              brand={brand!}
-              issues={selectedIssues}
-              serviceType={serviceType!}
-              estimatedMin={estimatedMin}
-              estimatedMax={estimatedMax}
-              name={name}
-              phone={phone}
-              onNameChange={setName}
-              onPhoneChange={(v) => setPhone(v.replace(/\D/g, "").slice(0, 10))}
-              onSubmit={handleSubmit}
-              isPending={isPending}
-              error={error}
-            />
-          )}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={confirmed ? "confirmed" : step}
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -16 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {confirmed ? (
+                <ConfirmationScreen confirmed={confirmed} onClose={onClose} />
+              ) : step === "brand" ? (
+                <StepBrand
+                  brands={brands}
+                  onPick={(b) => {
+                    setBrand(b);
+                    setStep("issue");
+                  }}
+                />
+              ) : step === "issue" ? (
+                <StepIssue
+                  issues={issues}
+                  brand={brand!}
+                  selected={issueIds}
+                  onToggle={(id) =>
+                    setIssueIds((prev) =>
+                      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+                    )
+                  }
+                  onContinue={() => setStep("service")}
+                />
+              ) : step === "service" ? (
+                <StepService
+                  selected={serviceType}
+                  onPick={(s) => {
+                    setServiceType(s);
+                    setStep("contact");
+                  }}
+                />
+              ) : (
+                <StepContact
+                  brand={brand!}
+                  issues={selectedIssues}
+                  serviceType={serviceType!}
+                  estimatedMin={estimatedMin}
+                  estimatedMax={estimatedMax}
+                  name={name}
+                  phone={phone}
+                  onNameChange={setName}
+                  onPhoneChange={(v) => setPhone(v.replace(/\D/g, "").slice(0, 10))}
+                  onSubmit={handleSubmit}
+                  isPending={isPending}
+                  error={error}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBlogPosts } from "@/lib/repairs";
 import { BUSINESS_NAME, BUSINESS_ADDRESS } from "@/lib/seo/business-info";
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: `Blog — ${BUSINESS_NAME}`,
@@ -25,7 +26,7 @@ export default async function BlogIndexPage() {
         <span className="text-[var(--color-ink)]">Blog</span>
       </nav>
 
-      <div className="mb-10 md:mb-14">
+      <Reveal as="div" className="mb-10 md:mb-14">
         <p className="text-xs font-semibold tracking-widest uppercase text-[var(--color-ink-3)] mb-2">
           From the workshop
         </p>
@@ -38,17 +39,17 @@ export default async function BlogIndexPage() {
         <p className="text-[var(--color-ink-3)] text-base max-w-xl">
           Repair tips, common phone problems, and guides from {BUSINESS_NAME}, Patiala.
         </p>
-      </div>
+      </Reveal>
 
       {posts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
+        <Reveal as="div" className="flex flex-col items-center justify-center py-24 gap-3 text-center">
           <p className="text-[var(--color-ink-3)] text-sm">No posts yet — check back soon.</p>
-        </div>
+        </Reveal>
       ) : (
-        <div className="flex flex-col gap-6">
+        <RevealGroup as="div" className="flex flex-col gap-6">
           {posts.map((post) => (
+            <RevealItem key={post.id}>
             <Link
-              key={post.id}
               href={`/blog/${post.slug}`}
               className="group flex flex-col sm:flex-row gap-4 sm:gap-6 bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden hover:border-[var(--color-ink-4)] transition-colors no-underline text-inherit"
             >
@@ -73,8 +74,9 @@ export default async function BlogIndexPage() {
                 )}
               </div>
             </Link>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       )}
 
       <div className="mt-12 pt-8 border-t border-[var(--color-line)]">

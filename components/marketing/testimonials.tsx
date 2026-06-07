@@ -1,3 +1,5 @@
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+
 const reviews = [
   {
     name: "Priya M.",
@@ -60,21 +62,21 @@ export function Testimonials() {
       className="py-16 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto"
     >
       {/* Header */}
-      <div className="mb-8">
+      <Reveal as="div" className="mb-8">
         <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
           What people say
         </p>
         <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)]">
           Real customers. <em>Real repairs.</em>
         </h2>
-      </div>
+      </Reveal>
 
       {/* Grid */}
-      <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
+      <RevealGroup className="grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
         {reviews.map((review) => (
-          <div
+          <RevealItem
             key={review.name}
-            className="bg-white border border-[var(--color-line)] rounded-2xl p-5 flex flex-col"
+            className="bg-white border border-[var(--color-line)] rounded-2xl p-5 flex flex-col transition-shadow hover:shadow-[var(--shadow-float)]"
           >
             <StarRating count={review.stars} />
             <blockquote className="font-serif italic text-[15px] text-[var(--color-ink-2)] leading-relaxed mt-4 flex-1">
@@ -96,9 +98,9 @@ export function Testimonials() {
                 {review.badge}
               </span>
             </div>
-          </div>
+          </RevealItem>
         ))}
-      </div>
+      </RevealGroup>
     </section>
   );
 }

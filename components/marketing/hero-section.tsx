@@ -1,3 +1,6 @@
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { FloatCard } from "@/components/motion/float-card";
+
 export function HeroSection() {
   return (
     <section
@@ -6,49 +9,57 @@ export function HeroSection() {
     >
       <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
         {/* Left column */}
-        <div className="flex flex-col gap-6">
+        <RevealGroup className="flex flex-col gap-6">
           {/* Status badge */}
-          <div className="inline-flex items-center gap-2 self-start px-3 py-1.5 bg-white border border-[var(--color-line)] rounded-full text-sm text-[var(--color-ink-2)]">
+          <RevealItem className="inline-flex items-center gap-2 self-start px-3 py-1.5 bg-white border border-[var(--color-line)] rounded-full text-sm text-[var(--color-ink-2)]">
             <span className="w-2 h-2 rounded-full bg-[var(--color-success)] animate-pulse flex-shrink-0" />
             Open now · Patiala
-          </div>
+          </RevealItem>
 
           {/* H1 */}
-          <h1
+          <RevealItem
+            as="div"
             className="font-serif text-[clamp(48px,8vw,72px)] leading-none tracking-tight text-[var(--color-ink)]"
           >
-            Cracked phone?
-            <br />
-            <em>Walk in,</em>
-            <br />
-            or send it by post.
-          </h1>
+            <h1 className="m-0">
+              Cracked phone?
+              <br />
+              <em>Walk in,</em>
+              <br />
+              or send it by post.
+            </h1>
+          </RevealItem>
 
           {/* Subtext */}
-          <p className="text-[var(--color-ink-3)] text-base max-w-lg leading-relaxed">
-            Free quote in 60 seconds. Genuine parts. 6-month warranty.
-            Patiala&apos;s most trusted repair shop — 50,000+ phones fixed
-            since 2014.
-          </p>
+          <RevealItem
+            as="div"
+            className="text-[var(--color-ink-3)] text-base max-w-lg leading-relaxed"
+          >
+            <p className="m-0">
+              Free quote in 60 seconds. Genuine parts. 6-month warranty.
+              Patiala&apos;s most trusted repair shop — 50,000+ phones fixed
+              since 2014.
+            </p>
+          </RevealItem>
 
           {/* CTAs */}
-          <div className="flex flex-wrap gap-3">
+          <RevealItem className="flex flex-wrap gap-3">
             <a
               href="#book"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold hover:opacity-90 transition-all hover:scale-[1.04] active:scale-[0.97]"
             >
               Get free quote
             </a>
             <a
               href="#post"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--color-ink)] text-[var(--color-ink)] text-sm font-medium hover:bg-[var(--color-bg-soft)] transition-colors"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--color-ink)] text-[var(--color-ink)] text-sm font-medium hover:bg-[var(--color-bg-soft)] transition-all hover:scale-[1.04] active:scale-[0.97]"
             >
               How post repair works
             </a>
-          </div>
+          </RevealItem>
 
           {/* Stats strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-[var(--color-line)] border border-[var(--color-line)] rounded-2xl overflow-hidden mt-2">
+          <RevealItem className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-[var(--color-line)] border border-[var(--color-line)] rounded-2xl overflow-hidden mt-2">
             {[
               { value: "50,000+", label: "phones repaired" },
               { value: "6 months", label: "parts warranty" },
@@ -66,18 +77,20 @@ export function HeroSection() {
                 </span>
               </div>
             ))}
-          </div>
-        </div>
+          </RevealItem>
+        </RevealGroup>
 
         {/* Right column — decorative card stack, desktop only */}
-        <div className="hidden lg:block relative" style={{ minHeight: 480 }}>
+        <Reveal as="div" delay={0.15} className="hidden lg:block relative" >
+        <div className="relative" style={{ minHeight: 480 }}>
           {/* Map-like grid background */}
           <div className="map-bg absolute inset-0 rounded-2xl" />
 
           {/* Card 1 — repair receipt */}
-          <div
+          <FloatCard
             className="absolute top-8 right-0 w-72 bg-white border border-[var(--color-line)] rounded-2xl p-4 shadow-[var(--shadow-float)]"
             style={{ transform: "rotate(-2.5deg)" }}
+            delay={0}
           >
             <div className="flex items-start justify-between gap-2 mb-3">
               <div>
@@ -100,12 +113,13 @@ export function HeroSection() {
                 Paid
               </span>
             </div>
-          </div>
+          </FloatCard>
 
           {/* Card 2 — courier tracking */}
-          <div
+          <FloatCard
             className="absolute top-64 left-4 w-60 bg-white border border-[var(--color-line)] rounded-2xl p-3.5 shadow-[var(--shadow-float)] flex items-center gap-3"
             style={{ transform: "rotate(1.5deg)" }}
+            delay={1.2}
           >
             <div className="w-8 h-8 rounded-full bg-[var(--color-bg-ink)] flex items-center justify-center flex-shrink-0">
               <svg
@@ -129,12 +143,13 @@ export function HeroSection() {
                 Galaxy S23 · ETA Monday
               </p>
             </div>
-          </div>
+          </FloatCard>
 
           {/* Card 3 — technician */}
-          <div
+          <FloatCard
             className="absolute bottom-12 right-6 w-56 bg-white border border-[var(--color-line)] rounded-2xl p-3.5 shadow-[var(--shadow-float)]"
             style={{ transform: "rotate(-1deg)" }}
+            delay={2.4}
           >
             <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
               Your technician
@@ -152,7 +167,7 @@ export function HeroSection() {
                 </p>
               </div>
             </div>
-          </div>
+          </FloatCard>
 
           {/* Accent pin pulses */}
           <div
@@ -174,6 +189,7 @@ export function HeroSection() {
             </span>
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );

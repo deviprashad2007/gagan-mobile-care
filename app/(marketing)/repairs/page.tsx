@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getBrands } from "@/lib/repairs";
 import { generateRepairsMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
 
@@ -26,6 +27,7 @@ export default async function RepairsPage() {
           <span className="text-[var(--color-ink)]">Repairs</span>
         </nav>
 
+        <Reveal as="div">
         <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
           15 brands · 13 repair types
         </p>
@@ -35,13 +37,14 @@ export default async function RepairsPage() {
         <p className="text-[var(--color-ink-3)] text-base mb-12 max-w-xl">
           Choose your brand to see prices for screen replacement, battery, charging port and more.
         </p>
+        </Reveal>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+        <RevealGroup className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
           {brands.map((brand) => (
+            <RevealItem key={brand.id}>
             <Link
-              key={brand.id}
               href={`/repairs/${brand.slug}`}
-              className="group flex flex-col items-center gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-colors"
+              className="group flex flex-col items-center gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.04] hover:shadow-[var(--shadow-float)]"
             >
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0"
@@ -53,10 +56,11 @@ export default async function RepairsPage() {
                 {brand.name}
               </span>
             </Link>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
 
-        <div className="mt-16 bg-[var(--color-bg-soft)] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <Reveal as="div" delay={0.1} className="mt-16 bg-[var(--color-bg-soft)] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-[var(--color-ink)]">Don&apos;t see your model?</p>
             <p className="text-sm text-[var(--color-ink-3)] mt-1">Call or WhatsApp us — we repair most Android and iOS devices.</p>
@@ -67,7 +71,7 @@ export default async function RepairsPage() {
           >
             Call for a quote
           </a>
-        </div>
+        </Reveal>
       </main>
     </>
   );

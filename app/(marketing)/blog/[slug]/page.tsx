@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getBlogPostBySlug, getAllBlogSlugs } from "@/lib/repairs";
 import { BUSINESS_NAME } from "@/lib/seo/business-info";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { Reveal } from "@/components/motion/reveal";
 
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
@@ -87,6 +88,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <span className="text-[var(--color-ink)] truncate min-w-0">{post.title}</span>
         </nav>
 
+        <Reveal as="div">
         <article>
           <header className="mb-8">
             <p className="text-xs text-[var(--color-ink-3)] mb-3">{formatDate(post.published_at)}</p>
@@ -122,6 +124,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             ))}
           </div>
         </article>
+        </Reveal>
 
         <div className="mt-12 pt-8 border-t border-[var(--color-line)]">
           <Link

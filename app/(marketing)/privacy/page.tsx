@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — Gagan Mobile Hospital",
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main className="py-16 px-4 md:px-8 lg:px-12 max-w-3xl mx-auto">
+      <Reveal as="div">
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
         Legal
       </p>
@@ -80,6 +82,7 @@ export default function PrivacyPage() {
           </p>
         </section>
       </div>
+      </Reveal>
     </main>
   );
 }

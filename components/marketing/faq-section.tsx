@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { WHATSAPP_URL } from "@/lib/seo/business-info";
+import { Reveal } from "@/components/motion/reveal";
 
 const faqs = [
   {
@@ -40,7 +42,7 @@ export function FaqSection() {
     >
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         {/* Left — copy */}
-        <div className="lg:sticky lg:top-20">
+        <Reveal as="div" className="lg:sticky lg:top-20">
           <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
             Common questions
           </p>
@@ -59,10 +61,10 @@ export function FaqSection() {
           >
             Ask on WhatsApp
           </a>
-        </div>
+        </Reveal>
 
         {/* Right — accordion */}
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl divide-y divide-[var(--color-line)] overflow-hidden">
+        <Reveal as="div" delay={0.1} className="bg-white border border-[var(--color-line)] rounded-2xl divide-y divide-[var(--color-line)] overflow-hidden">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
@@ -75,9 +77,10 @@ export function FaqSection() {
                   <span className="text-[15px] font-medium text-[var(--color-ink)] leading-snug">
                     {faq.q}
                   </span>
-                  <span
-                    className="flex-shrink-0 w-6 h-6 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[var(--color-ink-3)] transition-transform"
-                    style={{ transform: isOpen ? "rotate(45deg)" : "none" }}
+                  <motion.span
+                    className="flex-shrink-0 w-6 h-6 rounded-full border border-[var(--color-line)] flex items-center justify-center text-[var(--color-ink-3)]"
+                    animate={{ rotate: isOpen ? 45 : 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
                     aria-hidden="true"
                   >
                     <svg
@@ -93,17 +96,28 @@ export function FaqSection() {
                       <line x1="12" y1="5" x2="12" y2="19" />
                       <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>
-                  </span>
+                  </motion.span>
                 </button>
-                {isOpen && (
-                  <div className="px-6 pb-5 text-[14px] text-[var(--color-ink-2)] leading-relaxed max-w-xl">
-                    {faq.a}
-                  </div>
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="content"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-5 text-[14px] text-[var(--color-ink-2)] leading-relaxed max-w-xl">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
 import { buttonVariants } from "@/components/ui/button";
 import {
   BUSINESS_PHONE,
@@ -29,7 +30,12 @@ export default function Nav() {
 
   return (
     <>
-      <nav className="sticky top-0 z-40 w-full border-b border-line bg-white will-change-transform">
+      <motion.nav
+        className="sticky top-0 z-40 w-full border-b border-line bg-white will-change-transform"
+        initial={{ y: -56, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      >
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-14 gap-3">
           {/* Logo + Logotype */}
           <Link
@@ -91,95 +97,130 @@ export default function Nav() {
             >
               {BUSINESS_PHONE}
             </a>
-            <a
+            <motion.a
               href="/#book"
               className={buttonVariants({ size: "sm" })}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Book repair
-            </a>
+            </motion.a>
           </div>
 
           {/* Right — mobile hamburger */}
-          <button
+          <motion.button
             className="flex md:hidden w-10 h-10 rounded-xl border border-line bg-white items-center justify-center cursor-pointer flex-shrink-0"
             aria-label={mobOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobOpen}
             onClick={() => setMobOpen((o) => !o)}
+            whileTap={{ scale: 0.9 }}
           >
-            <span className="text-ink text-lg leading-none select-none">
-              {mobOpen ? "✕" : "☰"}
-            </span>
-          </button>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={mobOpen ? "close" : "open"}
+                className="text-ink text-lg leading-none select-none"
+                initial={{ opacity: 0, rotate: -45 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: 45 }}
+                transition={{ duration: 0.15 }}
+              >
+                {mobOpen ? "✕" : "☰"}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Mobile fullscreen menu */}
-      {mobOpen && (
-        <div className="fixed inset-0 z-50 bg-bg-ink flex flex-col p-6">
-          {/* Close button */}
-          <div className="flex justify-end mb-6">
-            <button
-              onClick={() => setMobOpen(false)}
-              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white text-lg cursor-pointer"
-              aria-label="Close menu"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Nav links */}
-          <nav className="flex flex-col flex-1">
-            {NAV_LINKS.map((link, i) => (
-              <Link
-                key={link.href}
-                href={link.href}
+      <AnimatePresence>
+        {mobOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-bg-ink flex flex-col p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Close button */}
+            <div className="flex justify-end mb-6">
+              <motion.button
                 onClick={() => setMobOpen(false)}
-                className={[
-                  "flex items-baseline justify-between py-5 text-white no-underline",
-                  i > 0 ? "border-t border-white/10" : "",
-                ].join(" ")}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white text-lg cursor-pointer"
+                aria-label="Close menu"
+                whileHover={{ rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2 }}
               >
-                <span
-                  className="leading-tight"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 32,
-                    letterSpacing: "-0.02em",
+                ✕
+              </motion.button>
+            </div>
+
+            {/* Nav links */}
+            <motion.nav
+              className="flex flex-col flex-1"
+              initial="hidden"
+              animate="show"
+              variants={{ show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } } }}
+            >
+              {NAV_LINKS.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  variants={{
+                    hidden: { opacity: 0, x: -16 },
+                    show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
                   }}
                 >
-                  {link.label}
-                </span>
-                <span
-                  className="text-white/40 text-xs ml-3"
-                  style={{ fontFamily: "var(--font-mono)" }}
-                >
-                  {link.n}
-                </span>
-              </Link>
-            ))}
-          </nav>
+                  <Link
+                    href={link.href}
+                    onClick={() => setMobOpen(false)}
+                    className={[
+                      "flex items-baseline justify-between py-5 text-white no-underline",
+                      i > 0 ? "border-t border-white/10" : "",
+                    ].join(" ")}
+                  >
+                    <span
+                      className="leading-tight"
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: 32,
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {link.label}
+                    </span>
+                    <span
+                      className="text-white/40 text-xs ml-3"
+                      style={{ fontFamily: "var(--font-mono)" }}
+                    >
+                      {link.n}
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.nav>
 
-          {/* Mobile CTAs */}
-          <div className="mt-auto pt-8 flex flex-col gap-3">
-            <a
-              href="/#book"
-              onClick={() => setMobOpen(false)}
-              className="w-full flex items-center justify-center bg-accent text-white font-semibold rounded-xl py-4 text-base no-underline"
-            >
-              Book a repair
-            </a>
-            <a
-              href={`tel:+${BUSINESS_PHONE_RAW}`}
-              className="w-full flex items-center justify-center border border-white/20 text-white rounded-xl py-3.5 text-sm no-underline"
-            >
-              Call {BUSINESS_PHONE}
-            </a>
-            <p className="text-white/40 text-xs tracking-widest uppercase mt-2">
-              Village Baran · Sirhand Road · Patiala 147004
-            </p>
-          </div>
-        </div>
-      )}
+            {/* Mobile CTAs */}
+            <div className="mt-auto pt-8 flex flex-col gap-3">
+              <a
+                href="/#book"
+                onClick={() => setMobOpen(false)}
+                className="w-full flex items-center justify-center bg-accent text-white font-semibold rounded-xl py-4 text-base no-underline"
+              >
+                Book a repair
+              </a>
+              <a
+                href={`tel:+${BUSINESS_PHONE_RAW}`}
+                className="w-full flex items-center justify-center border border-white/20 text-white rounded-xl py-3.5 text-sm no-underline"
+              >
+                Call {BUSINESS_PHONE}
+              </a>
+              <p className="text-white/40 text-xs tracking-widest uppercase mt-2">
+                Village Baran · Sirhand Road · Patiala 147004
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

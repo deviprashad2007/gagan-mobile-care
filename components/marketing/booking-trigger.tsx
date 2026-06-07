@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import type { Brand, Issue } from "@/lib/repairs";
 import { BookingFlow } from "./booking-flow";
 
@@ -20,13 +21,15 @@ export function BookingTrigger({ brands, issues, children, className }: Props) {
         {children ?? "Book a repair"}
       </button>
 
-      {open && (
-        <BookingFlow
-          brands={brands}
-          issues={issues}
-          onClose={() => setOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {open && (
+          <BookingFlow
+            brands={brands}
+            issues={issues}
+            onClose={() => setOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

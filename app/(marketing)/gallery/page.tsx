@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getGalleryImages } from "@/lib/repairs";
 import { BUSINESS_NAME, BUSINESS_ADDRESS } from "@/lib/seo/business-info";
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: `Gallery — ${BUSINESS_NAME}`,
@@ -22,7 +23,7 @@ export default async function GalleryPage() {
       </nav>
 
       {/* Header */}
-      <div className="mb-10 md:mb-14">
+      <Reveal as="div" className="mb-10 md:mb-14">
         <p className="text-xs font-semibold tracking-widest uppercase text-[var(--color-ink-3)] mb-2">
           Our Workshop
         </p>
@@ -35,20 +36,20 @@ export default async function GalleryPage() {
         <p className="text-[var(--color-ink-3)] text-base max-w-xl">
           Inside our shop, our repairs, and our team at {BUSINESS_NAME}, Patiala.
         </p>
-      </div>
+      </Reveal>
 
       {images.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
+        <Reveal as="div" className="flex flex-col items-center justify-center py-24 gap-3 text-center">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-ink-4)]">
             <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" />
             <polyline points="21 15 16 10 5 21" />
           </svg>
           <p className="text-[var(--color-ink-3)] text-sm">Photos coming soon.</p>
-        </div>
+        </Reveal>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
+        <RevealGroup className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
           {images.map((img) => (
-            <div
+            <RevealItem
               key={img.id}
               className="relative aspect-square overflow-hidden rounded-xl bg-[var(--color-bg-soft)] group border border-[var(--color-line)]"
             >
@@ -64,9 +65,9 @@ export default async function GalleryPage() {
                   <p className="text-white text-xs leading-snug">{img.caption}</p>
                 </div>
               )}
-            </div>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       )}
 
       {/* Back link */}

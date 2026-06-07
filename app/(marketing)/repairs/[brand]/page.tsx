@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getBrandBySlug, getAllBrandSlugs, getIssues } from "@/lib/repairs";
 import { generateBrandRepairsMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
 
@@ -44,6 +45,7 @@ export default async function BrandRepairsPage({ params }: Props) {
           <span className="text-[var(--color-ink)]">{brand.name}</span>
         </nav>
 
+        <Reveal as="div">
         <div className="flex items-center gap-4 mb-4">
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-base shrink-0"
@@ -64,13 +66,14 @@ export default async function BrandRepairsPage({ params }: Props) {
         <p className="text-[var(--color-ink-3)] text-base mb-12 max-w-xl">
           Select the issue to see model-by-model prices. Walk in to our Patiala shop or send your phone by post from anywhere in India.
         </p>
+        </Reveal>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <RevealGroup className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {issues.map((issue) => (
+            <RevealItem key={issue.id}>
             <Link
-              key={issue.id}
               href={`/repairs/${brand.slug}/${issue.slug}`}
-              className="group flex flex-col bg-white border border-[var(--color-line)] rounded-2xl p-5 hover:border-[var(--color-ink-4)] transition-colors"
+              className="group flex flex-col bg-white border border-[var(--color-line)] rounded-2xl p-5 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.02] hover:shadow-[var(--shadow-float)]"
             >
               <p className="text-base font-semibold text-[var(--color-ink)] group-hover:underline underline-offset-2">
                 {issue.name}
@@ -93,8 +96,9 @@ export default async function BrandRepairsPage({ params }: Props) {
                 </span>
               </div>
             </Link>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </main>
     </>
   );

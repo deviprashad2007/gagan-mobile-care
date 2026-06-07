@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Reveal } from "@/components/motion/reveal";
 import {
   BUSINESS_NAME,
   BUSINESS_ADDRESS,
@@ -37,6 +38,7 @@ const LINK_COLUMNS = [
 export default function Footer() {
   return (
     <footer className="mx-4 mb-4">
+      <Reveal as="div">
       <div
         className="bg-bg-ink text-white overflow-hidden"
         style={{ borderRadius: "var(--radius-card)" }}
@@ -67,7 +69,7 @@ export default function Footer() {
               <div className="flex flex-wrap gap-3 mt-6">
                 <a
                   href="/#book"
-                  className="inline-flex items-center justify-center bg-accent text-white font-semibold rounded-lg px-4 py-2.5 text-sm no-underline transition-opacity hover:opacity-90"
+                  className="inline-flex items-center justify-center bg-accent text-white font-semibold rounded-lg px-4 py-2.5 text-sm no-underline transition-all hover:opacity-90 hover:scale-[1.04] active:scale-[0.97]"
                 >
                   Book a repair
                 </a>
@@ -136,6 +138,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      </Reveal>
     </footer>
   );
 }
