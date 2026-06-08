@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { buttonVariants } from "@/components/ui/button";
+import { useOpenBooking } from "./booking-provider";
 import {
   BUSINESS_PHONE,
   BUSINESS_PHONE_RAW,
@@ -20,6 +21,7 @@ const NAV_LINKS = [
 
 export default function Nav() {
   const [mobOpen, setMobOpen] = useState(false);
+  const openBooking = useOpenBooking();
 
   useEffect(() => {
     document.body.style.overflow = mobOpen ? "hidden" : "";
@@ -97,14 +99,15 @@ export default function Nav() {
             >
               {BUSINESS_PHONE}
             </a>
-            <motion.a
-              href="/#book"
+            <motion.button
+              type="button"
+              onClick={openBooking}
               className={buttonVariants({ size: "sm" })}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               Book repair
-            </motion.a>
+            </motion.button>
           </div>
 
           {/* Right — mobile hamburger */}
@@ -201,13 +204,16 @@ export default function Nav() {
 
             {/* Mobile CTAs */}
             <div className="mt-auto pt-8 flex flex-col gap-3">
-              <Link
-                href="/#book"
-                onClick={() => setMobOpen(false)}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobOpen(false);
+                  openBooking();
+                }}
                 className="w-full flex items-center justify-center bg-accent text-white font-semibold rounded-xl py-4 text-base no-underline"
               >
                 Book a repair
-              </Link>
+              </button>
               <a
                 href={`tel:+${BUSINESS_PHONE_RAW}`}
                 className="w-full flex items-center justify-center border border-white/20 text-white rounded-xl py-3.5 text-sm no-underline"

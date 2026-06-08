@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookingCta } from "./booking-cta";
 
 const services = [
   {
@@ -101,10 +102,7 @@ export function ServicesGrid() {
                   {service.fromPrice}
                 </p>
               </div>
-              <a
-                href="#book"
-                className="inline-flex items-center gap-1 text-sm text-[var(--color-ink)] border border-[var(--color-line)] rounded-full px-3.5 py-1.5 hover:border-[var(--color-ink)] hover:bg-[var(--color-bg-soft)] transition-colors"
-              >
+              <BookingCta className="inline-flex items-center gap-1 text-sm text-[var(--color-ink)] border border-[var(--color-line)] rounded-full px-3.5 py-1.5 hover:border-[var(--color-ink)] hover:bg-[var(--color-bg-soft)] transition-colors">
                 Book
                 <svg
                   width="11"
@@ -120,7 +118,7 @@ export function ServicesGrid() {
                   <line x1="5" y1="12" x2="19" y2="12" />
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
-              </a>
+              </BookingCta>
             </div>
           </div>
         ))}

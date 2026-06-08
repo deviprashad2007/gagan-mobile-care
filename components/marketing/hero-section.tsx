@@ -1,5 +1,6 @@
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { FloatCard } from "@/components/motion/float-card";
+import { BookingCta } from "./booking-cta";
 
 export function HeroSection() {
   return (
@@ -44,12 +45,9 @@ export function HeroSection() {
 
           {/* CTAs */}
           <RevealItem className="flex flex-wrap gap-3">
-            <a
-              href="#book"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold hover:opacity-90 transition-all hover:scale-[1.04] active:scale-[0.97]"
-            >
+            <BookingCta className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold hover:opacity-90 transition-all hover:scale-[1.04] active:scale-[0.97]">
               Get free quote
-            </a>
+            </BookingCta>
             <a
               href="#post"
               className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--color-ink)] text-[var(--color-ink)] text-sm font-medium hover:bg-[var(--color-bg-soft)] transition-all hover:scale-[1.04] active:scale-[0.97]"

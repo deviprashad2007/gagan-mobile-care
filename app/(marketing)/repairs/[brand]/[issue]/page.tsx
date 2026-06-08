@@ -10,6 +10,7 @@ import {
 import { generateRepairPageMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
+import { BookingCta } from "@/components/marketing/booking-cta";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
 
@@ -132,12 +133,9 @@ export default async function RepairPage({ params }: Props) {
               <p className="text-sm text-[var(--color-ink-3)] mb-6">
                 We&apos;ll confirm the exact price on a quick call before starting any work.
               </p>
-              <Link
-                href="/#book"
-                className="block w-full text-center bg-[var(--color-ink)] text-white rounded-full px-5 py-3 text-sm font-medium hover:opacity-90 transition-opacity mb-3"
-              >
+              <BookingCta className="block w-full text-center bg-[var(--color-ink)] text-white rounded-full px-5 py-3 text-sm font-medium hover:opacity-90 transition-opacity mb-3">
                 Book a repair
-              </Link>
+              </BookingCta>
               <a
                 href={WHATSAPP_URL}
                 target="_blank"

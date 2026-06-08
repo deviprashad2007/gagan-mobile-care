@@ -1,27 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import type { Brand, Issue, Model } from "@/lib/repairs";
 import { BookingFlow } from "./booking-flow";
+
+const BookingContext = createContext<(() => void) | null>(null);
+
+export function useOpenBooking() {
+  const open = useContext(BookingContext);
+  if (!open) throw new Error("useOpenBooking must be used within BookingProvider");
+  return open;
+}
 
 interface Props {
   brands: Brand[];
   issues: Issue[];
   models: Model[];
-  children?: React.ReactNode;
-  className?: string;
+  children: React.ReactNode;
 }
 
-export function BookingTrigger({ brands, issues, models, children, className }: Props) {
+export function BookingProvider({ brands, issues, models, children }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <button onClick={() => setOpen(true)} className={className}>
-        {children ?? "Book a repair"}
-      </button>
-
+    <BookingContext.Provider value={() => setOpen(true)}>
+      {children}
       <AnimatePresence>
         {open && (
           <BookingFlow
@@ -32,6 +36,6 @@ export function BookingTrigger({ brands, issues, models, children, className }: 
           />
         )}
       </AnimatePresence>
-    </>
+    </BookingContext.Provider>
   );
 }

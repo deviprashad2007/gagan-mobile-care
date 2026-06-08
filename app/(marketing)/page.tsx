@@ -8,19 +8,14 @@ import { ServicesGrid } from "@/components/marketing/services-grid";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { PostFlow } from "@/components/marketing/post-flow";
 import { FaqSection } from "@/components/marketing/faq-section";
-import { BookingTrigger } from "@/components/marketing/booking-trigger";
+import { BookingCta } from "@/components/marketing/booking-cta";
 import { GallerySection } from "@/components/marketing/gallery-section";
-import { getBrands, getIssues, getModels, getGalleryImages } from "@/lib/repairs";
+import { getGalleryImages } from "@/lib/repairs";
 
 export const metadata: Metadata = generateHomeMetadata();
 
 export default async function HomePage() {
-  const [brands, issues, models, galleryImages] = await Promise.all([
-    getBrands(),
-    getIssues(),
-    getModels(),
-    getGalleryImages(),
-  ]);
+  const galleryImages = await getGalleryImages();
 
   return (
     <>
@@ -35,7 +30,6 @@ export default async function HomePage() {
         <PostFlow />
         <FaqSection />
 
-        {/* Global booking trigger — anchored by #book href in hero CTA */}
         <section id="book" className="py-16 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto text-center">
           <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-3">
             Ready to fix it?
@@ -43,14 +37,9 @@ export default async function HomePage() {
           <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
             Book your repair now.
           </h2>
-          <BookingTrigger
-            brands={brands}
-            issues={issues}
-            models={models}
-            className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-semibold rounded-full px-7 py-3.5 hover:opacity-90 transition-opacity"
-          >
+          <BookingCta className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-semibold rounded-full px-7 py-3.5 hover:opacity-90 transition-opacity">
             Get free quote →
-          </BookingTrigger>
+          </BookingCta>
         </section>
       </main>
     </>
