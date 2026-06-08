@@ -30,6 +30,12 @@ export async function sendMagicLink(data: unknown): Promise<MagicLinkResult> {
 
   if (error) {
     console.error("sendMagicLink error:", error);
+    if (error.code === "over_email_send_rate_limit") {
+      return {
+        success: false,
+        error: "Too many sign-in emails sent recently. Please wait a few minutes before requesting another link.",
+      };
+    }
     return { success: false, error: "Failed to send link. Please try again." };
   }
 
