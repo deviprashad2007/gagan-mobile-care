@@ -312,7 +312,7 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-[var(--color-line)]">
-                        <th className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] sticky left-0 bg-white min-w-[130px]">
+                        <th className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] sticky left-0 z-10 bg-white min-w-[130px]">
                           Model
                         </th>
                         {issues.map((issue) => (
@@ -327,8 +327,8 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
                     </thead>
                     <tbody className="divide-y divide-[var(--color-line)]">
                       {brandModels.map((model) => (
-                        <tr key={model.id} className="hover:bg-[var(--color-bg-soft)] transition-colors">
-                          <td className="px-4 py-3 font-medium text-[var(--color-ink)] sticky left-0 bg-inherit whitespace-nowrap">
+                        <tr key={model.id} className="group hover:bg-[var(--color-bg-soft)] transition-colors">
+                          <td className="px-4 py-3 font-medium text-[var(--color-ink)] sticky left-0 z-10 bg-white group-hover:bg-[var(--color-bg-soft)] transition-colors whitespace-nowrap">
                             {model.name}
                             {model.release_year && (
                               <span className="ml-1.5 font-mono text-[10px] text-[var(--color-ink-3)]">
