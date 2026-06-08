@@ -11,6 +11,7 @@ function db() {
 
 export type Brand = Database["public"]["Tables"]["brands"]["Row"];
 export type Issue = Database["public"]["Tables"]["issues"]["Row"];
+export type Model = Database["public"]["Tables"]["models"]["Row"];
 export type GalleryImage = Database["public"]["Tables"]["gallery_images"]["Row"];
 export type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"];
 
@@ -122,6 +123,20 @@ export const getIssueBySlug = unstable_cache(
     return data ?? null;
   },
   ["issue-by-slug"],
+  { revalidate: 3600, tags: ["catalog"] }
+);
+
+export const getModels = unstable_cache(
+  async (): Promise<Model[]> => {
+    const { data, error } = await db()
+      .from("models")
+      .select("*")
+      .is("deleted_at", null)
+      .order("sort_order");
+    if (error) throw error;
+    return data;
+  },
+  ["models"],
   { revalidate: 3600, tags: ["catalog"] }
 );
 

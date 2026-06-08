@@ -10,14 +10,15 @@ import { PostFlow } from "@/components/marketing/post-flow";
 import { FaqSection } from "@/components/marketing/faq-section";
 import { BookingTrigger } from "@/components/marketing/booking-trigger";
 import { GallerySection } from "@/components/marketing/gallery-section";
-import { getBrands, getIssues, getGalleryImages } from "@/lib/repairs";
+import { getBrands, getIssues, getModels, getGalleryImages } from "@/lib/repairs";
 
 export const metadata: Metadata = generateHomeMetadata();
 
 export default async function HomePage() {
-  const [brands, issues, galleryImages] = await Promise.all([
+  const [brands, issues, models, galleryImages] = await Promise.all([
     getBrands(),
     getIssues(),
+    getModels(),
     getGalleryImages(),
   ]);
 
@@ -45,6 +46,7 @@ export default async function HomePage() {
           <BookingTrigger
             brands={brands}
             issues={issues}
+            models={models}
             className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-semibold rounded-full px-7 py-3.5 hover:opacity-90 transition-opacity"
           >
             Get free quote →

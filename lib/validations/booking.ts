@@ -3,6 +3,8 @@ import { z } from "zod";
 export const bookingSchema = z.object({
   brandId: z.string().uuid(),
   brandName: z.string().min(1).max(100),
+  modelId: z.string().uuid().optional(),
+  modelText: z.string().min(1, "Enter your phone model").max(100),
   issueIds: z.array(z.string().uuid()).min(1, "Select at least one issue").max(10),
   serviceType: z.enum(["walkin", "post"]),
   customerName: z

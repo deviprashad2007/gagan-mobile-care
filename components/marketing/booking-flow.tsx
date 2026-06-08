@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { Brand, Issue } from "@/lib/repairs";
+import type { Brand, Issue, Model } from "@/lib/repairs";
 import { createBooking } from "@/lib/actions/create-booking";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
 
-type Step = "brand" | "issue" | "service" | "contact";
-const STEPS: Step[] = ["brand", "issue", "service", "contact"];
+type Step = "brand" | "model" | "issue" | "service" | "contact";
+const STEPS: Step[] = ["brand", "model", "issue", "service", "contact"];
 
 interface Confirmed {
   bookingRef: string;
@@ -19,12 +19,15 @@ interface Confirmed {
 interface Props {
   brands: Brand[];
   issues: Issue[];
+  models: Model[];
   onClose: () => void;
 }
 
-export function BookingFlow({ brands, issues, onClose }: Props) {
+export function BookingFlow({ brands, issues, models, onClose }: Props) {
   const [step, setStep] = useState<Step>("brand");
   const [brand, setBrand] = useState<Brand | null>(null);
+  const [model, setModel] = useState<Model | null>(null);
+  const [modelText, setModelText] = useState("");
   const [issueIds, setIssueIds] = useState<string[]>([]);
   const [serviceType, setServiceType] = useState<"walkin" | "post" | null>(null);
   const [name, setName] = useState("");
@@ -43,7 +46,7 @@ export function BookingFlow({ brands, issues, onClose }: Props) {
   };
 
   const handleSubmit = () => {
-    if (!brand || issueIds.length === 0 || !serviceType) return;
+    if (!brand || (!model && !modelText.trim()) || issueIds.length === 0 || !serviceType) return;
     if (name.trim().length < 2 || !/^\d{10}$/.test(phone)) return;
     setError(null);
 
@@ -51,6 +54,8 @@ export function BookingFlow({ brands, issues, onClose }: Props) {
       const result = await createBooking({
         brandId: brand.id,
         brandName: brand.name,
+        modelId: model?.id,
+        modelText: model ? model.name : modelText.trim(),
         issueIds,
         serviceType,
         customerName: name.trim(),
@@ -145,8 +150,26 @@ export function BookingFlow({ brands, issues, onClose }: Props) {
                   brands={brands}
                   onPick={(b) => {
                     setBrand(b);
-                    setStep("issue");
+                    setModel(null);
+                    setModelText("");
+                    setStep("model");
                   }}
+                />
+              ) : step === "model" ? (
+                <StepModel
+                  models={models.filter((m) => m.brand_id === brand!.id)}
+                  brand={brand!}
+                  selected={model}
+                  customText={modelText}
+                  onPick={(m) => {
+                    setModel(m);
+                    setModelText("");
+                  }}
+                  onCustomTextChange={(v) => {
+                    setModelText(v);
+                    setModel(null);
+                  }}
+                  onContinue={() => setStep("issue")}
                 />
               ) : step === "issue" ? (
                 <StepIssue
@@ -171,6 +194,7 @@ export function BookingFlow({ brands, issues, onClose }: Props) {
               ) : (
                 <StepContact
                   brand={brand!}
+                  modelLabel={model ? model.name : modelText.trim()}
                   issues={selectedIssues}
                   serviceType={serviceType!}
                   estimatedMin={estimatedMin}
@@ -209,7 +233,7 @@ function StepBrand({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 1 of 4 · Pick brand
+        Step 1 of 5 · Pick brand
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
         Which brand made <em>your</em> phone?
@@ -248,7 +272,132 @@ function StepBrand({
   );
 }
 
-// ─── Step 2: Issue ───────────────────────────────────────────────────────────
+// ─── Step 2: Model ───────────────────────────────────────────────────────────
+
+function StepModel({
+  models,
+  brand,
+  selected,
+  customText,
+  onPick,
+  onCustomTextChange,
+  onContinue,
+}: {
+  models: Model[];
+  brand: Brand;
+  selected: Model | null;
+  customText: string;
+  onPick: (m: Model) => void;
+  onCustomTextChange: (v: string) => void;
+  onContinue: () => void;
+}) {
+  const [q, setQ] = useState("");
+  const [showCustom, setShowCustom] = useState(false);
+  const filtered = models.filter((m) =>
+    m.name.toLowerCase().includes(q.toLowerCase())
+  );
+  const canContinue = !!selected || customText.trim().length > 1;
+
+  return (
+    <div>
+      <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
+        Step 2 of 5 · {brand.name} · Pick your model
+      </p>
+      <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
+        Which <em>{brand.name}</em> phone is it?
+      </h2>
+
+      {models.length > 0 && !showCustom && (
+        <div className="flex items-center gap-2 bg-white border border-[var(--color-line)] rounded-xl px-4 py-3 mb-6 max-w-xs">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search model…"
+            className="flex-1 bg-transparent text-sm outline-none"
+          />
+        </div>
+      )}
+
+      {!showCustom && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-6">
+          {filtered.map((m) => {
+            const on = selected?.id === m.id;
+            return (
+              <button
+                key={m.id}
+                onClick={() => onPick(m)}
+                className="relative flex items-center p-3.5 rounded-xl border text-left transition-all"
+                style={{
+                  border: `1px solid ${on ? "var(--color-ink)" : "var(--color-line)"}`,
+                  background: on ? "var(--color-ink)" : "#fff",
+                  color: on ? "#fff" : "var(--color-ink)",
+                }}
+              >
+                <span className="text-sm font-medium">{m.name}</span>
+                {on && (
+                  <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-accent)] flex items-center justify-center">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {models.length === 0 && !showCustom && (
+        <p className="text-sm text-[var(--color-ink-3)] mb-6">
+          We don&apos;t have a model list for {brand.name} yet — just type it in below.
+        </p>
+      )}
+
+      {showCustom ? (
+        <label className="flex flex-col gap-1.5 max-w-sm mb-6">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">
+            Type your model
+          </span>
+          <input
+            value={customText}
+            onChange={(e) => onCustomTextChange(e.target.value)}
+            placeholder={`e.g. ${brand.name} ...`}
+            autoFocus
+            className="px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-white outline-none focus:border-[var(--color-ink)] transition-colors"
+          />
+        </label>
+      ) : (
+        <button
+          onClick={() => setShowCustom(true)}
+          className="text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink)] underline underline-offset-2 transition-colors mb-6"
+        >
+          Can&apos;t find your model? Type it in
+        </button>
+      )}
+
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-[var(--color-ink-3)]">
+          {canContinue ? "Model selected" : "Pick or type your phone model"}
+        </p>
+        <button
+          onClick={onContinue}
+          disabled={!canContinue}
+          className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          Continue
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Step 3: Issue ───────────────────────────────────────────────────────────
 
 function StepIssue({
   issues,
@@ -266,7 +415,7 @@ function StepIssue({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 2 of 4 · {brand.name} · Pick one or many
+        Step 3 of 5 · {brand.name} · Pick one or many
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
         What&apos;s <em>wrong</em> with it?
@@ -343,7 +492,7 @@ function StepService({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 3 of 4 · How should we get the phone?
+        Step 4 of 5 · How should we get the phone?
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
         Walk in, or <em>send by post.</em>
@@ -427,6 +576,7 @@ function StepService({
 
 function StepContact({
   brand,
+  modelLabel,
   issues,
   serviceType,
   estimatedMin,
@@ -440,6 +590,7 @@ function StepContact({
   error,
 }: {
   brand: Brand;
+  modelLabel: string;
   issues: Issue[];
   serviceType: "walkin" | "post";
   estimatedMin: number;
@@ -460,7 +611,7 @@ function StepContact({
     <div className="grid lg:grid-cols-[1fr_300px] gap-10">
       <div>
         <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-          Step 4 of 4 · Almost there
+          Step 5 of 5 · Almost there
         </p>
         <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-3">
           We&apos;ll call you in <em>15 minutes.</em>
@@ -542,7 +693,10 @@ function StepContact({
           >
             {brand.glyph}
           </div>
-          <span className="text-sm font-medium text-[var(--color-ink)]">{brand.name}</span>
+          <div>
+            <span className="text-sm font-medium text-[var(--color-ink)] block">{brand.name}</span>
+            <span className="text-[12px] text-[var(--color-ink-3)]">{modelLabel}</span>
+          </div>
         </div>
 
         <div className="space-y-2 pb-4 border-b border-[var(--color-line)]">
