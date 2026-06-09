@@ -334,7 +334,7 @@ function StepModel({
               <button
                 key={m.id}
                 onClick={() => onPick(m)}
-                className="relative flex items-center p-3.5 rounded-xl border text-left transition-all"
+                className="relative flex flex-col p-3.5 rounded-xl border text-left transition-all"
                 style={{
                   border: `1px solid ${on ? "var(--color-ink)" : "var(--color-line)"}`,
                   background: on ? "var(--color-ink)" : "#fff",
@@ -342,6 +342,9 @@ function StepModel({
                 }}
               >
                 <span className="text-sm font-medium">{m.name}</span>
+                {m.release_year && (
+                  <span className="text-[11px] mt-0.5" style={{ opacity: 0.55 }}>{m.release_year}</span>
+                )}
                 {on && (
                   <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[var(--color-accent)] flex items-center justify-center">
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round">

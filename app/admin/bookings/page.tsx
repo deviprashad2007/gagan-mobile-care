@@ -84,6 +84,11 @@ export default async function BookingsPage({ searchParams }: Props) {
                         <Link href={`/admin/bookings/${b.id}`} className="block">
                           <p className="font-medium text-[var(--color-ink)]">{b.customer_name}</p>
                           <p className="font-mono text-xs text-[var(--color-ink-3)]">{b.customer_phone}</p>
+                          {(b.brand_name || b.model_text) && (
+                            <p className="text-[11px] text-[var(--color-ink-3)] mt-0.5">
+                              {[b.brand_name, b.model_text].filter(Boolean).join(" · ")}
+                            </p>
+                          )}
                         </Link>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">

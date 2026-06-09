@@ -19,6 +19,8 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
   }
 
   const {
+    brandId,
+    brandName,
     modelId,
     modelText,
     issueIds,
@@ -63,6 +65,8 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
     booking_ref: bookingRef,
     customer_name: customerName,
     customer_phone: customerPhone,
+    brand_id: brandId,
+    brand_name: brandName,
     model_id: modelId ?? null,
     model_text: modelText,
     issue_ids: issueIds,

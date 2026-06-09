@@ -12,33 +12,38 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          email: string
+          id: string
+          invited_by: string | null
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          email: string
+          id?: string
+          invited_by?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          email?: string
+          id?: string
+          invited_by?: string | null
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
@@ -75,117 +80,56 @@ export type Database = {
         }
         Relationships: []
       }
-      admin_users: {
-        Row: {
-          id: string
-          email: string
-          role: string
-          invited_by: string | null
-          created_at: string
-          updated_at: string
-          deleted_at: string | null
-        }
-        Insert: {
-          id?: string
-          email: string
-          role?: string
-          invited_by?: string | null
-          created_at?: string
-          updated_at?: string
-          deleted_at?: string | null
-        }
-        Update: {
-          id?: string
-          email?: string
-          role?: string
-          invited_by?: string | null
-          created_at?: string
-          updated_at?: string
-          deleted_at?: string | null
-        }
-        Relationships: []
-      }
       blog_posts: {
         Row: {
-          id: string
-          title: string
-          slug: string
-          excerpt: string | null
           content: string
           cover_image_url: string | null
           cover_storage_path: string | null
+          created_at: string
+          deleted_at: string | null
+          excerpt: string | null
+          id: string
           published: boolean
           published_at: string | null
-          created_at: string
+          slug: string
+          title: string
           updated_at: string
-          deleted_at: string | null
         }
         Insert: {
-          id?: string
-          title: string
-          slug: string
-          excerpt?: string | null
           content: string
           cover_image_url?: string | null
           cover_storage_path?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          excerpt?: string | null
+          id?: string
           published?: boolean
           published_at?: string | null
-          created_at?: string
+          slug: string
+          title: string
           updated_at?: string
-          deleted_at?: string | null
         }
         Update: {
-          id?: string
-          title?: string
-          slug?: string
-          excerpt?: string | null
           content?: string
           cover_image_url?: string | null
           cover_storage_path?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          excerpt?: string | null
+          id?: string
           published?: boolean
           published_at?: string | null
-          created_at?: string
+          slug?: string
+          title?: string
           updated_at?: string
-          deleted_at?: string | null
-        }
-        Relationships: []
-      }
-      gallery_images: {
-        Row: {
-          id: string
-          url: string
-          storage_path: string
-          caption: string | null
-          sort_order: number
-          created_at: string
-          updated_at: string
-          deleted_at: string | null
-        }
-        Insert: {
-          id?: string
-          url: string
-          storage_path: string
-          caption?: string | null
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-          deleted_at?: string | null
-        }
-        Update: {
-          id?: string
-          url?: string
-          storage_path?: string
-          caption?: string | null
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-          deleted_at?: string | null
         }
         Relationships: []
       }
       bookings: {
         Row: {
           booking_ref: string
+          brand_id: string | null
+          brand_name: string | null
           confirmed_price: number | null
           created_at: string
           customer_id: string | null
@@ -207,6 +151,8 @@ export type Database = {
         }
         Insert: {
           booking_ref: string
+          brand_id?: string | null
+          brand_name?: string | null
           confirmed_price?: number | null
           created_at?: string
           customer_id?: string | null
@@ -228,6 +174,8 @@ export type Database = {
         }
         Update: {
           booking_ref?: string
+          brand_id?: string | null
+          brand_name?: string | null
           confirmed_price?: number | null
           created_at?: string
           customer_id?: string | null
@@ -248,6 +196,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "bookings_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "bookings_customer_id_fkey"
             columns: ["customer_id"]
@@ -336,6 +291,39 @@ export type Database = {
           total_spend?: number
           total_visits?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_images: {
+        Row: {
+          caption: string | null
+          created_at: string
+          deleted_at: string | null
+          id: string
+          sort_order: number
+          storage_path: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          sort_order?: number
+          storage_path: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          sort_order?: number
+          storage_path?: string
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }
@@ -634,6 +622,7 @@ export type Database = {
     Functions: {
       generate_booking_ref: { Args: never; Returns: string }
       generate_repair_ref: { Args: never; Returns: string }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -762,9 +751,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {},
   },

@@ -62,6 +62,20 @@ export default async function BookingDetailPage({ params }: Props) {
       {/* Details card */}
       <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5 space-y-4 mb-4">
         <Row label="Booking ref" value={<span className="font-mono">{booking.booking_ref}</span>} />
+        <Row label="Brand" value={booking.brand_name ?? "—"} />
+        <Row
+          label="Model"
+          value={
+            <>
+              {booking.model_text ?? "—"}
+              {(booking.model as { release_year?: number | null } | null)?.release_year != null && (
+                <span className="ml-1.5 font-mono text-[11px] text-[var(--color-ink-3)]">
+                  ({(booking.model as { release_year: number }).release_year})
+                </span>
+              )}
+            </>
+          }
+        />
         <Row label="Service" value={booking.service_type === "post" ? "📦 Send by post" : "🏪 Walk-in"} />
         <Row
           label="Estimate"
