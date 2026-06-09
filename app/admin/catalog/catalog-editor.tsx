@@ -7,6 +7,7 @@ import type { Database } from "@/lib/supabase/types";
 import { upsertPrice } from "@/lib/actions/upsert-price";
 import { createBrand } from "@/lib/actions/create-brand";
 import { createModel } from "@/lib/actions/create-model";
+import { BrandIcon } from "@/components/marketing/brand-icon";
 
 type Model = Database["public"]["Tables"]["models"]["Row"];
 type Price = Database["public"]["Tables"]["prices"]["Row"];
@@ -112,7 +113,7 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
                 : { background: "#fff", borderColor: "var(--color-line)", color: "var(--color-ink)" }
             }
           >
-            <span className="font-bold text-[10px]">{brand.glyph}</span>
+            <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} size={18} className="rounded-md" />
             {brand.name}
           </button>
         ))}
@@ -139,12 +140,7 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
                   : "hover:bg-[var(--color-bg-soft)] text-[var(--color-ink)]"
               }`}
             >
-              <div
-                className="w-6 h-6 rounded-md flex items-center justify-center text-white font-bold text-[9px] shrink-0"
-                style={{ background: brand.tone }}
-              >
-                {brand.glyph}
-              </div>
+              <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} size={24} className="rounded-md" />
               <span className="truncate">{brand.name}</span>
             </button>
           ))}
