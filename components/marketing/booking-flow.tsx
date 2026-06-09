@@ -43,7 +43,16 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
   const estimatedMax = selectedIssues.reduce((s, i) => s + i.range_max, 0);
 
   const goBack = () => {
-    if (stepIndex > 0) setStep(STEPS[stepIndex - 1]);
+    if (stepIndex === 0) return;
+    const prevStep = STEPS[stepIndex - 1];
+    if (prevStep === "brand") {
+      setModel(null); setModelText(""); setIssueIds([]); setServiceType(null);
+    } else if (prevStep === "model") {
+      setIssueIds([]); setServiceType(null);
+    } else if (prevStep === "issue") {
+      setServiceType(null);
+    }
+    setStep(prevStep);
   };
 
   const handleSubmit = () => {
