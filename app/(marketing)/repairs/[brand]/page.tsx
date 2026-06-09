@@ -5,6 +5,7 @@ import { getBrandBySlug, getAllBrandSlugs, getIssues } from "@/lib/repairs";
 import { generateBrandRepairsMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { BrandIcon } from "@/components/marketing/brand-icon";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
 
@@ -47,12 +48,14 @@ export default async function BrandRepairsPage({ params }: Props) {
 
         <Reveal as="div">
         <div className="flex items-center gap-4 mb-4">
-          <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-base shrink-0"
-            style={{ backgroundColor: brand.tone }}
-          >
-            {brand.glyph}
-          </div>
+          <BrandIcon
+            slug={brand.slug}
+            name={brand.name}
+            tone={brand.tone}
+            glyph={brand.glyph}
+            size={56}
+            className="rounded-2xl"
+          />
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)]">
               {issues.length} repair types available

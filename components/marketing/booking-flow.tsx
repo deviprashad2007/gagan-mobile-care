@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import type { Brand, Issue, Model } from "@/lib/repairs";
+import { BrandIcon } from "./brand-icon";
 import { createBooking } from "@/lib/actions/create-booking";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
 
@@ -258,12 +259,7 @@ function StepBrand({
             onClick={() => onPick(b)}
             className="flex items-center gap-3 p-3.5 bg-white border border-[var(--color-line)] rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-left"
           >
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0"
-              style={{ backgroundColor: b.tone }}
-            >
-              {b.glyph}
-            </div>
+            <BrandIcon slug={b.slug} name={b.name} tone={b.tone} glyph={b.glyph} size={36} className="rounded-full" />
             <span className="text-sm font-medium text-[var(--color-ink)]">{b.name}</span>
           </button>
         ))}
@@ -687,12 +683,7 @@ function StepContact({
         </p>
 
         <div className="flex items-center gap-2.5 pb-4 border-b border-[var(--color-line)]">
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0"
-            style={{ backgroundColor: brand.tone }}
-          >
-            {brand.glyph}
-          </div>
+          <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} size={32} className="rounded-full" />
           <div>
             <span className="text-sm font-medium text-[var(--color-ink)] block">{brand.name}</span>
             <span className="text-[12px] text-[var(--color-ink-3)]">{modelLabel}</span>

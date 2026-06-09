@@ -4,6 +4,7 @@ import { getBrands } from "@/lib/repairs";
 import { generateRepairsMetadata } from "@/lib/seo/metadata";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { BrandIcon } from "@/components/marketing/brand-icon";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
 
@@ -46,12 +47,13 @@ export default async function RepairsPage() {
               href={`/repairs/${brand.slug}`}
               className="group flex flex-col items-center gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.04] hover:shadow-[var(--shadow-float)]"
             >
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0"
-                style={{ backgroundColor: brand.tone }}
-              >
-                {brand.glyph}
-              </div>
+              <BrandIcon
+                slug={brand.slug}
+                name={brand.name}
+                tone={brand.tone}
+                glyph={brand.glyph}
+                size={52}
+              />
               <span className="text-[13px] font-medium text-[var(--color-ink)] text-center leading-tight group-hover:underline underline-offset-2">
                 {brand.name}
               </span>
