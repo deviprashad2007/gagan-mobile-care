@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -221,10 +219,13 @@ export type Database = {
       }
       brands: {
         Row: {
+          category_id: string | null
           created_at: string
           deleted_at: string | null
           glyph: string
           id: string
+          logo_storage_path: string | null
+          logo_url: string | null
           name: string
           slug: string
           sort_order: number
@@ -232,10 +233,13 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          category_id?: string | null
           created_at?: string
           deleted_at?: string | null
           glyph: string
           id?: string
+          logo_storage_path?: string | null
+          logo_url?: string | null
           name: string
           slug: string
           sort_order?: number
@@ -243,14 +247,61 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          category_id?: string | null
           created_at?: string
           deleted_at?: string | null
           glyph?: string
           id?: string
+          logo_storage_path?: string | null
+          logo_url?: string | null
           name?: string
           slug?: string
           sort_order?: number
           tone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brands_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          description: string | null
+          icon: string
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          icon?: string
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          description?: string | null
+          icon?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
           updated_at?: string
         }
         Relationships: []
@@ -634,7 +685,6 @@ export type Database = {
 }
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<

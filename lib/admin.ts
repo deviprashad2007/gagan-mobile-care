@@ -87,7 +87,7 @@ export async function getBookingById(id: string) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("bookings")
-    .select("*")
+    .select("*, model:model_id(name, release_year)")
     .eq("id", id)
     .is("deleted_at", null)
     .single();

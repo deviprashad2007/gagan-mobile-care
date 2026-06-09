@@ -27,6 +27,7 @@ interface Props {
   name: string;
   tone: string;
   glyph: string;
+  logo_url?: string | null;
   size?: number;
   iconColor?: string;
   className?: string;
@@ -37,12 +38,28 @@ export function BrandIcon({
   name,
   tone,
   glyph,
+  logo_url,
   size = 48,
   iconColor = "#ffffff",
   className = "",
 }: Props) {
   const path = PATHS[slug];
   const iconSize = Math.round(size * 0.55);
+
+  // Uploaded logo — shown as a plain rounded image, no coloured bg
+  if (logo_url) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={logo_url}
+        alt={name}
+        width={size}
+        height={size}
+        className={`object-contain rounded-xl shrink-0 ${className}`}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
 
   return (
     <div
