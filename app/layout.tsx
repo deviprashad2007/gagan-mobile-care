@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -41,7 +42,10 @@ export default function RootLayout({
       lang="en"
       className={cn(inter.variable, instrumentSerif.variable, jetbrainsMono.variable)}
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
