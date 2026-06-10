@@ -1,8 +1,13 @@
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
+  "@id": `${siteUrl}/#business`,
   name: "Gagan Mobile Hospital",
   description: "Mobile phone repair shop in Patiala, Punjab",
+  url: siteUrl,
+  image: `${siteUrl}/opengraph-image`,
   telephone: "+919814036114",
   address: {
     "@type": "PostalAddress",
@@ -12,9 +17,64 @@ const schema = {
     postalCode: "147004",
     addressCountry: "IN",
   },
+  areaServed: [
+    { "@type": "City", name: "Patiala" },
+    { "@type": "Country", name: "India" },
+  ],
   openingHours: ["Mo-Sa 10:00-21:00", "Su 11:00-19:00"],
   priceRange: "₹499 - ₹12999",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    reviewCount: "2100",
+  },
 };
+
+export function ServiceJsonLd({
+  brandName,
+  issueName,
+  description,
+  url,
+  priceMin,
+  priceMax,
+}: {
+  brandName: string;
+  issueName: string;
+  description?: string | null;
+  url: string;
+  priceMin: number;
+  priceMax: number;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: `${brandName} ${issueName}`,
+    name: `${brandName} ${issueName} Repair`,
+    description:
+      description ??
+      `${brandName} ${issueName.toLowerCase()} repair in Patiala, Punjab. Genuine parts, 6-month warranty.`,
+    url,
+    provider: { "@id": `${siteUrl}/#business` },
+    areaServed: [
+      { "@type": "City", name: "Patiala" },
+      { "@type": "Country", name: "India" },
+    ],
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "INR",
+      lowPrice: priceMin,
+      highPrice: Math.max(priceMin, priceMax),
+      availability: "https://schema.org/InStock",
+      url,
+    },
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
 
 type BreadcrumbItem = { name: string; url: string };
 

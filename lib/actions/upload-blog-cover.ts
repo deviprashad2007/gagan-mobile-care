@@ -2,6 +2,7 @@
 
 import { createServiceClient } from "@/lib/supabase/service";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { extensionForMimeType } from "@/lib/utils/file-validation";
 
 export type UploadBlogCoverResult =
   | { success: true; url: string; storagePath: string }
@@ -15,7 +16,9 @@ export async function uploadBlogCover(formData: FormData): Promise<UploadBlogCov
   if (!file || file.size === 0) return { success: false, error: "No file provided." };
   if (file.size > 5 * 1024 * 1024) return { success: false, error: "File too large. Max 5 MB." };
 
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+  const ext = extensionForMimeType(file.type);
+  if (!ext) return { success: false, error: "Only JPEG, PNG, WebP or GIF images accepted." };
+
   const filename = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
   const bytes = new Uint8Array(await file.arrayBuffer());

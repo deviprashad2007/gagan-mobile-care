@@ -2,17 +2,19 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { Brand, Issue } from "@/lib/repairs";
+import type { Brand, Category, Issue } from "@/lib/repairs";
 import type { Database } from "@/lib/supabase/types";
 import { upsertPrice } from "@/lib/actions/upsert-price";
 import { createBrand } from "@/lib/actions/create-brand";
 import { createModel } from "@/lib/actions/create-model";
+import { createCategory } from "@/lib/actions/create-category";
 import { BrandIcon } from "@/components/marketing/brand-icon";
 
 type Model = Database["public"]["Tables"]["models"]["Row"];
 type Price = Database["public"]["Tables"]["prices"]["Row"];
 
 interface Props {
+  categories: Category[];
   brands: Brand[];
   issues: Issue[];
   models: Model[];
@@ -24,13 +26,23 @@ const BRAND_COLORS = [
   "#9333ea", "#ea580c", "#0891b2", "#be185d",
 ];
 
-export function CatalogEditor({ brands, issues, models, prices }: Props) {
+const CATEGORY_ICONS = ["📱", "💻", "📲", "🎧", "⌚", "🖥️", "🖨️", "📷"];
+
+export function CatalogEditor({ categories, brands, issues, models, prices }: Props) {
   const router = useRouter();
-  const [selectedBrandId, setSelectedBrandId] = useState(brands[0]?.id ?? "");
+  const [activeCategoryId, setActiveCategoryId] = useState(categories[0]?.id ?? "");
+  const categoryBrands = brands.filter((b) => b.category_id === activeCategoryId);
+  const [selectedBrandId, setSelectedBrandId] = useState(categoryBrands[0]?.id ?? "");
   const [editingCell, setEditingCell] = useState<{ modelId: string; issueId: string } | null>(null);
   const [editValue, setEditValue] = useState("");
   const [saving, setSaving] = useState(false);
   const [, startTransition] = useTransition();
+
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryIcon, setNewCategoryIcon] = useState(CATEGORY_ICONS[0]);
+  const [categoryError, setCategoryError] = useState("");
+  const [addingCategory, setAddingCategory] = useState(false);
 
   const [showAddBrand, setShowAddBrand] = useState(false);
   const [newBrandName, setNewBrandName] = useState("");
@@ -46,6 +58,25 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
 
   const selectedBrand = brands.find((b) => b.id === selectedBrandId);
   const brandModels = models.filter((m) => m.brand_id === selectedBrandId);
+
+  const handleSelectCategory = (categoryId: string) => {
+    setActiveCategoryId(categoryId);
+    const firstBrand = brands.find((b) => b.category_id === categoryId);
+    setSelectedBrandId(firstBrand?.id ?? "");
+    setShowAddBrand(false);
+    setShowAddModel(false);
+  };
+
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    setCategoryError("");
+    setAddingCategory(true);
+    const result = await createCategory({ name: newCategoryName.trim(), icon: newCategoryIcon });
+    setAddingCategory(false);
+    if (!result.success) { setCategoryError(result.error); return; }
+    setNewCategoryName(""); setNewCategoryIcon(CATEGORY_ICONS[0]); setShowAddCategory(false);
+    router.refresh();
+  };
 
   const getPrice = (modelId: string, issueId: string): number | null => {
     const p = prices.find((p) => p.model_id === modelId && p.issue_id === issueId);
@@ -75,7 +106,7 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
     setBrandError("");
     setAddingBrand(true);
     const glyph = newBrandName.trim().slice(0, 2).toUpperCase();
-    const result = await createBrand({ name: newBrandName.trim(), glyph, tone: newBrandTone });
+    const result = await createBrand({ name: newBrandName.trim(), glyph, tone: newBrandTone, category_id: activeCategoryId || undefined });
     setAddingBrand(false);
     if (!result.success) { setBrandError(result.error); return; }
     setNewBrandName(""); setNewBrandTone(BRAND_COLORS[0]); setShowAddBrand(false);
@@ -97,12 +128,92 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
   return (
     <div className="flex flex-col gap-4">
 
+      {/* ── Device category selector ───────────────────────────────────────── */}
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
+        {categories.map((cat) => {
+          const count = brands.filter((b) => b.category_id === cat.id).length;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => handleSelectCategory(cat.id)}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm whitespace-nowrap border transition-colors shrink-0 ${
+                activeCategoryId === cat.id
+                  ? "bg-[var(--color-ink)] text-white border-[var(--color-ink)]"
+                  : "bg-white border-[var(--color-line)] text-[var(--color-ink)]"
+              }`}
+            >
+              <span>{cat.icon}</span>
+              {cat.name}
+              <span className={`text-[10px] font-mono ${activeCategoryId === cat.id ? "opacity-70" : "text-[var(--color-ink-3)]"}`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+        <button
+          onClick={() => setShowAddCategory((v) => !v)}
+          className="flex items-center gap-1 px-3.5 py-2 rounded-full text-sm whitespace-nowrap border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] shrink-0"
+        >
+          + Add device
+        </button>
+      </div>
+
+      {showAddCategory && (
+        <div className="bg-white border border-[var(--color-line)] rounded-2xl p-4 flex flex-col gap-3 max-w-sm">
+          <p className="text-sm font-medium text-[var(--color-ink)]">Add device type</p>
+          <div className="flex gap-2">
+            <input
+              autoFocus
+              placeholder="e.g. Tablets"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleAddCategory();
+                if (e.key === "Escape") { setShowAddCategory(false); setCategoryError(""); }
+              }}
+              className="flex-1 px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)]"
+            />
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {CATEGORY_ICONS.map((icon) => (
+              <button
+                key={icon}
+                onClick={() => setNewCategoryIcon(icon)}
+                className="w-8 h-8 rounded-lg border flex items-center justify-center text-base transition-colors"
+                style={{
+                  borderColor: newCategoryIcon === icon ? "var(--color-ink)" : "var(--color-line)",
+                  background: newCategoryIcon === icon ? "var(--color-bg-soft)" : "#fff",
+                }}
+              >
+                {icon}
+              </button>
+            ))}
+          </div>
+          {categoryError && <p className="text-xs text-red-500">{categoryError}</p>}
+          <div className="flex gap-2">
+            <button
+              onClick={handleAddCategory}
+              disabled={addingCategory || !newCategoryName.trim()}
+              className="flex-1 py-2 bg-[var(--color-ink)] text-white text-sm rounded-xl disabled:opacity-40"
+            >
+              {addingCategory ? "Adding…" : "Add device type"}
+            </button>
+            <button
+              onClick={() => { setShowAddCategory(false); setCategoryError(""); setNewCategoryName(""); }}
+              className="px-4 py-2 border border-[var(--color-line)] text-sm rounded-xl text-[var(--color-ink-3)]"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Brand selector ───────────────────────────────────────────────── */}
       {/* Mobile: horizontal scrollable pills | Desktop: vertical sidebar */}
 
       {/* Mobile pill row */}
       <div className="md:hidden flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
-        {brands.map((brand) => (
+        {categoryBrands.map((brand) => (
           <button
             key={brand.id}
             onClick={() => { setSelectedBrandId(brand.id); setShowAddModel(false); }}
@@ -113,7 +224,7 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
                 : { background: "#fff", borderColor: "var(--color-line)", color: "var(--color-ink)" }
             }
           >
-            <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} size={18} className="rounded-md" />
+            <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} logo_url={brand.logo_url} size={18} className="rounded-md" />
             {brand.name}
           </button>
         ))}
@@ -130,7 +241,7 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
 
         {/* Desktop sidebar */}
         <div className="hidden md:flex md:flex-col w-44 shrink-0 bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden self-start">
-          {brands.map((brand) => (
+          {categoryBrands.map((brand) => (
             <button
               key={brand.id}
               onClick={() => { setSelectedBrandId(brand.id); setShowAddModel(false); }}
@@ -140,10 +251,13 @@ export function CatalogEditor({ brands, issues, models, prices }: Props) {
                   : "hover:bg-[var(--color-bg-soft)] text-[var(--color-ink)]"
               }`}
             >
-              <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} size={24} className="rounded-md" />
+              <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} logo_url={brand.logo_url} size={24} className="rounded-md" />
               <span className="truncate">{brand.name}</span>
             </button>
           ))}
+          {categoryBrands.length === 0 && (
+            <p className="px-3 py-3 text-xs text-[var(--color-ink-3)]">No brands in this category yet.</p>
+          )}
 
           {showAddBrand ? (
             <div className="p-3 border-t border-[var(--color-line)] flex flex-col gap-2">

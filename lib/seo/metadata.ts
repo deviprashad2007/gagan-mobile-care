@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
 
 export function generateRepairsMetadata(): Metadata {
   return {

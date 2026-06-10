@@ -8,11 +8,11 @@ import {
   getAllBrandIssueSlugs,
 } from "@/lib/repairs";
 import { generateRepairPageMetadata } from "@/lib/seo/metadata";
-import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
+import { BreadcrumbJsonLd, ServiceJsonLd } from "@/lib/seo/json-ld";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
 import { BookingCta } from "@/components/marketing/booking-cta";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
 
 type Props = { params: Promise<{ brand: string; issue: string }> };
 
@@ -46,6 +46,11 @@ export default async function RepairPage({ params }: Props) {
     return acc;
   }, {});
 
+  const pageUrl = `${siteUrl}/repairs/${brand.slug}/${issue.slug}`;
+  const highestPrice = models.length > 0
+    ? Math.max(...models.map((m) => m.price ?? issue.range_max))
+    : issue.range_max;
+
   return (
     <>
       <BreadcrumbJsonLd
@@ -53,8 +58,16 @@ export default async function RepairPage({ params }: Props) {
           { name: "Home", url: siteUrl },
           { name: "Repairs", url: `${siteUrl}/repairs` },
           { name: brand.name, url: `${siteUrl}/repairs/${brand.slug}` },
-          { name: issue.name, url: `${siteUrl}/repairs/${brand.slug}/${issue.slug}` },
+          { name: issue.name, url: pageUrl },
         ]}
+      />
+      <ServiceJsonLd
+        brandName={brand.name}
+        issueName={issue.name}
+        description={issue.description}
+        url={pageUrl}
+        priceMin={lowestPrice}
+        priceMax={highestPrice}
       />
       <main className="py-16 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto">
         <nav className="flex items-center gap-2 text-xs font-mono text-[var(--color-ink-3)] mb-10 uppercase tracking-widest flex-wrap">

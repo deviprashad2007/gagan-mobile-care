@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCatalog } from "@/lib/admin";
+import { getCategories } from "@/lib/repairs";
 import { CatalogEditor } from "./catalog-editor";
 
 export default async function CatalogPage() {
@@ -8,7 +9,10 @@ export default async function CatalogPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login");
 
-  const { brands, issues, models, prices } = await getCatalog();
+  const [{ brands, issues, models, prices }, categories] = await Promise.all([
+    getCatalog(),
+    getCategories(),
+  ]);
 
   return (
     <div className="px-4 md:px-8 py-6 max-w-6xl mx-auto">
@@ -16,9 +20,9 @@ export default async function CatalogPage() {
         Catalog
       </h1>
       <p className="text-sm text-[var(--color-ink-3)] mb-5">
-        Select a brand, then tap any price cell to update it.
+        Pick a device, then a brand, then tap any price cell to update it.
       </p>
-      <CatalogEditor brands={brands} issues={issues} models={models} prices={prices} />
+      <CatalogEditor categories={categories} brands={brands} issues={issues} models={models} prices={prices} />
     </div>
   );
 }

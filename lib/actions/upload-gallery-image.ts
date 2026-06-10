@@ -3,6 +3,7 @@
 import { createServiceClient } from "@/lib/supabase/service";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { revalidateTag } from "next/cache";
+import { extensionForMimeType } from "@/lib/utils/file-validation";
 
 export type UploadGalleryResult =
   | { success: true }
@@ -18,9 +19,11 @@ export async function uploadGalleryImage(
   if (!file || file.size === 0) return { success: false, error: "No file provided." };
   if (file.size > 5 * 1024 * 1024) return { success: false, error: "File too large. Max 5 MB." };
 
+  const ext = extensionForMimeType(file.type);
+  if (!ext) return { success: false, error: "Only JPEG, PNG, WebP or GIF images accepted." };
+
   const caption = (formData.get("caption") as string | null)?.trim() || null;
 
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
   const bytes = new Uint8Array(await file.arrayBuffer());

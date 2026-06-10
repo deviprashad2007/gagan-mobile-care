@@ -3,8 +3,8 @@
 import { revalidateTag } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/service";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { extensionForMimeType } from "@/lib/utils/file-validation";
 
-const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"];
 const MAX_BYTES = 2 * 1024 * 1024;
 
 export type UploadLogoResult = { success: true; url: string } | { success: false; error: string };
@@ -16,9 +16,10 @@ export async function uploadBrandLogo(brandId: string, formData: FormData): Prom
   const file = formData.get("logo");
   if (!(file instanceof File) || file.size === 0) return { success: false, error: "No file selected." };
   if (file.size > MAX_BYTES) return { success: false, error: "File too large — max 2 MB." };
-  if (!ALLOWED.includes(file.type)) return { success: false, error: "Only JPEG, PNG, WebP or SVG accepted." };
 
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "png";
+  const ext = extensionForMimeType(file.type);
+  if (!ext) return { success: false, error: "Only JPEG, PNG or WebP images accepted." };
+
   const path = `brands/${brandId}.${ext}`;
 
   const supabase = createServiceClient();

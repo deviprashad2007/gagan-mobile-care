@@ -2,13 +2,13 @@
 
 import { useState, useTransition } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { Brand, Issue, Model } from "@/lib/repairs";
+import type { Brand, Category, Issue, Model } from "@/lib/repairs";
 import { BrandIcon } from "./brand-icon";
 import { createBooking } from "@/lib/actions/create-booking";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
 
-type Step = "brand" | "model" | "issue" | "service" | "contact";
-const STEPS: Step[] = ["brand", "model", "issue", "service", "contact"];
+type Step = "category" | "brand" | "model" | "issue" | "service" | "contact";
+const STEPS: Step[] = ["category", "brand", "model", "issue", "service", "contact"];
 
 interface Confirmed {
   bookingRef: string;
@@ -21,11 +21,13 @@ interface Props {
   brands: Brand[];
   issues: Issue[];
   models: Model[];
+  categories: Category[];
   onClose: () => void;
 }
 
-export function BookingFlow({ brands, issues, models, onClose }: Props) {
-  const [step, setStep] = useState<Step>("brand");
+export function BookingFlow({ brands, issues, models, categories, onClose }: Props) {
+  const [step, setStep] = useState<Step>("category");
+  const [category, setCategory] = useState<Category | null>(null);
   const [brand, setBrand] = useState<Brand | null>(null);
   const [model, setModel] = useState<Model | null>(null);
   const [modelText, setModelText] = useState("");
@@ -33,6 +35,7 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
   const [serviceType, setServiceType] = useState<"walkin" | "post" | null>(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot — must stay empty
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -45,7 +48,9 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
   const goBack = () => {
     if (stepIndex === 0) return;
     const prevStep = STEPS[stepIndex - 1];
-    if (prevStep === "brand") {
+    if (prevStep === "category") {
+      setBrand(null); setModel(null); setModelText(""); setIssueIds([]); setServiceType(null);
+    } else if (prevStep === "brand") {
       setModel(null); setModelText(""); setIssueIds([]); setServiceType(null);
     } else if (prevStep === "model") {
       setIssueIds([]); setServiceType(null);
@@ -72,6 +77,7 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
         customerPhone: phone,
         estimatedPriceMin: estimatedMin,
         estimatedPriceMax: estimatedMax,
+        website,
       });
 
       if (!result.success) {
@@ -155,9 +161,21 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
             >
               {confirmed ? (
                 <ConfirmationScreen confirmed={confirmed} onClose={onClose} />
+              ) : step === "category" ? (
+                <StepCategory
+                  categories={categories}
+                  onPick={(c) => {
+                    setCategory(c);
+                    setBrand(null);
+                    setModel(null);
+                    setModelText("");
+                    setStep("brand");
+                  }}
+                />
               ) : step === "brand" ? (
                 <StepBrand
-                  brands={brands}
+                  brands={brands.filter((b) => b.category_id === category?.id)}
+                  category={category!}
                   onPick={(b) => {
                     setBrand(b);
                     setModel(null);
@@ -213,6 +231,8 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
                   phone={phone}
                   onNameChange={setName}
                   onPhoneChange={(v) => setPhone(v.replace(/\D/g, "").slice(0, 10))}
+                  website={website}
+                  onWebsiteChange={setWebsite}
                   onSubmit={handleSubmit}
                   isPending={isPending}
                   error={error}
@@ -226,13 +246,49 @@ export function BookingFlow({ brands, issues, models, onClose }: Props) {
   );
 }
 
-// ─── Step 1: Brand ───────────────────────────────────────────────────────────
+// ─── Step 1: Device category ─────────────────────────────────────────────────
+
+function StepCategory({
+  categories,
+  onPick,
+}: {
+  categories: Category[];
+  onPick: (c: Category) => void;
+}) {
+  return (
+    <div>
+      <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
+        Step 1 of 6 · What needs fixing?
+      </p>
+      <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
+        What kind of <em>device</em> is it?
+      </h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        {categories.map((c) => (
+          <button
+            key={c.id}
+            onClick={() => onPick(c)}
+            className="flex flex-col items-center gap-2 p-5 bg-white border border-[var(--color-line)] rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-center"
+          >
+            <span className="text-3xl">{c.icon}</span>
+            <span className="text-sm font-medium text-[var(--color-ink)]">{c.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Step 2: Brand ───────────────────────────────────────────────────────────
 
 function StepBrand({
   brands,
+  category,
   onPick,
 }: {
   brands: Brand[];
+  category: Category;
   onPick: (b: Brand) => void;
 }) {
   const [q, setQ] = useState("");
@@ -243,10 +299,10 @@ function StepBrand({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 1 of 5 · Pick brand
+        Step 2 of 6 · {category.name} · Pick brand
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
-        Which brand made <em>your</em> phone?
+        Which brand made <em>your</em> {category.name.toLowerCase().replace(/s$/, "")}?
       </h2>
 
       <div className="flex items-center gap-2 bg-white border border-[var(--color-line)] rounded-xl px-4 py-3 mb-6 max-w-xs">
@@ -261,23 +317,29 @@ function StepBrand({
         />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-        {filtered.map((b) => (
-          <button
-            key={b.id}
-            onClick={() => onPick(b)}
-            className="flex items-center gap-3 p-3.5 bg-white border border-[var(--color-line)] rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-left"
-          >
-            <BrandIcon slug={b.slug} name={b.name} tone={b.tone} glyph={b.glyph} size={36} className="rounded-full" />
-            <span className="text-sm font-medium text-[var(--color-ink)]">{b.name}</span>
-          </button>
-        ))}
-      </div>
+      {filtered.length === 0 ? (
+        <p className="text-sm text-[var(--color-ink-3)]">
+          No brands listed yet for {category.name} — call us and we&apos;ll sort it out.
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {filtered.map((b) => (
+            <button
+              key={b.id}
+              onClick={() => onPick(b)}
+              className="flex items-center gap-3 p-3.5 bg-white border border-[var(--color-line)] rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-left"
+            >
+              <BrandIcon slug={b.slug} name={b.name} tone={b.tone} glyph={b.glyph} logo_url={b.logo_url} size={36} className="rounded-full" />
+              <span className="text-sm font-medium text-[var(--color-ink)]">{b.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-// ─── Step 2: Model ───────────────────────────────────────────────────────────
+// ─── Step 3: Model ───────────────────────────────────────────────────────────
 
 function StepModel({
   models,
@@ -306,7 +368,7 @@ function StepModel({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 2 of 5 · {brand.name} · Pick your model
+        Step 3 of 6 · {brand.name} · Pick your model
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
         Which <em>{brand.name}</em> phone is it?
@@ -405,7 +467,7 @@ function StepModel({
   );
 }
 
-// ─── Step 3: Issue ───────────────────────────────────────────────────────────
+// ─── Step 4: Issue ───────────────────────────────────────────────────────────
 
 function StepIssue({
   issues,
@@ -423,7 +485,7 @@ function StepIssue({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 3 of 5 · {brand.name} · Pick one or many
+        Step 4 of 6 · {brand.name} · Pick one or many
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
         What&apos;s <em>wrong</em> with it?
@@ -488,7 +550,7 @@ function StepIssue({
   );
 }
 
-// ─── Step 3: Service type ─────────────────────────────────────────────────────
+// ─── Step 5: Service type ─────────────────────────────────────────────────────
 
 function StepService({
   selected,
@@ -500,7 +562,7 @@ function StepService({
   return (
     <div>
       <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-        Step 4 of 5 · How should we get the phone?
+        Step 5 of 6 · How should we get the device?
       </p>
       <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
         Walk in, or <em>send by post.</em>
@@ -580,7 +642,7 @@ function StepService({
   );
 }
 
-// ─── Step 4: Contact details ──────────────────────────────────────────────────
+// ─── Step 6: Contact details ──────────────────────────────────────────────────
 
 function StepContact({
   brand,
@@ -593,6 +655,8 @@ function StepContact({
   phone,
   onNameChange,
   onPhoneChange,
+  website,
+  onWebsiteChange,
   onSubmit,
   isPending,
   error,
@@ -607,6 +671,8 @@ function StepContact({
   phone: string;
   onNameChange: (v: string) => void;
   onPhoneChange: (v: string) => void;
+  website: string;
+  onWebsiteChange: (v: string) => void;
   onSubmit: () => void;
   isPending: boolean;
   error: string | null;
@@ -619,7 +685,7 @@ function StepContact({
     <div className="grid lg:grid-cols-[1fr_300px] gap-10">
       <div>
         <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
-          Step 5 of 5 · Almost there
+          Step 6 of 6 · Almost there
         </p>
         <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-3">
           We&apos;ll call you in <em>15 minutes.</em>
@@ -629,6 +695,18 @@ function StepContact({
         </p>
 
         <div className="flex flex-col gap-4 max-w-sm">
+          {/* Honeypot field — hidden from real users, bots tend to fill every field */}
+          <input
+            type="text"
+            name="website"
+            value={website}
+            onChange={(e) => onWebsiteChange(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            className="absolute left-[-9999px] w-px h-px opacity-0"
+          />
+
           <label className="flex flex-col gap-1.5">
             <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">
               Your name
@@ -695,7 +773,7 @@ function StepContact({
         </p>
 
         <div className="flex items-center gap-2.5 pb-4 border-b border-[var(--color-line)]">
-          <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} size={32} className="rounded-full" />
+          <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} logo_url={brand.logo_url} size={32} className="rounded-full" />
           <div>
             <span className="text-sm font-medium text-[var(--color-ink)] block">{brand.name}</span>
             <span className="text-[12px] text-[var(--color-ink-3)]">{modelLabel}</span>

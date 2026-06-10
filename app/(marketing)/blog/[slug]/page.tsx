@@ -6,6 +6,7 @@ import { getBlogPostBySlug, getAllBlogSlugs } from "@/lib/repairs";
 import { BUSINESS_NAME } from "@/lib/seo/business-info";
 import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { Reveal } from "@/components/motion/reveal";
+import { BlogContent } from "@/components/marketing/blog-content";
 
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
 
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
   const description = post.excerpt ?? post.content.slice(0, 160);
 
   return {
@@ -65,9 +66,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.in";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
   const url = `${base}/blog/${post.slug}`;
-  const paragraphs = post.content.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
   return (
     <>
@@ -116,13 +116,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </div>
           )}
 
-          <div className="flex flex-col gap-4">
-            {paragraphs.map((para, i) => (
-              <p key={i} className="text-[15px] text-[var(--color-ink-2)] leading-relaxed">
-                {para}
-              </p>
-            ))}
-          </div>
+          <BlogContent content={post.content} />
         </article>
         </Reveal>
 

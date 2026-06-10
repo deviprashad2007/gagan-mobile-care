@@ -29,7 +29,18 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
     customerPhone,
     estimatedPriceMin,
     estimatedPriceMax,
+    website,
   } = parsed.data;
+
+  // Honeypot tripped — pretend success so the bot doesn't adapt.
+  if (website) {
+    return {
+      success: true,
+      bookingRef: "GMC-0000",
+      estimatedPriceMin,
+      estimatedPriceMax,
+    };
+  }
 
   const supabase = createServiceClient();
 

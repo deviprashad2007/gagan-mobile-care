@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import type { Brand, Issue, Model } from "@/lib/repairs";
+import type { Brand, Category, Issue, Model } from "@/lib/repairs";
 import { BookingFlow } from "./booking-flow";
 
 const BookingContext = createContext<(() => void) | null>(null);
@@ -17,10 +17,11 @@ interface Props {
   brands: Brand[];
   issues: Issue[];
   models: Model[];
+  categories: Category[];
   children: React.ReactNode;
 }
 
-export function BookingProvider({ brands, issues, models, children }: Props) {
+export function BookingProvider({ brands, issues, models, categories, children }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,6 +33,7 @@ export function BookingProvider({ brands, issues, models, children }: Props) {
             brands={brands}
             issues={issues}
             models={models}
+            categories={categories}
             onClose={() => setOpen(false)}
           />
         )}

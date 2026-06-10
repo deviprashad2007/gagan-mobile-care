@@ -16,6 +16,9 @@ export const bookingSchema = z.object({
     .regex(/^\d{10}$/, "Enter a valid 10-digit mobile number"),
   estimatedPriceMin: z.number().int().min(0),
   estimatedPriceMax: z.number().int().min(0),
+  // Honeypot: a hidden field real users never fill in. Bots that
+  // auto-fill every field will trip this and get silently rejected.
+  website: z.string().max(0).optional(),
 });
 
 export type BookingInput = z.infer<typeof bookingSchema>;
