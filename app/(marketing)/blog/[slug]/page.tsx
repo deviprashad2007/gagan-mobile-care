@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getBlogPostBySlug(slug);
   if (!post) return {};
 
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.com";
   const description = post.excerpt ?? post.content.slice(0, 160);
 
   return {
@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const post = await getBlogPostBySlug(slug);
   if (!post) notFound();
 
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.com";
   const url = `${base}/blog/${post.slug}`;
 
   return (

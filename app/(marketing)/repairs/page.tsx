@@ -6,7 +6,7 @@ import { BreadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { BrandIcon } from "@/components/marketing/brand-icon";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.com";
 
 export const metadata: Metadata = generateRepairsMetadata();
 

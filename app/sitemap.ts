@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllBrandSlugs, getAllBrandIssueSlugs, getBlogPosts } from "@/lib/repairs";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.com";
   const now = new Date();
 
   const [brandSlugs, brandIssueSlugs, blogPosts] = await Promise.all([

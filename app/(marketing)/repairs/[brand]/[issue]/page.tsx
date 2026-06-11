@@ -12,7 +12,7 @@ import { BreadcrumbJsonLd, ServiceJsonLd } from "@/lib/seo/json-ld";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
 import { BookingCta } from "@/components/marketing/booking-cta";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.com";
 
 type Props = { params: Promise<{ brand: string; issue: string }> };
 

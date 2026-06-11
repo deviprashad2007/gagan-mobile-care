@@ -4,7 +4,7 @@ import { Reveal } from "@/components/motion/reveal";
 export const metadata: Metadata = {
   title: "Privacy Policy — Gagan Mobile Hospital",
   description: "Privacy policy for Gagan Mobile Care, compliant with India's Digital Personal Data Protection Act 2023.",
-  alternates: { canonical: "https://gaganmobilehospital.com/privacy" },
+  alternates: { canonical: "https://gaganmobilecare.com/privacy" },
 };
 
 export default function PrivacyPage() {
