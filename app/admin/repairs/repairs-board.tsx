@@ -67,7 +67,7 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
             {items.map((r) => (
               <div
                 key={r.id}
-                className="bg-white border border-[var(--color-line)] rounded-2xl p-4 flex flex-col gap-3"
+                className="card-surface border rounded-2xl p-4 flex flex-col gap-3 transition-colors hover:border-[var(--color-ink-4)]"
               >
                 <div className="flex items-start gap-2.5">
                   <div className="w-7 h-7 rounded-full bg-[var(--color-bg-soft)] flex items-center justify-center text-[10px] font-bold text-[var(--color-ink)] shrink-0">

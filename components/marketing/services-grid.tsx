@@ -85,7 +85,7 @@ export function ServicesGrid() {
         {services.map((service) => (
           <div
             key={service.id}
-            className="bg-white border border-[var(--color-line)] rounded-2xl p-5 flex flex-col hover:border-[var(--color-ink-4)] transition-colors"
+            className="card-surface border rounded-2xl p-5 flex flex-col hover:border-[var(--color-ink-4)] transition-colors"
           >
             <p className="text-base font-semibold text-[var(--color-ink)]">
               {service.name}

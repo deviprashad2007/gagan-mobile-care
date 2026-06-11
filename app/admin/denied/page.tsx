@@ -3,7 +3,7 @@ import { signOut } from "@/lib/actions/sign-out";
 export default function DeniedPage() {
   return (
     <div className="min-h-screen bg-[var(--color-bg-soft)] flex items-center justify-center px-4">
-      <div className="max-w-sm w-full bg-white border border-[var(--color-line)] rounded-2xl p-8 text-center">
+      <div className="max-w-sm w-full card-surface border rounded-2xl p-8 text-center">
         <div className="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="12" cy="12" r="10" />
@@ -18,7 +18,7 @@ export default function DeniedPage() {
         <form action={signOut}>
           <button
             type="submit"
-            className="w-full py-2.5 bg-[var(--color-ink)] text-white text-sm font-medium rounded-xl"
+            className="w-full py-2.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl"
           >
             Sign out
           </button>

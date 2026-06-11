@@ -61,7 +61,7 @@ export function HowItWorks() {
       {/* Two cards */}
       <RevealGroup className="grid lg:grid-cols-2 gap-6">
         {/* Walk-in card */}
-        <RevealItem className="bg-white border border-[var(--color-line)] rounded-2xl p-7 transition-shadow hover:shadow-[var(--shadow-float)]">
+        <RevealItem className="card-surface border rounded-2xl p-7 transition-shadow hover:shadow-[var(--shadow-float)]">
           <p className="font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink-3)] mb-5">
             Walk-in repair · ~90 min
           </p>

@@ -48,8 +48,8 @@ export default async function BookingsPage({ searchParams }: Props) {
             href={s.id === "all" ? "/admin/bookings" : `/admin/bookings?status=${s.id}`}
             className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
               status === s.id
-                ? "bg-[var(--color-ink)] text-white border-[var(--color-ink)]"
-                : "bg-white text-[var(--color-ink-3)] border-[var(--color-line)] hover:border-[var(--color-ink-3)]"
+                ? "bg-[var(--color-ink)] text-[var(--color-bg)] border-[var(--color-ink)]"
+                : "bg-[var(--color-bg-card)] text-[var(--color-ink-3)] border-[var(--color-line)] hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
             }`}
           >
             {s.label}
@@ -59,7 +59,7 @@ export default async function BookingsPage({ searchParams }: Props) {
       </div>
 
       {/* Table */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden">
+      <div className="card-surface border rounded-2xl overflow-hidden">
         {bookings.length === 0 ? (
           <p className="text-center text-sm text-[var(--color-ink-3)] py-16">No bookings found.</p>
         ) : (

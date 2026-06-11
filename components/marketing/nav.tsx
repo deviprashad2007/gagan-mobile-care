@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { buttonVariants } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useOpenBooking } from "./booking-provider";
 import {
   BUSINESS_PHONE,
@@ -33,7 +34,7 @@ export default function Nav() {
   return (
     <>
       <motion.nav
-        className="sticky top-0 z-40 w-full border-b border-line bg-white will-change-transform"
+        className="sticky top-0 z-40 w-full border-b border-line bg-[var(--color-bg)] will-change-transform"
         initial={{ y: -56, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -84,7 +85,7 @@ export default function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-ink-2 hover:text-ink px-3 py-1.5 rounded-full hover:bg-white transition-colors"
+                className="text-sm text-ink-2 hover:text-ink px-3 py-1.5 rounded-full hover:bg-[var(--color-bg)] transition-colors"
               >
                 {link.label}
               </Link>
@@ -99,6 +100,7 @@ export default function Nav() {
             >
               {BUSINESS_PHONE}
             </a>
+            <ThemeToggle className="flex items-center justify-center w-9 h-9 rounded-full border border-line text-ink hover:border-accent transition-colors cursor-pointer" />
             <motion.button
               type="button"
               onClick={openBooking}
@@ -110,27 +112,30 @@ export default function Nav() {
             </motion.button>
           </div>
 
-          {/* Right — mobile hamburger */}
-          <motion.button
-            className="flex md:hidden w-10 h-10 rounded-xl border border-line bg-white items-center justify-center cursor-pointer flex-shrink-0"
-            aria-label={mobOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobOpen}
-            onClick={() => setMobOpen((o) => !o)}
-            whileTap={{ scale: 0.9 }}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={mobOpen ? "close" : "open"}
-                className="text-ink text-lg leading-none select-none"
-                initial={{ opacity: 0, rotate: -45 }}
-                animate={{ opacity: 1, rotate: 0 }}
-                exit={{ opacity: 0, rotate: 45 }}
-                transition={{ duration: 0.15 }}
-              >
-                {mobOpen ? "✕" : "☰"}
-              </motion.span>
-            </AnimatePresence>
-          </motion.button>
+          {/* Right — mobile */}
+          <div className="flex md:hidden items-center gap-2 flex-shrink-0">
+            <ThemeToggle className="flex w-10 h-10 rounded-xl border border-line bg-[var(--color-bg-card)] items-center justify-center cursor-pointer text-ink" />
+            <motion.button
+              className="flex w-10 h-10 rounded-xl border border-line bg-[var(--color-bg-card)] items-center justify-center cursor-pointer"
+              aria-label={mobOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobOpen}
+              onClick={() => setMobOpen((o) => !o)}
+              whileTap={{ scale: 0.9 }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={mobOpen ? "close" : "open"}
+                  className="text-ink text-lg leading-none select-none"
+                  initial={{ opacity: 0, rotate: -45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 45 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  {mobOpen ? "✕" : "☰"}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
+          </div>
         </div>
       </motion.nav>
 

@@ -51,7 +51,7 @@ export default async function BlogIndexPage() {
             <RevealItem key={post.id}>
             <Link
               href={`/blog/${post.slug}`}
-              className="group flex flex-col sm:flex-row gap-4 sm:gap-6 bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden hover:border-[var(--color-ink-4)] transition-colors no-underline text-inherit"
+              className="group flex flex-col sm:flex-row gap-4 sm:gap-6 card-surface border rounded-2xl overflow-hidden hover:border-[var(--color-ink-4)] transition-colors no-underline text-inherit"
             >
               {post.cover_image_url && (
                 <div className="relative w-full sm:w-56 aspect-[2/1] sm:aspect-square shrink-0 overflow-hidden bg-[var(--color-bg-soft)]">

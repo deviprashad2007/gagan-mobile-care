@@ -116,7 +116,7 @@ export default async function RepairPage({ params }: Props) {
                     <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-3">{series}</p>
                     <div className="divide-y divide-[var(--color-line)] border border-[var(--color-line)] rounded-2xl overflow-hidden">
                       {seriesModels.map((model) => (
-                        <div key={model.id} className="flex items-center justify-between px-5 py-4 bg-white">
+                        <div key={model.id} className="flex items-center justify-between px-5 py-4 bg-[var(--color-bg-card)]">
                           <span className="text-[15px] text-[var(--color-ink)]">{model.name}</span>
                           <span className="font-serif text-xl text-[var(--color-ink)] shrink-0 ml-4">
                             {model.price !== null
@@ -146,7 +146,7 @@ export default async function RepairPage({ params }: Props) {
               <p className="text-sm text-[var(--color-ink-3)] mb-6">
                 We&apos;ll confirm the exact price on a quick call before starting any work.
               </p>
-              <BookingCta className="block w-full text-center bg-[var(--color-ink)] text-white rounded-full px-5 py-3 text-sm font-medium hover:opacity-90 transition-opacity mb-3">
+              <BookingCta className="block w-full text-center bg-[var(--color-ink)] text-[var(--color-bg)] rounded-full px-5 py-3 text-sm font-medium hover:opacity-90 transition-opacity mb-3">
                 Book a repair
               </BookingCta>
               <a

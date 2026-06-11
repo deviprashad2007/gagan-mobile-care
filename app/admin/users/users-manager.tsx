@@ -60,7 +60,7 @@ export function UsersManager({ users, ownerEmail }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {/* Add user */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5">
+      <div className="card-surface border rounded-2xl p-5">
         <p className="text-sm font-semibold text-[var(--color-ink)] mb-3">Add user</p>
         <div className="flex gap-2">
           <input
@@ -74,7 +74,7 @@ export function UsersManager({ users, ownerEmail }: Props) {
           <button
             onClick={handleAdd}
             disabled={adding || !newEmail.trim()}
-            className="px-4 py-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-xl disabled:opacity-40"
+            className="px-4 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl disabled:opacity-40"
           >
             {adding ? "Adding…" : "Add"}
           </button>
@@ -87,7 +87,7 @@ export function UsersManager({ users, ownerEmail }: Props) {
       </div>
 
       {/* User list */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden">
+      <div className="card-surface border rounded-2xl overflow-hidden">
         <div className="px-5 py-3 border-b border-[var(--color-line)]">
           <p className="text-sm font-semibold text-[var(--color-ink)]">
             {users.length} user{users.length !== 1 ? "s" : ""} with access
@@ -105,7 +105,7 @@ export function UsersManager({ users, ownerEmail }: Props) {
                   <span
                     className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
                       u.role === "owner"
-                        ? "bg-[var(--color-ink)] text-white"
+                        ? "bg-[var(--color-ink)] text-[var(--color-bg)]"
                         : "bg-[var(--color-bg-soft)] text-[var(--color-ink-3)]"
                     }`}
                   >

@@ -141,7 +141,7 @@ export function TrustBar() {
         {trustItems.map((item) => (
           <div
             key={item.title}
-            className="flex items-start gap-3 p-4 md:p-5 border-r border-b border-[var(--color-line)] last:border-r-0 bg-white text-[var(--color-ink)]"
+            className="flex items-start gap-3 p-4 md:p-5 border-r border-b border-[var(--color-line)] last:border-r-0 bg-[var(--color-bg-card)] text-[var(--color-ink)]"
           >
             <div className="w-8 h-8 rounded-lg bg-[var(--color-bg-soft)] flex items-center justify-center flex-shrink-0 text-[var(--color-ink)]">
               {item.icon}

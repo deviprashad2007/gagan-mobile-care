@@ -37,7 +37,7 @@ export default async function HomePage() {
           <h2 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight text-[var(--color-ink)] mb-6">
             Book your repair now.
           </h2>
-          <BookingCta className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-semibold rounded-full px-7 py-3.5 hover:opacity-90 transition-opacity">
+          <BookingCta className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-semibold rounded-full px-7 py-3.5 hover:opacity-90 transition-opacity">
             Get free quote →
           </BookingCta>
         </section>

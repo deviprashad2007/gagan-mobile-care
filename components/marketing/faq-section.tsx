@@ -64,7 +64,7 @@ export function FaqSection() {
         </Reveal>
 
         {/* Right — accordion */}
-        <Reveal as="div" delay={0.1} className="bg-white border border-[var(--color-line)] rounded-2xl divide-y divide-[var(--color-line)] overflow-hidden">
+        <Reveal as="div" delay={0.1} className="card-surface border rounded-2xl divide-y divide-[var(--color-line)] overflow-hidden">
           {faqs.map((faq, i) => {
             const isOpen = openIndex === i;
             return (

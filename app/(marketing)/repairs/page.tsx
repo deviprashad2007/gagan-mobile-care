@@ -69,7 +69,7 @@ export default async function RepairsPage() {
                 <RevealItem key={brand.id}>
                   <Link
                     href={`/repairs/${brand.slug}`}
-                    className="group flex flex-col items-center gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.04] hover:shadow-[var(--shadow-float)]"
+                    className="group flex flex-col items-center gap-3 card-surface border rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.04] hover:shadow-[var(--shadow-float)]"
                   >
                     <BrandIcon
                       slug={brand.slug}
@@ -99,7 +99,7 @@ export default async function RepairsPage() {
                 <RevealItem key={brand.id}>
                   <Link
                     href={`/repairs/${brand.slug}`}
-                    className="group flex flex-col items-center gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.04] hover:shadow-[var(--shadow-float)]"
+                    className="group flex flex-col items-center gap-3 card-surface border rounded-2xl p-4 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.04] hover:shadow-[var(--shadow-float)]"
                   >
                     <BrandIcon
                       slug={brand.slug}
@@ -126,7 +126,7 @@ export default async function RepairsPage() {
           </div>
           <a
             href="tel:+919814036114"
-            className="inline-flex items-center gap-2 text-sm font-medium bg-[var(--color-ink)] text-white rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity shrink-0"
+            className="inline-flex items-center gap-2 text-sm font-medium bg-[var(--color-ink)] text-[var(--color-bg)] rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity shrink-0"
           >
             Call for a quote
           </a>

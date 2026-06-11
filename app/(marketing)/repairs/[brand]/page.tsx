@@ -76,7 +76,7 @@ export default async function BrandRepairsPage({ params }: Props) {
             <RevealItem key={issue.id}>
             <Link
               href={`/repairs/${brand.slug}/${issue.slug}`}
-              className="group flex flex-col bg-white border border-[var(--color-line)] rounded-2xl p-5 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.02] hover:shadow-[var(--shadow-float)]"
+              className="group flex flex-col card-surface border rounded-2xl p-5 hover:border-[var(--color-ink-4)] transition-all hover:scale-[1.02] hover:shadow-[var(--shadow-float)]"
             >
               <p className="text-base font-semibold text-[var(--color-ink)] group-hover:underline underline-offset-2">
                 {issue.name}

@@ -12,7 +12,7 @@ export function HeroSection() {
         {/* Left column */}
         <RevealGroup className="flex flex-col gap-6">
           {/* Status badge */}
-          <RevealItem className="inline-flex items-center gap-2 self-start px-3 py-1.5 bg-white border border-[var(--color-line)] rounded-full text-sm text-[var(--color-ink-2)]">
+          <RevealItem className="inline-flex items-center gap-2 self-start px-3 py-1.5 card-surface border rounded-full text-sm text-[var(--color-ink-2)]">
             <span className="w-2 h-2 rounded-full bg-[var(--color-success)] animate-pulse flex-shrink-0" />
             Open now · Patiala
           </RevealItem>
@@ -65,7 +65,7 @@ export function HeroSection() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="bg-white px-4 py-4 flex flex-col gap-1"
+                className="card-surface px-4 py-4 flex flex-col gap-1"
               >
                 <span className="font-serif text-2xl leading-none tracking-tight text-[var(--color-ink)]">
                   {stat.value}
@@ -86,7 +86,7 @@ export function HeroSection() {
 
           {/* Card 1 — repair receipt */}
           <FloatCard
-            className="absolute top-8 right-0 w-72 bg-white border border-[var(--color-line)] rounded-2xl p-4 shadow-[var(--shadow-float)]"
+            className="absolute top-8 right-0 w-72 card-surface border rounded-2xl p-4 shadow-[var(--shadow-float)]"
             style={{ transform: "rotate(-2.5deg)" }}
             delay={0}
           >
@@ -115,7 +115,7 @@ export function HeroSection() {
 
           {/* Card 2 — courier tracking */}
           <FloatCard
-            className="absolute top-64 left-4 w-60 bg-white border border-[var(--color-line)] rounded-2xl p-3.5 shadow-[var(--shadow-float)] flex items-center gap-3"
+            className="absolute top-64 left-4 w-60 card-surface border rounded-2xl p-3.5 shadow-[var(--shadow-float)] flex items-center gap-3"
             style={{ transform: "rotate(1.5deg)" }}
             delay={1.2}
           >
@@ -145,7 +145,7 @@ export function HeroSection() {
 
           {/* Card 3 — technician */}
           <FloatCard
-            className="absolute bottom-12 right-6 w-56 bg-white border border-[var(--color-line)] rounded-2xl p-3.5 shadow-[var(--shadow-float)]"
+            className="absolute bottom-12 right-6 w-56 card-surface border rounded-2xl p-3.5 shadow-[var(--shadow-float)]"
             style={{ transform: "rotate(-1deg)" }}
             delay={2.4}
           >

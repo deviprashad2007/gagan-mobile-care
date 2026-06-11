@@ -120,10 +120,10 @@ export function AdminNav({ role }: Props) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-56 flex-col border-r border-[var(--color-line)] bg-white z-40">
+      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-56 flex-col border-r border-[var(--color-line)] bg-[var(--color-bg-card)] z-40">
         <div className="px-5 py-5 border-b border-[var(--color-line)]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--color-ink)] flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 rounded-lg bg-[var(--color-ink)] flex items-center justify-center text-[var(--color-bg)] font-bold text-sm">
               G
             </div>
             <div>
@@ -142,7 +142,7 @@ export function AdminNav({ role }: Props) {
               href={link.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 isActive(link.href)
-                  ? "bg-[var(--color-ink)] text-white"
+                  ? "bg-[var(--color-ink)] text-[var(--color-bg)]"
                   : "text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:bg-[var(--color-bg-soft)]"
               }`}
             >
@@ -158,7 +158,7 @@ export function AdminNav({ role }: Props) {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-line)] z-40 flex">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--color-bg-card)] border-t border-[var(--color-line)] z-40 flex">
         {links.map((link) => (
           <Link
             key={link.href}

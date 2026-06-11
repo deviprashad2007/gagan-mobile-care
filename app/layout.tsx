@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilehospital.com";
@@ -85,10 +86,13 @@ export default function RootLayout({
     <html
       lang="en-IN"
       className={cn(inter.variable, instrumentSerif.variable, jetbrainsMono.variable)}
+      suppressHydrationWarning
     >
       <body className="antialiased">
-        {children}
-        <Analytics />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   );

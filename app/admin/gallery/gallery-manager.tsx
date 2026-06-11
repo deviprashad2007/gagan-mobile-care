@@ -66,7 +66,7 @@ export function GalleryManager({ images }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {/* Upload card */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5">
+      <div className="card-surface border rounded-2xl p-5">
         <p className="text-sm font-semibold text-[var(--color-ink)] mb-4">Add photo</p>
 
         {/* Drop zone */}
@@ -112,13 +112,13 @@ export function GalleryManager({ images }: Props) {
               <button
                 onClick={handleUpload}
                 disabled={uploading}
-                className="flex-1 py-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-xl disabled:opacity-50"
+                className="flex-1 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl disabled:opacity-50"
               >
                 {uploading ? "Uploading…" : "Upload photo"}
               </button>
               <button
                 onClick={() => { setSelectedFile(null); setPreview(null); setCaption(""); if (fileRef.current) fileRef.current.value = ""; }}
-                className="px-4 py-2 border border-[var(--color-line)] rounded-xl text-sm text-[var(--color-ink-3)]"
+                className="px-4 py-2 border border-[var(--color-line)] rounded-xl text-sm text-[var(--color-ink-3)] transition-colors hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
               >
                 Cancel
               </button>
@@ -160,7 +160,7 @@ export function GalleryManager({ images }: Props) {
           ))}
         </div>
       ) : (
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl p-10 flex flex-col items-center gap-2 text-center">
+        <div className="card-surface border rounded-2xl p-10 flex flex-col items-center gap-2 text-center">
           <p className="text-sm font-medium text-[var(--color-ink)]">No photos yet</p>
           <p className="text-xs text-[var(--color-ink-3)]">Upload photos of your shop, repairs, and team above.</p>
         </div>

@@ -11,21 +11,22 @@
   --font-display: var(--font-instrument-serif);
   --font-mono:    var(--font-jetbrains-mono);
 
-  /* Colors — accent (LOCKED: matches Gagan's shop signage, do not change) */
-  --color-accent:      #E63329;
-  --color-accent-soft: #FDE3E1;
+  /* Colors — accent (LOCKED hue: matches Gagan's shop signage, do not change) */
+  --color-accent:      var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-deep: var(--accent-deep);
 
   /* Colors — ink scale */
-  --color-ink:      #0A0A0A;
-  --color-ink-2:    #1A1A1A;
-  --color-ink-3:    #6B6B6B;
-  --color-ink-4:    #A8A8A8;
+  --color-ink:      var(--ink);
+  --color-ink-2:    var(--ink-2);
+  --color-ink-3:    var(--ink-3);
+  --color-ink-4:    var(--ink-4);
 
   /* Colors — backgrounds */
-  --color-bg:       #FFFFFF;
-  --color-bg-card:  #FFFFFF;
-  --color-bg-soft:  #F5F5F5;
-  --color-bg-ink:   #0A0A0A;
+  --color-bg:       var(--bg);
+  --color-bg-card:  var(--bg-card);
+  --color-bg-soft:  var(--bg-soft);
+  --color-bg-ink:   var(--bg-ink);
 
   /* Colors — status */
   --color-success:  #22A06B;
@@ -35,7 +36,7 @@
   --color-wa:       #25D366;
 
   /* Colors — border */
-  --color-line:     #E5E5E5;
+  --color-line:     var(--line);
 
   /* Radii */
   --radius-pill:    999px;
@@ -93,6 +94,7 @@
     color: var(--color-ink);
     font-family: var(--font-body), system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.2s ease, color 0.2s ease;
     @apply bg-background text-foreground;
   }
   * {
@@ -100,6 +102,10 @@
   }
   html {
     @apply font-sans;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
   }
 }
 
@@ -111,27 +117,60 @@
     linear-gradient(90deg, rgba(229,229,229,.5) 1px, transparent 1px);
   background-size: 32px 32px;
 }
+.dark .map-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+}
+
+/* ─── Card surface — frosted glass in dark mode ─────────────────────────────── */
+.card-surface {
+  background-color: var(--color-bg-card);
+  border-color: var(--color-line);
+}
+.dark .card-surface {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+}
 
 :root {
-  /* ── shadcn semantic tokens — reconciled with Gagan Mobile Care brand ─────── */
-  --background:             #FFFFFF;        /* --color-bg */
-  --foreground:             #0A0A0A;        /* --color-ink */
+  /* ── Brand scale tokens — LIGHT theme (white/grays dominant, red accent, ink for contrast) ── */
+  --bg:           #FFFFFF;  /* page background */
+  --bg-soft:      #F5F5F5;  /* soft section background */
+  --bg-card:      #FFFFFF;  /* card surface */
+  --bg-ink:       #0A0A0A;  /* near-black accent panels (footer, dark cards) */
+
+  --ink:          #0A0A0A;  /* primary text */
+  --ink-2:        #1A1A1A;  /* headings / emphasis */
+  --ink-3:        #6B6B6B;  /* muted text */
+  --ink-4:        #A8A8A8;  /* faint text */
+
+  --line:         #E5E5E5;  /* borders */
+
+  --accent:       #E63329;  /* brand red — LOCKED */
+  --accent-soft:  #FDE3E1;  /* pale red tint (badges, hover) */
+  --accent-deep:  #B5241D;  /* darker red (hover/pressed) */
+
+  /* ── shadcn semantic tokens — LIGHT ───────────────────────────────────────── */
+  --background:             #FFFFFF;
+  --foreground:             #0A0A0A;
   --card:                   #FFFFFF;
   --card-foreground:        #0A0A0A;
   --popover:                #FFFFFF;
   --popover-foreground:     #0A0A0A;
   --primary:                #E63329;        /* brand red — LOCKED */
   --primary-foreground:     #FFFFFF;        /* white on red */
-  --secondary:              #F5F5F5;        /* --color-bg-soft */
+  --secondary:              #F5F5F5;
   --secondary-foreground:   #0A0A0A;
   --muted:                  #F5F5F5;
-  --muted-foreground:       #6B6B6B;        /* --color-ink-3 */
-  --accent:                 #FDE3E1;        /* --color-accent-soft (hover tints) */
+  --muted-foreground:       #6B6B6B;
   --accent-foreground:      #E63329;
   --destructive:            #E63329;
-  --border:                 #E5E5E5;        /* --color-line */
+  --border:                 #E5E5E5;
   --input:                  #E5E5E5;
-  --ring:                   #E63329;        /* brand red focus ring */
+  --ring:                   #E63329;
   --chart-1:    oklch(0.87 0 0);
   --chart-2:    oklch(0.556 0 0);
   --chart-3:    oklch(0.439 0 0);
@@ -148,4 +187,54 @@
   --sidebar-ring:           #E63329;
 }
 
-/* No dark mode — this site is light-only */
+/* ── DARK theme — 60% black/charcoal/gray, 30% red shades, 10% white ───────── */
+.dark {
+  /* ── Brand scale tokens ── */
+  --bg:           #0A0A0A;  /* 60% — base black */
+  --bg-soft:      #141414;  /* 60% — soft section, charcoal */
+  --bg-card:      #1A1A1A;  /* 60% — card surface, dark gray */
+  --bg-ink:       #262626;  /* 60% — raised panel, lighter gray */
+
+  --ink:          #F2F2F2;  /* 10% — primary text, near-white */
+  --ink-2:        #FFFFFF;  /* 10% — headings, pure white */
+  --ink-3:        #9A9A9A;  /* 60% — muted gray text */
+  --ink-4:        #6E6E6E;  /* 60% — faint gray text */
+
+  --line:         #2A2A2A;  /* 60% — borders, gray */
+
+  --accent:       #E63329;  /* 30% — brand red, LOCKED hue */
+  --accent-soft:  #3A1512;  /* 30% — deep red tint (badges, hover bg) */
+  --accent-deep:  #FF6B5E;  /* 30% — bright red (hover/links on black) */
+
+  /* ── shadcn semantic tokens — DARK ─────────────────────────────────────────── */
+  --background:             #0A0A0A;
+  --foreground:             #F2F2F2;
+  --card:                   #1A1A1A;
+  --card-foreground:        #F2F2F2;
+  --popover:                #1A1A1A;
+  --popover-foreground:     #F2F2F2;
+  --primary:                #E63329;
+  --primary-foreground:     #FFFFFF;
+  --secondary:              #1A1A1A;
+  --secondary-foreground:   #F2F2F2;
+  --muted:                  #161616;
+  --muted-foreground:       #9A9A9A;
+  --accent-foreground:      #FF6B5E;
+  --destructive:            #E63329;
+  --border:                 #2A2A2A;
+  --input:                  #2A2A2A;
+  --ring:                   #E63329;
+  --chart-1:    oklch(0.87 0 0);
+  --chart-2:    oklch(0.556 0 0);
+  --chart-3:    oklch(0.439 0 0);
+  --chart-4:    oklch(0.371 0 0);
+  --chart-5:    oklch(0.269 0 0);
+  --sidebar:                #141414;
+  --sidebar-foreground:     #F2F2F2;
+  --sidebar-primary:        #E63329;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent:         #3A1512;
+  --sidebar-accent-foreground: #FF6B5E;
+  --sidebar-border:         #2A2A2A;
+  --sidebar-ring:           #E63329;
+}

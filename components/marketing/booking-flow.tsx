@@ -269,7 +269,7 @@ function StepCategory({
           <button
             key={c.id}
             onClick={() => onPick(c)}
-            className="flex flex-col items-center gap-2 p-5 bg-white border border-[var(--color-line)] rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-center"
+            className="flex flex-col items-center gap-2 p-5 card-surface border rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-center"
           >
             <span className="text-3xl">{c.icon}</span>
             <span className="text-sm font-medium text-[var(--color-ink)]">{c.name}</span>
@@ -305,7 +305,7 @@ function StepBrand({
         Which brand made <em>your</em> {category.name.toLowerCase().replace(/s$/, "")}?
       </h2>
 
-      <div className="flex items-center gap-2 bg-white border border-[var(--color-line)] rounded-xl px-4 py-3 mb-6 max-w-xs">
+      <div className="flex items-center gap-2 card-surface border rounded-xl px-4 py-3 mb-6 max-w-xs">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
@@ -327,7 +327,7 @@ function StepBrand({
             <button
               key={b.id}
               onClick={() => onPick(b)}
-              className="flex items-center gap-3 p-3.5 bg-white border border-[var(--color-line)] rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-left"
+              className="flex items-center gap-3 p-3.5 card-surface border rounded-xl hover:border-[var(--color-ink-4)] hover:-translate-y-px transition-all text-left"
             >
               <BrandIcon slug={b.slug} name={b.name} tone={b.tone} glyph={b.glyph} logo_url={b.logo_url} size={36} className="rounded-full" />
               <span className="text-sm font-medium text-[var(--color-ink)]">{b.name}</span>
@@ -375,7 +375,7 @@ function StepModel({
       </h2>
 
       {models.length > 0 && !showCustom && (
-        <div className="flex items-center gap-2 bg-white border border-[var(--color-line)] rounded-xl px-4 py-3 mb-6 max-w-xs">
+        <div className="flex items-center gap-2 card-surface border rounded-xl px-4 py-3 mb-6 max-w-xs">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
@@ -396,11 +396,11 @@ function StepModel({
               <button
                 key={m.id}
                 onClick={() => onPick(m)}
-                className="relative flex flex-col p-3.5 rounded-xl border text-left transition-all"
+                className="relative flex flex-col p-3.5 rounded-xl border text-left transition-all hover:border-[var(--color-ink-4)]"
                 style={{
                   border: `1px solid ${on ? "var(--color-ink)" : "var(--color-line)"}`,
-                  background: on ? "var(--color-ink)" : "#fff",
-                  color: on ? "#fff" : "var(--color-ink)",
+                  background: on ? "var(--color-ink)" : "var(--color-bg-card)",
+                  color: on ? "var(--color-bg)" : "var(--color-ink)",
                 }}
               >
                 <span className="text-sm font-medium">{m.name}</span>
@@ -436,7 +436,7 @@ function StepModel({
             onChange={(e) => onCustomTextChange(e.target.value)}
             placeholder={`e.g. ${brand.name} ...`}
             autoFocus
-            className="px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-white outline-none focus:border-[var(--color-ink)] transition-colors"
+            className="px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-card)] outline-none focus:border-[var(--color-ink)] transition-colors"
           />
         </label>
       ) : (
@@ -455,7 +455,7 @@ function StepModel({
         <button
           onClick={onContinue}
           disabled={!canContinue}
-          className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Continue
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
@@ -498,11 +498,11 @@ function StepIssue({
             <button
               key={issue.id}
               onClick={() => onToggle(issue.id)}
-              className="relative flex flex-col gap-2 p-4 rounded-xl border text-left transition-all"
+              className="relative flex flex-col gap-2 p-4 rounded-xl border text-left transition-all hover:border-[var(--color-ink-4)]"
               style={{
                 border: `1px solid ${on ? "var(--color-ink)" : "var(--color-line)"}`,
-                background: on ? "var(--color-ink)" : "#fff",
-                color: on ? "#fff" : "var(--color-ink)",
+                background: on ? "var(--color-ink)" : "var(--color-bg-card)",
+                color: on ? "var(--color-bg)" : "var(--color-ink)",
               }}
             >
               {issue.is_common && !on && (
@@ -538,7 +538,7 @@ function StepIssue({
         <button
           onClick={onContinue}
           disabled={selected.length === 0}
-          className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full px-5 py-2.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Continue
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
@@ -572,7 +572,7 @@ function StepService({
         {/* Walk in */}
         <button
           onClick={() => onPick("walkin")}
-          className="relative flex flex-col text-left bg-white rounded-2xl overflow-hidden transition-all"
+          className="relative flex flex-col text-left card-surface rounded-2xl overflow-hidden transition-all"
           style={{
             border: `1px solid ${selected === "walkin" ? "var(--color-ink)" : "var(--color-line)"}`,
           }}
@@ -597,7 +597,7 @@ function StepService({
           </div>
           {selected === "walkin" && (
             <span className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[var(--color-ink)] flex items-center justify-center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg)" strokeWidth="3" strokeLinecap="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </span>
@@ -607,7 +607,7 @@ function StepService({
         {/* Send by post */}
         <button
           onClick={() => onPick("post")}
-          className="relative flex flex-col text-left bg-white rounded-2xl overflow-hidden transition-all"
+          className="relative flex flex-col text-left card-surface rounded-2xl overflow-hidden transition-all"
           style={{
             border: `1px solid ${selected === "post" ? "var(--color-ink)" : "var(--color-line)"}`,
           }}
@@ -631,7 +631,7 @@ function StepService({
           </div>
           {selected === "post" && (
             <span className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[var(--color-ink)] flex items-center justify-center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg)" strokeWidth="3" strokeLinecap="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </span>
@@ -715,7 +715,7 @@ function StepContact({
               value={name}
               onChange={(e) => onNameChange(e.target.value)}
               placeholder="e.g. Aarav Sharma"
-              className="px-4 py-3.5 border border-[var(--color-line)] rounded-xl text-sm bg-white outline-none focus:border-[var(--color-ink)] transition-colors"
+              className="px-4 py-3.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-card)] outline-none focus:border-[var(--color-ink)] transition-colors"
             />
           </label>
 
@@ -723,7 +723,7 @@ function StepContact({
             <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">
               Mobile number
             </span>
-            <div className="flex items-stretch border border-[var(--color-line)] rounded-xl bg-white focus-within:border-[var(--color-ink)] transition-colors">
+            <div className="flex items-stretch border border-[var(--color-line)] rounded-xl bg-[var(--color-bg-card)] focus-within:border-[var(--color-ink)] transition-colors">
               <span className="px-3.5 py-3.5 text-sm text-[var(--color-ink-3)] border-r border-[var(--color-line)]">
                 +91
               </span>
@@ -747,7 +747,7 @@ function StepContact({
           <button
             onClick={onSubmit}
             disabled={!canSubmit}
-            className="flex items-center justify-center gap-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-full px-5 py-3.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+            className="flex items-center justify-center gap-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full px-5 py-3.5 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed mt-2"
           >
             {isPending ? (
               "Booking…"
@@ -824,7 +824,7 @@ function ConfirmationScreen({
   return (
     <div className="max-w-xl mx-auto text-center pt-4">
       <div className="w-16 h-16 rounded-full bg-[var(--color-ink)] flex items-center justify-center mx-auto">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-bg)" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
           <polyline points="20 6 9 17 4 12" />
         </svg>
       </div>
@@ -837,13 +837,13 @@ function ConfirmationScreen({
       </p>
 
       <div className="grid grid-cols-2 gap-3 mt-8 text-left">
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl p-4">
+        <div className="card-surface border rounded-2xl p-4">
           <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1">
             Booking ID
           </p>
           <p className="font-mono text-lg text-[var(--color-ink)]">{confirmed.bookingRef}</p>
         </div>
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl p-4">
+        <div className="card-surface border rounded-2xl p-4">
           <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1">
             Estimate
           </p>

@@ -35,7 +35,7 @@ export function BookingStatusForm({ booking }: { booking: Booking }) {
   };
 
   return (
-    <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5 space-y-4">
+    <div className="card-surface border rounded-2xl p-5 space-y-4">
       <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">
         Update status
       </p>
@@ -66,7 +66,7 @@ export function BookingStatusForm({ booking }: { booking: Booking }) {
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           placeholder="Add notes about this booking…"
-          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-white transition-colors resize-none"
+          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors resize-none"
         />
       </div>
 
@@ -85,7 +85,7 @@ export function BookingStatusForm({ booking }: { booking: Booking }) {
       <button
         onClick={handleSave}
         disabled={isPending}
-        className="w-full bg-[var(--color-ink)] text-white text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40"
+        className="w-full bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40"
       >
         {isPending ? "Saving…" : "Save changes"}
       </button>

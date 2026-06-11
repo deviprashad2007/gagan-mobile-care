@@ -138,8 +138,8 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               onClick={() => handleSelectCategory(cat.id)}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm whitespace-nowrap border transition-colors shrink-0 ${
                 activeCategoryId === cat.id
-                  ? "bg-[var(--color-ink)] text-white border-[var(--color-ink)]"
-                  : "bg-white border-[var(--color-line)] text-[var(--color-ink)]"
+                  ? "bg-[var(--color-ink)] text-[var(--color-bg)] border-[var(--color-ink)]"
+                  : "bg-[var(--color-bg-card)] border-[var(--color-line)] text-[var(--color-ink)] hover:border-[var(--color-ink-3)]"
               }`}
             >
               <span>{cat.icon}</span>
@@ -159,7 +159,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
       </div>
 
       {showAddCategory && (
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl p-4 flex flex-col gap-3 max-w-sm">
+        <div className="card-surface border rounded-2xl p-4 flex flex-col gap-3 max-w-sm">
           <p className="text-sm font-medium text-[var(--color-ink)]">Add device type</p>
           <div className="flex gap-2">
             <input
@@ -182,7 +182,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                 className="w-8 h-8 rounded-lg border flex items-center justify-center text-base transition-colors"
                 style={{
                   borderColor: newCategoryIcon === icon ? "var(--color-ink)" : "var(--color-line)",
-                  background: newCategoryIcon === icon ? "var(--color-bg-soft)" : "#fff",
+                  background: newCategoryIcon === icon ? "var(--color-bg-soft)" : "var(--color-bg-card)",
                 }}
               >
                 {icon}
@@ -194,7 +194,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
             <button
               onClick={handleAddCategory}
               disabled={addingCategory || !newCategoryName.trim()}
-              className="flex-1 py-2 bg-[var(--color-ink)] text-white text-sm rounded-xl disabled:opacity-40"
+              className="flex-1 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-xl disabled:opacity-40"
             >
               {addingCategory ? "Adding…" : "Add device type"}
             </button>
@@ -221,7 +221,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
             style={
               selectedBrandId === brand.id
                 ? { background: brand.tone, borderColor: brand.tone, color: "#fff" }
-                : { background: "#fff", borderColor: "var(--color-line)", color: "var(--color-ink)" }
+                : { background: "var(--color-bg-card)", borderColor: "var(--color-line)", color: "var(--color-ink)" }
             }
           >
             <BrandIcon slug={brand.slug} name={brand.name} tone={brand.tone} glyph={brand.glyph} logo_url={brand.logo_url} size={18} className="rounded-md" />
@@ -240,14 +240,14 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
       <div className="flex flex-col md:flex-row gap-4 min-h-0">
 
         {/* Desktop sidebar */}
-        <div className="hidden md:flex md:flex-col w-44 shrink-0 bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden self-start">
+        <div className="hidden md:flex md:flex-col w-44 shrink-0 card-surface border rounded-2xl overflow-hidden self-start">
           {categoryBrands.map((brand) => (
             <button
               key={brand.id}
               onClick={() => { setSelectedBrandId(brand.id); setShowAddModel(false); }}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-left text-sm transition-colors border-b border-[var(--color-line)] ${
                 selectedBrandId === brand.id
-                  ? "bg-[var(--color-ink)] text-white"
+                  ? "bg-[var(--color-ink)] text-[var(--color-bg)]"
                   : "hover:bg-[var(--color-bg-soft)] text-[var(--color-ink)]"
               }`}
             >
@@ -287,7 +287,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                 <button
                   onClick={handleAddBrand}
                   disabled={addingBrand || !newBrandName.trim()}
-                  className="flex-1 py-1.5 bg-[var(--color-ink)] text-white text-xs rounded-lg disabled:opacity-40"
+                  className="flex-1 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
                 >
                   {addingBrand ? "Adding…" : "Add"}
                 </button>
@@ -311,7 +311,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
 
         {/* Add brand modal for mobile */}
         {showAddBrand && (
-          <div className="md:hidden bg-white border border-[var(--color-line)] rounded-2xl p-4 flex flex-col gap-3">
+          <div className="md:hidden card-surface border rounded-2xl p-4 flex flex-col gap-3">
             <p className="text-sm font-medium text-[var(--color-ink)]">Add brand</p>
             <input
               autoFocus
@@ -339,7 +339,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               <button
                 onClick={handleAddBrand}
                 disabled={addingBrand || !newBrandName.trim()}
-                className="flex-1 py-2 bg-[var(--color-ink)] text-white text-sm rounded-xl disabled:opacity-40"
+                className="flex-1 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-xl disabled:opacity-40"
               >
                 {addingBrand ? "Adding…" : "Add brand"}
               </button>
@@ -354,7 +354,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
         )}
 
         {/* ── Price grid ──────────────────────────────────────────────────── */}
-        <div className="flex-1 bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden min-w-0">
+        <div className="flex-1 card-surface border rounded-2xl overflow-hidden min-w-0">
           {!selectedBrand ? (
             <p className="text-center text-sm text-[var(--color-ink-3)] py-16">Select a brand</p>
           ) : (
@@ -390,7 +390,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                       <button
                         onClick={handleAddModel}
                         disabled={addingModel || !newModelName.trim()}
-                        className="px-3 py-1 bg-[var(--color-ink)] text-white text-sm rounded-lg disabled:opacity-40"
+                        className="px-3 py-1 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-lg disabled:opacity-40"
                       >
                         {addingModel ? "…" : "Add"}
                       </button>
@@ -422,7 +422,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-[var(--color-line)]">
-                        <th className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] sticky left-0 z-10 bg-white min-w-[130px]">
+                        <th className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] sticky left-0 z-10 bg-[var(--color-bg-card)] min-w-[130px]">
                           Model
                         </th>
                         {issues.map((issue) => (
@@ -438,7 +438,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                     <tbody className="divide-y divide-[var(--color-line)]">
                       {brandModels.map((model) => (
                         <tr key={model.id} className="group hover:bg-[var(--color-bg-soft)] transition-colors">
-                          <td className="px-4 py-3 font-medium text-[var(--color-ink)] sticky left-0 z-10 bg-white group-hover:bg-[var(--color-bg-soft)] transition-colors whitespace-nowrap">
+                          <td className="px-4 py-3 font-medium text-[var(--color-ink)] sticky left-0 z-10 bg-[var(--color-bg-card)] group-hover:bg-[var(--color-bg-soft)] transition-colors whitespace-nowrap">
                             {model.name}
                             {model.release_year && (
                               <span className="ml-1.5 font-mono text-[10px] text-[var(--color-ink-3)]">

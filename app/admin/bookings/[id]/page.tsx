@@ -44,7 +44,7 @@ export default async function BookingDetailPage({ params }: Props) {
         <div className="flex gap-2 shrink-0">
           <a
             href={`tel:+91${booking.customer_phone}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium bg-[var(--color-ink)] text-white rounded-full px-4 py-2 hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-1.5 text-sm font-medium bg-[var(--color-ink)] text-[var(--color-bg)] rounded-full px-4 py-2 hover:opacity-90 transition-opacity"
           >
             Call
           </a>
@@ -60,7 +60,7 @@ export default async function BookingDetailPage({ params }: Props) {
       </div>
 
       {/* Details card */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5 space-y-4 mb-4">
+      <div className="card-surface border rounded-2xl p-5 space-y-4 mb-4">
         <Row label="Booking ref" value={<span className="font-mono">{booking.booking_ref}</span>} />
         <Row label="Brand" value={booking.brand_name ?? "—"} />
         <Row

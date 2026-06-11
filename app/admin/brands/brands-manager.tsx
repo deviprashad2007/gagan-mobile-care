@@ -103,8 +103,8 @@ export function BrandsManager({ categories, brands }: Props) {
             onClick={() => { setActiveCategoryId(cat.id); setShowAddBrand(false); }}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
               activeCategoryId === cat.id
-                ? "bg-[var(--color-ink)] text-white border-[var(--color-ink)]"
-                : "bg-white text-[var(--color-ink-3)] border-[var(--color-line)] hover:border-[var(--color-ink-3)]"
+                ? "bg-[var(--color-ink)] text-[var(--color-bg)] border-[var(--color-ink)]"
+                : "bg-[var(--color-bg-card)] text-[var(--color-ink-3)] border-[var(--color-line)] hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
             }`}
           >
             <span>{cat.icon}</span>
@@ -117,14 +117,14 @@ export function BrandsManager({ categories, brands }: Props) {
 
         {/* Add category inline */}
         {showAddCategory ? (
-          <div className="flex items-center gap-2 bg-white border border-[var(--color-line)] rounded-2xl px-3 py-2">
+          <div className="flex items-center gap-2 card-surface border rounded-2xl px-3 py-2">
             <div className="flex gap-1.5 flex-wrap">
               {CATEGORY_ICONS.map((ic) => (
                 <button
                   key={ic}
                   onClick={() => setCatIcon(ic)}
                   className={`text-base px-1.5 py-0.5 rounded-lg transition-colors ${
-                    catIcon === ic ? "bg-[var(--color-ink)] text-white" : "hover:bg-[var(--color-bg-soft)]"
+                    catIcon === ic ? "bg-[var(--color-ink)] text-[var(--color-bg)]" : "hover:bg-[var(--color-bg-soft)]"
                   }`}
                 >
                   {ic}
@@ -146,7 +146,7 @@ export function BrandsManager({ categories, brands }: Props) {
             <button
               onClick={handleAddCategory}
               disabled={addingCat || !catName.trim()}
-              className="px-3 py-1.5 bg-[var(--color-ink)] text-white text-xs rounded-lg disabled:opacity-40"
+              className="px-3 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
             >
               {addingCat ? "…" : "Add"}
             </button>
@@ -185,7 +185,7 @@ export function BrandsManager({ categories, brands }: Props) {
               return (
                 <div
                   key={brand.id}
-                  className="flex flex-col items-center gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4"
+                  className="flex flex-col items-center gap-3 card-surface border rounded-2xl p-4 transition-colors hover:border-[var(--color-ink-4)]"
                 >
                   <BrandIcon
                     slug={brand.slug}
@@ -225,7 +225,7 @@ export function BrandsManager({ categories, brands }: Props) {
 
             {/* Add brand card */}
             {showAddBrand ? (
-              <div className="flex flex-col gap-3 bg-white border border-[var(--color-line)] rounded-2xl p-4">
+              <div className="flex flex-col gap-3 card-surface border rounded-2xl p-4">
                 <input
                   autoFocus
                   placeholder="Brand name"
@@ -255,7 +255,7 @@ export function BrandsManager({ categories, brands }: Props) {
                   <button
                     onClick={handleAddBrand}
                     disabled={addingBrand || !brandName.trim()}
-                    className="flex-1 py-1.5 bg-[var(--color-ink)] text-white text-xs rounded-lg disabled:opacity-40"
+                    className="flex-1 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
                   >
                     {addingBrand ? "Adding…" : "Add"}
                   </button>
@@ -268,7 +268,7 @@ export function BrandsManager({ categories, brands }: Props) {
             ) : (
               <button
                 onClick={() => setShowAddBrand(true)}
-                className="flex flex-col items-center justify-center gap-2 bg-white border border-dashed border-[var(--color-line)] rounded-2xl p-4 text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:border-[var(--color-ink-3)] transition-colors min-h-[160px]"
+                className="flex flex-col items-center justify-center gap-2 card-surface border border-dashed rounded-2xl p-4 text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:border-[var(--color-ink-3)] transition-colors min-h-[160px]"
               >
                 <span className="text-3xl font-light leading-none">+</span>
                 <span className="text-sm">Add brand</span>

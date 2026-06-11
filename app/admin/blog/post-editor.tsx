@@ -75,7 +75,7 @@ export function PostEditor({ post }: Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Cover image */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5">
+      <div className="card-surface border rounded-2xl p-5">
         <p className="text-sm font-semibold text-[var(--color-ink)] mb-3">Cover image</p>
         <div
           onClick={() => fileRef.current?.click()}
@@ -108,7 +108,7 @@ export function PostEditor({ post }: Props) {
       </div>
 
       {/* Title */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5">
+      <div className="card-surface border rounded-2xl p-5">
         <label className="text-sm font-semibold text-[var(--color-ink)] mb-2 block">Title</label>
         <input
           type="text"
@@ -120,7 +120,7 @@ export function PostEditor({ post }: Props) {
       </div>
 
       {/* Excerpt */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5">
+      <div className="card-surface border rounded-2xl p-5">
         <label className="text-sm font-semibold text-[var(--color-ink)] mb-2 block">
           Short summary <span className="font-normal text-[var(--color-ink-3)]">(shown in search results & post list)</span>
         </label>
@@ -135,7 +135,7 @@ export function PostEditor({ post }: Props) {
       </div>
 
       {/* Content */}
-      <div className="bg-white border border-[var(--color-line)] rounded-2xl p-5">
+      <div className="card-surface border rounded-2xl p-5">
         <label className="text-sm font-semibold text-[var(--color-ink)] mb-2 block">
           Content <span className="font-normal text-[var(--color-ink-3)]">(leave a blank line between paragraphs)</span>
         </label>
@@ -155,14 +155,14 @@ export function PostEditor({ post }: Props) {
         <button
           onClick={() => handleSave(true)}
           disabled={saving || uploadingCover}
-          className="flex-1 py-3 bg-[var(--color-ink)] text-white text-sm font-medium rounded-xl disabled:opacity-50"
+          className="flex-1 py-3 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl disabled:opacity-50"
         >
           {saving ? "Saving…" : post?.published ? "Save changes" : "Publish post"}
         </button>
         <button
           onClick={() => handleSave(false)}
           disabled={saving || uploadingCover}
-          className="px-5 py-3 border border-[var(--color-line)] text-[var(--color-ink-3)] text-sm font-medium rounded-xl disabled:opacity-50"
+          className="px-5 py-3 border border-[var(--color-line)] text-[var(--color-ink-3)] text-sm font-medium rounded-xl disabled:opacity-50 transition-colors hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
         >
           Save as draft
         </button>

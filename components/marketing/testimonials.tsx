@@ -76,7 +76,7 @@ export function Testimonials() {
         {reviews.map((review) => (
           <RevealItem
             key={review.name}
-            className="bg-white border border-[var(--color-line)] rounded-2xl p-5 flex flex-col transition-shadow hover:shadow-[var(--shadow-float)]"
+            className="card-surface border rounded-2xl p-5 flex flex-col transition-shadow hover:shadow-[var(--shadow-float)]"
           >
             <StarRating count={review.stars} />
             <blockquote className="font-serif italic text-[15px] text-[var(--color-ink-2)] leading-relaxed mt-4 flex-1">

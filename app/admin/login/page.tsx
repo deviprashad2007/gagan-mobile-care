@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo mark */}
         <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[var(--color-ink)] text-white font-bold text-lg mb-4">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[var(--color-ink)] text-[var(--color-bg)] font-bold text-lg mb-4">
             G
           </div>
           <h1 className="font-serif text-3xl tracking-tight text-[var(--color-ink)]">
@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white border border-[var(--color-line)] rounded-2xl p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="card-surface border rounded-2xl p-6 space-y-4">
           <div>
             <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
               Email address
@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
               placeholder="you@example.com"
               required
               autoFocus
-              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-white transition-colors"
+              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
             />
           </div>
 
@@ -68,7 +68,7 @@ export default function AdminLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-white transition-colors"
+              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
             />
           </div>
 
@@ -81,7 +81,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isPending || !email || !password}
-            className="w-full bg-[var(--color-ink)] text-white text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isPending ? "Signing in…" : "Sign in"}
           </button>

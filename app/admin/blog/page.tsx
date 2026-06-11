@@ -26,7 +26,7 @@ export default async function AdminBlogPage() {
         </h1>
         <Link
           href="/admin/blog/new"
-          className="px-4 py-2 bg-[var(--color-ink)] text-white text-sm font-medium rounded-xl"
+          className="px-4 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl"
         >
           + New post
         </Link>

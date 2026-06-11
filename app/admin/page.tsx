@@ -58,7 +58,7 @@ export default async function AdminPage() {
           { label: "Ready to pick up", value: stats.readyRepairs, sub: "Notify customers" },
           { label: "Earned today", value: fmt(stats.todayEarnings), sub: "Picked-up repairs" },
         ].map((s) => (
-          <div key={s.label} className="bg-white border border-[var(--color-line)] rounded-2xl p-4">
+          <div key={s.label} className="card-surface border rounded-2xl p-4 transition-colors hover:border-[var(--color-ink-4)]">
             <p className="text-xs text-[var(--color-ink-3)] mb-1">{s.label}</p>
             <p
               className="font-serif text-3xl leading-none tracking-tight"
@@ -73,7 +73,7 @@ export default async function AdminPage() {
 
       <div className="grid md:grid-cols-2 gap-4">
         {/* New bookings */}
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden">
+        <div className="card-surface border rounded-2xl overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-line)]">
             <h2 className="text-sm font-semibold text-[var(--color-ink)]">New bookings to call</h2>
             <Link href="/admin/bookings" className="text-xs text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors">
@@ -118,7 +118,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Ready for pickup */}
-        <div className="bg-white border border-[var(--color-line)] rounded-2xl overflow-hidden">
+        <div className="card-surface border rounded-2xl overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-line)]">
             <h2 className="text-sm font-semibold text-[var(--color-ink)]">Ready to pick up</h2>
             <Link href="/admin/repairs" className="text-xs text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors">
