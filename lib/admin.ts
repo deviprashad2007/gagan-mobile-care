@@ -55,7 +55,13 @@ export async function getNewBookings(limit = 8) {
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .limit(limit);
-  return data ?? [];
+  const bookings = data ?? [];
+
+  const issueNames = await getIssueNamesMap();
+  return bookings.map((b) => ({
+    ...b,
+    issue_names: b.issue_ids.map((id) => issueNames.get(id)).filter((n): n is string => !!n),
+  }));
 }
 
 export async function getReadyRepairs(limit = 8) {
@@ -70,6 +76,12 @@ export async function getReadyRepairs(limit = 8) {
   return data ?? [];
 }
 
+export async function getIssueNamesMap() {
+  const supabase = await createClient();
+  const { data } = await supabase.from("issues").select("id, name");
+  return new Map((data ?? []).map((i) => [i.id, i.name]));
+}
+
 export async function getBookings(status?: string) {
   const supabase = await createClient();
   let query = supabase
@@ -80,7 +92,13 @@ export async function getBookings(status?: string) {
     .limit(100);
   if (status && status !== "all") query = query.eq("status", status);
   const { data } = await query;
-  return data ?? [];
+  const bookings = data ?? [];
+
+  const issueNames = await getIssueNamesMap();
+  return bookings.map((b) => ({
+    ...b,
+    issue_names: b.issue_ids.map((id) => issueNames.get(id)).filter((n): n is string => !!n),
+  }));
 }
 
 export async function getBookingById(id: string) {
@@ -91,7 +109,13 @@ export async function getBookingById(id: string) {
     .eq("id", id)
     .is("deleted_at", null)
     .single();
-  return data ?? null;
+  if (!data) return null;
+
+  const issueNames = await getIssueNamesMap();
+  return {
+    ...data,
+    issue_names: data.issue_ids.map((id) => issueNames.get(id)).filter((n): n is string => !!n),
+  };
 }
 
 export async function getRepairs() {

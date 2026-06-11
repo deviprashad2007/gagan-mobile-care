@@ -76,6 +76,7 @@ export default async function BookingDetailPage({ params }: Props) {
             </>
           }
         />
+        <Row label="Problem" value={booking.issue_names.length > 0 ? booking.issue_names.join(", ") : "—"} />
         <Row label="Service" value={booking.service_type === "post" ? "📦 Send by post" : "🏪 Walk-in"} />
         <Row
           label="Estimate"

@@ -25,6 +25,7 @@ const BRAND_LINKS = [
 ] as const;
 
 const COMPANY_LINKS = [
+  { label: "Track Order", href: "/track" },
   { label: "About", href: "/about" },
   { label: "Privacy", href: "/privacy" },
   { label: "Contact", href: "/contact" },

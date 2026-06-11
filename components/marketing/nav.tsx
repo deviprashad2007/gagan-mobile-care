@@ -12,12 +12,13 @@ import {
 } from "@/lib/seo/business-info";
 
 const NAV_LINKS = [
-  { label: "How it works", href: "/#how", n: "01" },
-  { label: "Pricing", href: "/#prices", n: "02" },
-  { label: "Gallery", href: "/gallery", n: "03" },
-  { label: "Blog", href: "/blog", n: "04" },
-  { label: "Reviews", href: "/#stories", n: "05" },
+  { label: "Home", href: "/", n: "01" },
+  { label: "How it works", href: "/#how", n: "02" },
+  { label: "Pricing", href: "/#prices", n: "03" },
+  { label: "Gallery", href: "/gallery", n: "04" },
+  { label: "Blog", href: "/blog", n: "05" },
   { label: "FAQ", href: "/#faq", n: "06" },
+  { label: "Track Order", href: "/track", n: "07" },
 ] as const;
 
 export default function Nav() {

@@ -89,6 +89,11 @@ export default async function BookingsPage({ searchParams }: Props) {
                               {[b.brand_name, b.model_text].filter(Boolean).join(" · ")}
                             </p>
                           )}
+                          {b.issue_names.length > 0 && (
+                            <p className="text-[11px] text-[var(--color-ink-3)] mt-0.5">
+                              {b.issue_names.join(", ")}
+                            </p>
+                          )}
                         </Link>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">

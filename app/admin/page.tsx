@@ -93,6 +93,9 @@ export default async function AdminPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-[var(--color-ink)] truncate">{b.customer_name}</p>
                     <p className="text-xs text-[var(--color-ink-3)] truncate font-mono">{b.customer_phone}</p>
+                    {b.issue_names.length > 0 && (
+                      <p className="text-[11px] text-[var(--color-ink-3)] truncate">{b.issue_names.join(", ")}</p>
+                    )}
                   </div>
                   <div className="text-right shrink-0">
                     {b.estimated_price_min && (
