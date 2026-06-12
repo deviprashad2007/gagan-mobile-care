@@ -144,7 +144,7 @@ export default function Nav() {
       <AnimatePresence>
         {mobOpen && (
           <motion.div
-            className="fixed inset-0 z-50 bg-bg-ink flex flex-col p-6"
+            className="fixed inset-0 z-50 bg-bg-ink flex flex-col p-6 overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -183,7 +183,7 @@ export default function Nav() {
                     href={link.href}
                     onClick={() => setMobOpen(false)}
                     className={[
-                      "flex items-baseline justify-between py-5 text-white no-underline",
+                      "flex items-baseline justify-between py-3.5 text-white no-underline",
                       i > 0 ? "border-t border-white/10" : "",
                     ].join(" ")}
                   >
@@ -191,7 +191,7 @@ export default function Nav() {
                       className="leading-tight"
                       style={{
                         fontFamily: "var(--font-display)",
-                        fontSize: 32,
+                        fontSize: 28,
                         letterSpacing: "-0.02em",
                       }}
                     >
