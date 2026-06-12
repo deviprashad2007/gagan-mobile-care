@@ -29,6 +29,7 @@ function timeAgo(iso: string) {
 export function UsersManager({ users, ownerEmail }: Props) {
   const router = useRouter();
   const [newEmail, setNewEmail] = useState("");
+  const [newRole, setNewRole] = useState<"staff" | "owner">("staff");
   const [addError, setAddError] = useState("");
   const [addSuccess, setAddSuccess] = useState("");
   const [adding, setAdding] = useState(false);
@@ -40,11 +41,12 @@ export function UsersManager({ users, ownerEmail }: Props) {
     setAddError("");
     setAddSuccess("");
     setAdding(true);
-    const result = await addAdminUser({ email: newEmail.trim().toLowerCase() });
+    const result = await addAdminUser({ email: newEmail.trim().toLowerCase(), role: newRole });
     setAdding(false);
     if (!result.success) { setAddError(result.error); return; }
     setNewEmail("");
-    setAddSuccess("User added. They can now log in with a magic link.");
+    setNewRole("staff");
+    setAddSuccess("Invite sent. They'll get an email to set their password and sign in.");
     router.refresh();
   };
 
@@ -71,18 +73,27 @@ export function UsersManager({ users, ownerEmail }: Props) {
             onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
             className="flex-1 px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)]"
           />
+          <select
+            value={newRole}
+            onChange={(e) => setNewRole(e.target.value as "staff" | "owner")}
+            className="px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-card)] outline-none focus:border-[var(--color-ink)]"
+          >
+            <option value="staff">Staff</option>
+            <option value="owner">Owner</option>
+          </select>
           <button
             onClick={handleAdd}
             disabled={adding || !newEmail.trim()}
             className="px-4 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl disabled:opacity-40"
           >
-            {adding ? "Adding…" : "Add"}
+            {adding ? "Inviting…" : "Invite"}
           </button>
         </div>
         {addError && <p className="text-xs text-red-500 mt-2">{addError}</p>}
         {addSuccess && <p className="text-xs text-green-600 mt-2">{addSuccess}</p>}
         <p className="text-xs text-[var(--color-ink-3)] mt-2">
-          The user will be able to log in immediately using a magic link sent to their email.
+          Staff can manage bookings, repairs and invoices. Owners can also manage other users.
+          The new user gets an email with a link to set their password.
         </p>
       </div>
 

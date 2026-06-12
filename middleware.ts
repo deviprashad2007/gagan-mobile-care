@@ -53,13 +53,16 @@ export async function middleware(request: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname.startsWith("/admin/login");
   const isDeniedPage = pathname.startsWith("/admin/denied");
+  const isSetPasswordPage = pathname.startsWith("/admin/set-password");
 
   // 1. Unauthenticated hitting admin → login
-  if (isAdminRoute && !isLoginPage && !isDeniedPage && !user) {
+  // (set-password is exempt: invite/recovery links sign the user in client-side via a URL hash,
+  // which the server can't see, so this page must render before that session exists.)
+  if (isAdminRoute && !isLoginPage && !isDeniedPage && !isSetPasswordPage && !user) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
-  if (user && isAdminRoute && !isLoginPage && !isDeniedPage) {
+  if (user && isAdminRoute && !isLoginPage && !isDeniedPage && !isSetPasswordPage) {
     const cached = request.cookies.get(ADMIN_CACHE_COOKIE)?.value;
     let allowed = cached === user.email;
 
