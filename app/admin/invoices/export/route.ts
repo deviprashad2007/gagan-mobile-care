@@ -38,7 +38,7 @@ export async function GET() {
       inv.invoice_number,
       new Date(inv.created_at).toISOString().slice(0, 10),
       inv.customer_name,
-      inv.customer_phone,
+      inv.customer_phone ?? "",
       inv.model_text ?? "",
       itemsSummary,
       String(inv.subtotal),

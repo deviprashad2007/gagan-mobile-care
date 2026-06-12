@@ -2,8 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { Repair } from "@/lib/admin";
+import type { Repair, Invoice } from "@/lib/admin";
 import { createInvoice } from "@/lib/actions/create-invoice";
+import { updateInvoice } from "@/lib/actions/update-invoice";
 import type { InvoiceItem } from "@/lib/validations/invoice";
 
 const PAYMENT_METHODS = [
@@ -17,24 +18,34 @@ function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
 }
 
-export function InvoiceForm({ repair }: { repair: Repair | null }) {
-  const [customerName, setCustomerName] = useState(repair?.customer_name ?? "");
-  const [customerPhone, setCustomerPhone] = useState(repair?.customer_phone ?? "");
-  const [modelText, setModelText] = useState(repair?.model_text ?? "");
+export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoice?: Invoice }) {
+  const isEdit = !!invoice;
+  const [customerName, setCustomerName] = useState(invoice?.customer_name ?? repair?.customer_name ?? "");
+  const [customerPhone, setCustomerPhone] = useState(invoice?.customer_phone ?? repair?.customer_phone ?? "");
+  const [modelText, setModelText] = useState(invoice?.model_text ?? repair?.model_text ?? "");
   const [issueText, setIssueText] = useState(repair?.issue_text ?? "");
   const [partCost, setPartCost] = useState(0);
   const [serviceCost, setServiceCost] = useState(repair?.amount ?? 0);
   const [isPostal, setIsPostal] = useState(repair?.service_type === "post");
   const [repostCost, setRepostCost] = useState(0);
-  const [extraItems, setExtraItems] = useState<InvoiceItem[]>([]);
-  const [discount, setDiscount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState<"cash" | "upi" | "card" | "other">("cash");
-  const [notes, setNotes] = useState("");
+  const [extraItems, setExtraItems] = useState<InvoiceItem[]>(
+    isEdit ? ((invoice!.items as unknown as InvoiceItem[]) ?? []) : []
+  );
+  const [discount, setDiscount] = useState(invoice?.discount ?? 0);
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "upi" | "card" | "other">(
+    (invoice?.payment_method as "cash" | "upi" | "card" | "other") ?? "cash"
+  );
+  const [notes, setNotes] = useState(invoice?.notes ?? "");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const buildItems = (): InvoiceItem[] => {
+    if (isEdit) {
+      const items = extraItems.filter((item) => item.description.trim());
+      if (items.length === 0) items.push({ description: "Item", qty: 1, price: 0 });
+      return items;
+    }
     const items: InvoiceItem[] = [];
     const label = issueText.trim() || "Repair";
     if (partCost > 0) items.push({ description: `${label} – Replacement part`, qty: 1, price: partCost });
@@ -61,6 +72,27 @@ export function InvoiceForm({ repair }: { repair: Repair | null }) {
   const handleSubmit = () => {
     setError(null);
     startTransition(async () => {
+      if (isEdit) {
+        const result = await updateInvoice({
+          id: invoice!.id,
+          data: {
+            customerName,
+            customerPhone,
+            modelText: modelText || undefined,
+            items: buildItems(),
+            discount,
+            paymentMethod,
+            notes: notes || undefined,
+          },
+        });
+        if (!result.success) {
+          setError(result.error);
+          return;
+        }
+        router.push(`/admin/invoices/${invoice!.id}`);
+        return;
+      }
+
       const result = await createInvoice({
         repairId: repair?.id,
         customerName,
@@ -94,10 +126,10 @@ export function InvoiceForm({ repair }: { repair: Repair | null }) {
         </div>
         <div>
           <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
-            Phone
+            Phone (optional)
           </label>
           <input
-            value={customerPhone}
+            value={customerPhone ?? ""}
             onChange={(e) => setCustomerPhone(e.target.value)}
             className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
           />
@@ -109,84 +141,88 @@ export function InvoiceForm({ repair }: { repair: Repair | null }) {
           Model
         </label>
         <input
-          value={modelText}
+          value={modelText ?? ""}
           onChange={(e) => setModelText(e.target.value)}
           placeholder="e.g. iPhone 13"
           className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
         />
       </div>
 
-      <div>
-        <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
-          Issue / problem
-        </label>
-        <input
-          value={issueText}
-          onChange={(e) => setIssueText(e.target.value)}
-          placeholder="e.g. Screen replacement"
-          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
-        />
-      </div>
-
-      {/* Cost breakdown */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
-            Part / replacement cost
-          </label>
-          <input
-            type="number"
-            min={0}
-            value={partCost}
-            onChange={(e) => setPartCost(Number(e.target.value) || 0)}
-            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
-          />
-        </div>
-        <div>
-          <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
-            Repair / service cost
-          </label>
-          <input
-            type="number"
-            min={0}
-            value={serviceCost}
-            onChange={(e) => setServiceCost(Number(e.target.value) || 0)}
-            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
-          />
-        </div>
-      </div>
-
-      {/* Postal repost cost */}
-      <div>
-        <label className="inline-flex items-center gap-2 text-sm text-[var(--color-ink-3)] cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isPostal}
-            onChange={(e) => setIsPostal(e.target.checked)}
-            className="w-4 h-4"
-          />
-          Sent back by post (add return postage cost)
-        </label>
-        {isPostal && (
-          <div className="mt-2">
+      {!isEdit && (
+        <>
+          <div>
             <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
-              Repost / return postage cost
+              Issue / problem
             </label>
             <input
-              type="number"
-              min={0}
-              value={repostCost}
-              onChange={(e) => setRepostCost(Number(e.target.value) || 0)}
-              className="w-full sm:w-1/2 px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+              value={issueText}
+              onChange={(e) => setIssueText(e.target.value)}
+              placeholder="e.g. Screen replacement"
+              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
             />
           </div>
-        )}
-      </div>
 
-      {/* Extra items */}
+          {/* Cost breakdown */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
+                Part / replacement cost
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={partCost}
+                onChange={(e) => setPartCost(Number(e.target.value) || 0)}
+                className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
+                Repair / service cost
+              </label>
+              <input
+                type="number"
+                min={0}
+                value={serviceCost}
+                onChange={(e) => setServiceCost(Number(e.target.value) || 0)}
+                className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+              />
+            </div>
+          </div>
+
+          {/* Postal repost cost */}
+          <div>
+            <label className="inline-flex items-center gap-2 text-sm text-[var(--color-ink-3)] cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isPostal}
+                onChange={(e) => setIsPostal(e.target.checked)}
+                className="w-4 h-4"
+              />
+              Sent back by post (add return postage cost)
+            </label>
+            {isPostal && (
+              <div className="mt-2">
+                <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
+                  Repost / return postage cost
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  value={repostCost}
+                  onChange={(e) => setRepostCost(Number(e.target.value) || 0)}
+                  className="w-full sm:w-1/2 px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Items */}
       <div>
         <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">
-          Other items (optional)
+          {isEdit ? "Items" : "Other items (optional)"}
         </label>
         <div className="space-y-2">
           {extraItems.map((item, i) => (
@@ -273,7 +309,7 @@ export function InvoiceForm({ repair }: { repair: Repair | null }) {
           Notes (optional)
         </label>
         <textarea
-          value={notes}
+          value={notes ?? ""}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
           placeholder="e.g. warranty terms"
@@ -313,10 +349,10 @@ export function InvoiceForm({ repair }: { repair: Repair | null }) {
 
       <button
         onClick={handleSubmit}
-        disabled={isPending || !customerName.trim() || !customerPhone.trim()}
+        disabled={isPending || !customerName.trim()}
         className="w-full bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40"
       >
-        {isPending ? "Creating…" : "Create invoice"}
+        {isPending ? "Saving…" : isEdit ? "Save changes" : "Create invoice"}
       </button>
     </div>
   );

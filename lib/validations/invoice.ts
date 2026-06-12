@@ -9,7 +9,12 @@ export const invoiceItemSchema = z.object({
 export const createInvoiceSchema = z.object({
   repairId: z.string().uuid().optional(),
   customerName: z.string().trim().min(1, "Customer name is required").max(80),
-  customerPhone: z.string().trim().min(10).max(15),
+  customerPhone: z
+    .string()
+    .trim()
+    .max(15)
+    .refine((v) => v === "" || v.length >= 10, "Phone number must be at least 10 digits")
+    .optional(),
   modelText: z.string().trim().max(120).optional(),
   items: z.array(invoiceItemSchema).min(1, "Add at least one item").max(20),
   discount: z.number().int().min(0).default(0),

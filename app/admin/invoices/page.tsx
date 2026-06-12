@@ -67,7 +67,9 @@ export default async function InvoicesPage() {
                     <td className="px-4 py-3">
                       <Link href={`/admin/invoices/${inv.id}`} className="block">
                         <p className="font-medium text-[var(--color-ink)]">{inv.customer_name}</p>
-                        <p className="font-mono text-xs text-[var(--color-ink-3)]">{inv.customer_phone}</p>
+                        {inv.customer_phone && (
+                          <p className="font-mono text-xs text-[var(--color-ink-3)]">{inv.customer_phone}</p>
+                        )}
                       </Link>
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell text-[var(--color-ink-3)]">

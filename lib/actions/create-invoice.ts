@@ -38,7 +38,7 @@ export async function createInvoice(data: unknown): Promise<CreateInvoiceResult>
       invoice_number: ref,
       repair_id: repairId ?? null,
       customer_name: customerName,
-      customer_phone: customerPhone,
+      customer_phone: customerPhone || null,
       model_text: modelText ?? null,
       items,
       subtotal,

@@ -5,6 +5,7 @@ import { getInvoiceById } from "@/lib/admin";
 import { BUSINESS_NAME, BUSINESS_ADDRESS, BUSINESS_PHONE } from "@/lib/seo/business-info";
 import type { InvoiceItem } from "@/lib/validations/invoice";
 import { PrintButton } from "./print-button";
+import { DeleteInvoiceButton } from "./delete-invoice-button";
 
 const PAYMENT_LABELS: Record<string, string> = {
   cash: "Cash",
@@ -44,7 +45,16 @@ export default async function InvoiceDetailPage({ params }: Props) {
           <span>/</span>
           <span className="font-mono text-[var(--color-ink)]">{invoice.invoice_number}</span>
         </nav>
-        <PrintButton />
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/admin/invoices/${invoice.id}/edit`}
+            className="no-print inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--color-line)] text-[var(--color-ink-3)] rounded-full px-4 py-2 hover:text-[var(--color-ink)] transition-colors"
+          >
+            Edit
+          </Link>
+          <DeleteInvoiceButton id={invoice.id} />
+          <PrintButton />
+        </div>
       </div>
 
       <div className="print-area card-surface border rounded-2xl p-6 sm:p-8">
@@ -69,7 +79,9 @@ export default async function InvoiceDetailPage({ params }: Props) {
             Bill to
           </p>
           <p className="text-sm font-medium text-[var(--color-ink)]">{invoice.customer_name}</p>
-          <p className="font-mono text-xs text-[var(--color-ink-3)] mt-0.5">{invoice.customer_phone}</p>
+          {invoice.customer_phone && (
+            <p className="font-mono text-xs text-[var(--color-ink-3)] mt-0.5">{invoice.customer_phone}</p>
+          )}
           {invoice.model_text && (
             <p className="text-xs text-[var(--color-ink-3)] mt-0.5">{invoice.model_text}</p>
           )}

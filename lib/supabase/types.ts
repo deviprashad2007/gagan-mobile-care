@@ -673,7 +673,7 @@ export type Database = {
         Row: {
           created_at: string
           customer_name: string
-          customer_phone: string
+          customer_phone: string | null
           deleted_at: string | null
           discount: number
           id: string
@@ -690,7 +690,7 @@ export type Database = {
         Insert: {
           created_at?: string
           customer_name: string
-          customer_phone: string
+          customer_phone?: string | null
           deleted_at?: string | null
           discount?: number
           id?: string
@@ -707,7 +707,7 @@ export type Database = {
         Update: {
           created_at?: string
           customer_name?: string
-          customer_phone?: string
+          customer_phone?: string | null
           deleted_at?: string | null
           discount?: number
           id?: string
