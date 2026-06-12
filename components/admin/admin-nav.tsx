@@ -54,6 +54,17 @@ const baseLinks = [
     ),
   },
   {
+    href: "/admin/invoices",
+    label: "Invoices",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <path d="M9 13h6" /><path d="M9 17h6" /><path d="M9 9h1" />
+      </svg>
+    ),
+  },
+  {
     href: "/admin/brands",
     label: "Brands",
     icon: (
@@ -120,7 +131,7 @@ export function AdminNav({ role }: Props) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-56 flex-col border-r border-[var(--color-line)] bg-[var(--color-bg-card)] z-40">
+      <aside className="no-print hidden md:flex fixed left-0 top-0 bottom-0 w-56 flex-col border-r border-[var(--color-line)] bg-[var(--color-bg-card)] z-40">
         <div className="px-5 py-5 border-b border-[var(--color-line)]">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[var(--color-ink)] flex items-center justify-center text-[var(--color-bg)] font-bold text-sm">
@@ -158,7 +169,7 @@ export function AdminNav({ role }: Props) {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--color-bg-card)] border-t border-[var(--color-line)] z-40 flex">
+      <nav className="no-print md:hidden fixed bottom-0 left-0 right-0 bg-[var(--color-bg-card)] border-t border-[var(--color-line)] z-40 flex">
         {links.map((link) => (
           <Link
             key={link.href}

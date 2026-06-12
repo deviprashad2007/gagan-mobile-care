@@ -6,6 +6,8 @@ import type { Brand, Category } from "@/lib/repairs";
 import { BrandIcon } from "@/components/marketing/brand-icon";
 import { createCategory } from "@/lib/actions/create-category";
 import { createBrand } from "@/lib/actions/create-brand";
+import { updateBrand } from "@/lib/actions/update-brand";
+import { deleteBrand } from "@/lib/actions/delete-brand";
 import { uploadBrandLogo } from "@/lib/actions/upload-brand-logo";
 
 const BRAND_COLORS = [
@@ -45,6 +47,14 @@ export function BrandsManager({ categories, brands }: Props) {
   const [uploadError, setUploadError] = useState<Record<string, string>>({});
   const [localLogos, setLocalLogos] = useState<Record<string, string>>({});
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
+  // Edit brand state
+  const [editingBrandId, setEditingBrandId] = useState<string | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editTone, setEditTone] = useState(BRAND_COLORS[0]);
+  const [editError, setEditError] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [removingBrandId, setRemovingBrandId] = useState<string | null>(null);
 
   const categoryBrands = brands.filter((b) => b.category_id === activeCategoryId);
   const activeCategory = categories.find((c) => c.id === activeCategoryId);
@@ -89,6 +99,38 @@ export function BrandsManager({ categories, brands }: Props) {
       return;
     }
     setLocalLogos((p) => ({ ...p, [brand.id]: result.url }));
+    startTransition(() => router.refresh());
+  };
+
+  const startEditBrand = (brand: Brand) => {
+    setEditingBrandId(brand.id);
+    setEditName(brand.name);
+    setEditTone(brand.tone);
+    setEditError("");
+  };
+
+  const handleSaveBrand = async (brand: Brand) => {
+    if (!editName.trim()) return;
+    setEditError("");
+    setSavingEdit(true);
+    const result = await updateBrand({
+      id: brand.id,
+      name: editName.trim(),
+      tone: editTone,
+      category_id: brand.category_id ?? undefined,
+    });
+    setSavingEdit(false);
+    if (!result.success) { setEditError(result.error); return; }
+    setEditingBrandId(null);
+    startTransition(() => router.refresh());
+  };
+
+  const handleRemoveBrand = async (brand: Brand) => {
+    if (!window.confirm(`Remove ${brand.name} and all its models? This hides them from the catalog and public site.`)) return;
+    setRemovingBrandId(brand.id);
+    const result = await deleteBrand({ id: brand.id });
+    setRemovingBrandId(null);
+    if (!result.success) { window.alert(result.error); return; }
     startTransition(() => router.refresh());
   };
 
@@ -182,11 +224,77 @@ export function BrandsManager({ categories, brands }: Props) {
               const isUploading = uploading[brand.id];
               const err = uploadError[brand.id];
 
+              const isEditing = editingBrandId === brand.id;
+
+              if (isEditing) {
+                return (
+                  <div
+                    key={brand.id}
+                    className="flex flex-col gap-3 card-surface border rounded-2xl p-4"
+                  >
+                    <input
+                      autoFocus
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSaveBrand(brand);
+                        if (e.key === "Escape") setEditingBrandId(null);
+                      }}
+                      className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                    />
+                    <div className="flex flex-wrap gap-1.5">
+                      {BRAND_COLORS.map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => setEditTone(c)}
+                          className="w-5 h-5 rounded-full border-2 transition-all"
+                          style={{ background: c, borderColor: editTone === c ? "#000" : "transparent" }}
+                        />
+                      ))}
+                    </div>
+                    {editError && <p className="text-[10px] text-red-500">{editError}</p>}
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={() => handleSaveBrand(brand)}
+                        disabled={savingEdit || !editName.trim()}
+                        className="flex-1 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
+                      >
+                        {savingEdit ? "Saving…" : "Save"}
+                      </button>
+                      <button
+                        onClick={() => setEditingBrandId(null)}
+                        className="px-2 py-1.5 border border-[var(--color-line)] text-xs rounded-lg text-[var(--color-ink-3)]"
+                      >✕</button>
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <div
                   key={brand.id}
-                  className="flex flex-col items-center gap-3 card-surface border rounded-2xl p-4 transition-colors hover:border-[var(--color-ink-4)]"
+                  className="group relative flex flex-col items-center gap-3 card-surface border rounded-2xl p-4 transition-colors hover:border-[var(--color-ink-4)]"
                 >
+                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => startEditBrand(brand)}
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors text-xs"
+                      aria-label={`Edit ${brand.name}`}
+                      title={`Edit ${brand.name}`}
+                    >
+                      ✎
+                    </button>
+                    <button
+                      onClick={() => handleRemoveBrand(brand)}
+                      disabled={removingBrandId === brand.id}
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-red-500 transition-colors text-xs disabled:opacity-50"
+                      aria-label={`Remove ${brand.name}`}
+                      title={`Remove ${brand.name}`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+
                   <BrandIcon
                     slug={brand.slug}
                     name={brand.name}

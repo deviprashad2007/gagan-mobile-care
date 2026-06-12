@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import type { Repair } from "@/lib/admin";
 import { updateRepairStatus } from "@/lib/actions/update-repair-status";
 
@@ -102,6 +103,12 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.45 2 2 0 0 1 3.57 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                       </svg>
                     </a>
+                    <Link
+                      href={`/admin/invoices/new?repairId=${r.id}`}
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+                    >
+                      Bill
+                    </Link>
                     {nextCol && (
                       <button
                         onClick={() => advance(r)}

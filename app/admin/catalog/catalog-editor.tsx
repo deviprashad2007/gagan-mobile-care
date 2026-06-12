@@ -7,6 +7,9 @@ import type { Database } from "@/lib/supabase/types";
 import { upsertPrice } from "@/lib/actions/upsert-price";
 import { createBrand } from "@/lib/actions/create-brand";
 import { createModel } from "@/lib/actions/create-model";
+import { deleteModel } from "@/lib/actions/delete-model";
+import { createIssue } from "@/lib/actions/create-issue";
+import { deleteIssue } from "@/lib/actions/delete-issue";
 import { createCategory } from "@/lib/actions/create-category";
 import { BrandIcon } from "@/components/marketing/brand-icon";
 
@@ -55,6 +58,15 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
   const [newModelYear, setNewModelYear] = useState("");
   const [modelError, setModelError] = useState("");
   const [addingModel, setAddingModel] = useState(false);
+  const [removingModelId, setRemovingModelId] = useState<string | null>(null);
+
+  const [showAddIssue, setShowAddIssue] = useState(false);
+  const [newIssueName, setNewIssueName] = useState("");
+  const [newIssueMin, setNewIssueMin] = useState("");
+  const [newIssueMax, setNewIssueMax] = useState("");
+  const [issueError, setIssueError] = useState("");
+  const [addingIssue, setAddingIssue] = useState(false);
+  const [removingIssueId, setRemovingIssueId] = useState<string | null>(null);
 
   const selectedBrand = brands.find((b) => b.id === selectedBrandId);
   const brandModels = models.filter((m) => m.brand_id === selectedBrandId);
@@ -122,6 +134,39 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
     setAddingModel(false);
     if (!result.success) { setModelError(result.error); return; }
     setNewModelName(""); setNewModelYear(""); setShowAddModel(false);
+    router.refresh();
+  };
+
+  const handleRemoveModel = async (model: Model) => {
+    if (!window.confirm(`Remove ${model.name}? This will hide it and its prices from the catalog.`)) return;
+    setRemovingModelId(model.id);
+    const result = await deleteModel({ id: model.id });
+    setRemovingModelId(null);
+    if (!result.success) { window.alert(result.error); return; }
+    router.refresh();
+  };
+
+  const handleAddIssue = async () => {
+    if (!newIssueName.trim()) return;
+    setIssueError("");
+    setAddingIssue(true);
+    const result = await createIssue({
+      name: newIssueName.trim(),
+      rangeMin: parseInt(newIssueMin, 10) || 0,
+      rangeMax: parseInt(newIssueMax, 10) || 0,
+    });
+    setAddingIssue(false);
+    if (!result.success) { setIssueError(result.error); return; }
+    setNewIssueName(""); setNewIssueMin(""); setNewIssueMax(""); setShowAddIssue(false);
+    router.refresh();
+  };
+
+  const handleRemoveIssue = async (issue: Issue) => {
+    if (!window.confirm(`Remove "${issue.name}" as a repair issue? This removes it from every model.`)) return;
+    setRemovingIssueId(issue.id);
+    const result = await deleteIssue({ id: issue.id });
+    setRemovingIssueId(null);
+    if (!result.success) { window.alert(result.error); return; }
     router.refresh();
   };
 
@@ -207,6 +252,81 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
           </div>
         </div>
       )}
+
+      {/* ── Repair issues (shared price columns for every model) ───────────── */}
+      <div className="card-surface border rounded-2xl p-4">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-2">
+          Repair issues &mdash; apply to every model
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {issues.map((issue) => (
+            <span
+              key={issue.id}
+              className="inline-flex items-center gap-1.5 pl-3 pr-1.5 py-1 rounded-full text-sm border border-[var(--color-line)] text-[var(--color-ink)]"
+            >
+              {issue.name}
+              <button
+                onClick={() => handleRemoveIssue(issue)}
+                disabled={removingIssueId === issue.id}
+                className="w-5 h-5 flex items-center justify-center rounded-full text-[var(--color-ink-3)] hover:text-red-500 transition-colors disabled:opacity-50"
+                aria-label={`Remove ${issue.name}`}
+                title={`Remove ${issue.name}`}
+              >
+                ✕
+              </button>
+            </span>
+          ))}
+
+          {showAddIssue ? (
+            <div className="flex flex-wrap items-center gap-2 card-surface border rounded-2xl px-3 py-1.5">
+              <input
+                autoFocus
+                placeholder="Issue name"
+                value={newIssueName}
+                onChange={(e) => setNewIssueName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAddIssue();
+                  if (e.key === "Escape") { setShowAddIssue(false); setIssueError(""); }
+                }}
+                className="w-32 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+              />
+              <input
+                placeholder="Min ₹"
+                value={newIssueMin}
+                onChange={(e) => setNewIssueMin(e.target.value.replace(/\D/g, ""))}
+                className="w-20 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+              />
+              <input
+                placeholder="Max ₹"
+                value={newIssueMax}
+                onChange={(e) => setNewIssueMax(e.target.value.replace(/\D/g, ""))}
+                className="w-20 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+              />
+              <button
+                onClick={handleAddIssue}
+                disabled={addingIssue || !newIssueName.trim()}
+                className="px-3 py-1 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-lg disabled:opacity-40"
+              >
+                {addingIssue ? "…" : "Add"}
+              </button>
+              <button
+                onClick={() => { setShowAddIssue(false); setIssueError(""); setNewIssueName(""); setNewIssueMin(""); setNewIssueMax(""); }}
+                className="px-2 py-1 text-[var(--color-ink-3)] text-sm hover:text-[var(--color-ink)]"
+              >
+                ✕
+              </button>
+              {issueError && <p className="text-xs text-red-500 w-full">{issueError}</p>}
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowAddIssue(true)}
+              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-sm border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+            >
+              + Add issue
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* ── Brand selector ───────────────────────────────────────────────── */}
       {/* Mobile: horizontal scrollable pills | Desktop: vertical sidebar */}
@@ -425,6 +545,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                         <th className="text-left px-4 py-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] sticky left-0 z-10 bg-[var(--color-bg-card)] min-w-[130px]">
                           Model
                         </th>
+                        <th className="w-8" />
                         {issues.map((issue) => (
                           <th
                             key={issue.id}
@@ -445,6 +566,17 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                                 {model.release_year}
                               </span>
                             )}
+                          </td>
+                          <td className="px-1 py-2 text-center">
+                            <button
+                              onClick={() => handleRemoveModel(model)}
+                              disabled={removingModelId === model.id}
+                              className="w-6 h-6 flex items-center justify-center rounded-lg text-[var(--color-ink-3)] opacity-0 group-hover:opacity-100 hover:text-red-500 transition-colors disabled:opacity-50"
+                              aria-label={`Remove ${model.name}`}
+                              title={`Remove ${model.name}`}
+                            >
+                              ✕
+                            </button>
                           </td>
                           {issues.map((issue) => {
                             const price = getPrice(model.id, issue.id);

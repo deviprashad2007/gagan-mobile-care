@@ -3,6 +3,7 @@ import type { Database } from "@/lib/supabase/types";
 
 export type Booking = Database["public"]["Tables"]["bookings"]["Row"];
 export type Repair = Database["public"]["Tables"]["repairs"]["Row"];
+export type Invoice = Database["public"]["Tables"]["invoices"]["Row"];
 
 export async function getAdminStats() {
   const supabase = await createClient();
@@ -127,6 +128,50 @@ export async function getRepairs() {
     .order("intake_at", { ascending: false })
     .limit(200);
   return data ?? [];
+}
+
+export async function getRepairByBookingId(bookingId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("repairs")
+    .select("id, repair_ref, status")
+    .eq("booking_id", bookingId)
+    .is("deleted_at", null)
+    .maybeSingle();
+  return data;
+}
+
+export async function getRepairById(id: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("repairs")
+    .select("*")
+    .eq("id", id)
+    .is("deleted_at", null)
+    .single();
+  return data;
+}
+
+export async function getInvoices() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("invoices")
+    .select("*")
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false })
+    .limit(100);
+  return data ?? [];
+}
+
+export async function getInvoiceById(id: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("invoices")
+    .select("*")
+    .eq("id", id)
+    .is("deleted_at", null)
+    .single();
+  return data;
 }
 
 export async function getCatalog() {

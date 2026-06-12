@@ -238,3 +238,24 @@
   --sidebar-border:         #2A2A2A;
   --sidebar-ring:           #E63329;
 }
+
+/* ─── Print — invoice pages ──────────────────────────────────────────────── */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #FFFFFF !important;
+  }
+  .print-area {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .print-area .card-surface {
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    background: #FFFFFF !important;
+  }
+}

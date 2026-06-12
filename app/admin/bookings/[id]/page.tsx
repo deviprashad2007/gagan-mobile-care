@@ -1,8 +1,9 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getBookingById } from "@/lib/admin";
+import { getBookingById, getRepairByBookingId } from "@/lib/admin";
 import { BookingStatusForm } from "./booking-status-form";
+import { StartRepairButton } from "./start-repair-button";
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
@@ -18,6 +19,8 @@ export default async function BookingDetailPage({ params }: Props) {
   const { id } = await params;
   const booking = await getBookingById(id);
   if (!booking) notFound();
+
+  const repair = booking.status === "booked" ? await getRepairByBookingId(booking.id) : null;
 
   const createdAt = new Date(booking.created_at).toLocaleString("en-IN", {
     day: "numeric", month: "short", year: "numeric",
@@ -93,6 +96,29 @@ export default async function BookingDetailPage({ params }: Props) {
         <Row label="Source" value={booking.source} />
         {booking.notes && <Row label="Notes" value={booking.notes} />}
       </div>
+
+      {/* Repair pipeline */}
+      {booking.status === "booked" && (
+        <div className="card-surface border rounded-2xl p-5 mb-4">
+          {repair ? (
+            <Row
+              label="Repair"
+              value={
+                <Link href="/admin/repairs" className="font-mono text-[var(--color-ink)] hover:underline">
+                  {repair.repair_ref} · {repair.status}
+                </Link>
+              }
+            />
+          ) : (
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm text-[var(--color-ink-3)]">
+                Move this booking into the repair pipeline.
+              </p>
+              <StartRepairButton bookingId={booking.id} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Status update */}
       <BookingStatusForm booking={booking} />

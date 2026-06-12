@@ -599,6 +599,7 @@ export type Database = {
           model_text: string | null
           notes: string | null
           repair_ref: string
+          service_type: string
           status: string
           updated_at: string
         }
@@ -619,6 +620,7 @@ export type Database = {
           model_text?: string | null
           notes?: string | null
           repair_ref: string
+          service_type?: string
           status?: string
           updated_at?: string
         }
@@ -639,6 +641,7 @@ export type Database = {
           model_text?: string | null
           notes?: string | null
           repair_ref?: string
+          service_type?: string
           status?: string
           updated_at?: string
         }
@@ -666,12 +669,75 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          deleted_at: string | null
+          discount: number
+          id: string
+          invoice_number: string
+          items: Json
+          model_text: string | null
+          notes: string | null
+          payment_method: string
+          repair_id: string | null
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          deleted_at?: string | null
+          discount?: number
+          id?: string
+          invoice_number: string
+          items: Json
+          model_text?: string | null
+          notes?: string | null
+          payment_method?: string
+          repair_id?: string | null
+          subtotal: number
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          deleted_at?: string | null
+          discount?: number
+          id?: string
+          invoice_number?: string
+          items?: Json
+          model_text?: string | null
+          notes?: string | null
+          payment_method?: string
+          repair_id?: string | null
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_repair_id_fkey"
+            columns: ["repair_id"]
+            isOneToOne: false
+            referencedRelation: "repairs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       generate_booking_ref: { Args: never; Returns: string }
+      generate_invoice_ref: { Args: never; Returns: string }
       generate_repair_ref: { Args: never; Returns: string }
       is_admin: { Args: never; Returns: boolean }
     }
