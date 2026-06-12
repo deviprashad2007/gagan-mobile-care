@@ -2,6 +2,7 @@
 
 import { bookingSchema } from "@/lib/validations/booking";
 import { createServiceClient } from "@/lib/supabase/service";
+import { sendTrackingEmail } from "@/lib/email/send-tracking-email";
 
 export type BookingResult =
   | {
@@ -27,6 +28,7 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
     serviceType,
     customerName,
     customerPhone,
+    customerEmail,
     estimatedPriceMin,
     estimatedPriceMax,
     website,
@@ -76,6 +78,7 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
     booking_ref: bookingRef,
     customer_name: customerName,
     customer_phone: customerPhone,
+    customer_email: customerEmail || null,
     brand_id: brandId,
     brand_name: brandName,
     model_id: modelId ?? null,
@@ -91,6 +94,10 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
   if (insertError) {
     console.error("createBooking insert error:", insertError);
     return { success: false, error: "Failed to save booking. Please try again." };
+  }
+
+  if (customerEmail) {
+    await sendTrackingEmail(customerEmail, customerName, bookingRef);
   }
 
   return {

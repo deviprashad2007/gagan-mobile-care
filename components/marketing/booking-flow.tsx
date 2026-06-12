@@ -35,6 +35,7 @@ export function BookingFlow({ brands, issues, models, categories, onClose }: Pro
   const [serviceType, setServiceType] = useState<"walkin" | "post" | null>(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [website, setWebsite] = useState(""); // honeypot — must stay empty
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
@@ -75,6 +76,7 @@ export function BookingFlow({ brands, issues, models, categories, onClose }: Pro
         serviceType,
         customerName: name.trim(),
         customerPhone: phone,
+        customerEmail: email.trim() || undefined,
         estimatedPriceMin: estimatedMin,
         estimatedPriceMax: estimatedMax,
         website,
@@ -229,8 +231,10 @@ export function BookingFlow({ brands, issues, models, categories, onClose }: Pro
                   estimatedMax={estimatedMax}
                   name={name}
                   phone={phone}
+                  email={email}
                   onNameChange={setName}
                   onPhoneChange={(v) => setPhone(v.replace(/\D/g, "").slice(0, 10))}
+                  onEmailChange={setEmail}
                   website={website}
                   onWebsiteChange={setWebsite}
                   onSubmit={handleSubmit}
@@ -653,8 +657,10 @@ function StepContact({
   estimatedMax,
   name,
   phone,
+  email,
   onNameChange,
   onPhoneChange,
+  onEmailChange,
   website,
   onWebsiteChange,
   onSubmit,
@@ -669,8 +675,10 @@ function StepContact({
   estimatedMax: number;
   name: string;
   phone: string;
+  email: string;
   onNameChange: (v: string) => void;
   onPhoneChange: (v: string) => void;
+  onEmailChange: (v: string) => void;
   website: string;
   onWebsiteChange: (v: string) => void;
   onSubmit: () => void;
@@ -736,6 +744,19 @@ function StepContact({
                 className="flex-1 px-3.5 py-3.5 text-sm bg-transparent outline-none"
               />
             </div>
+          </label>
+
+          <label className="flex flex-col gap-1.5">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">
+              Email (optional — get your tracking code by email)
+            </span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => onEmailChange(e.target.value)}
+              placeholder="you@example.com"
+              className="px-4 py-3.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-card)] outline-none focus:border-[var(--color-ink)] transition-colors"
+            />
           </label>
 
           {error && (

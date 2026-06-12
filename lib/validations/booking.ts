@@ -14,6 +14,12 @@ export const bookingSchema = z.object({
   customerPhone: z
     .string()
     .regex(/^\d{10}$/, "Enter a valid 10-digit mobile number"),
+  customerEmail: z
+    .string()
+    .trim()
+    .max(120)
+    .refine((v) => v === "" || z.string().email().safeParse(v).success, "Enter a valid email address")
+    .optional(),
   estimatedPriceMin: z.number().int().min(0),
   estimatedPriceMax: z.number().int().min(0),
   // Honeypot: a hidden field real users never fill in. Bots that

@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
-export default function TrackPage() {
+type Props = { searchParams: Promise<{ ref?: string }> };
+
+export default async function TrackPage({ searchParams }: Props) {
+  const { ref } = await searchParams;
+
   return (
     <main className="py-16 px-4 md:px-8 lg:px-12 max-w-3xl mx-auto">
       <Reveal as="div">
@@ -23,7 +27,7 @@ export default function TrackPage() {
           Enter the booking code from your confirmation screen, or the mobile number you booked with.
         </p>
 
-        <TrackStatusForm />
+        <TrackStatusForm initialQuery={ref} />
       </Reveal>
     </main>
   );

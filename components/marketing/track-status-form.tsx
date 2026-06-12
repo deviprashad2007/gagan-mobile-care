@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { trackStatus, type TrackedItem } from "@/lib/actions/track-status";
 
 function fmt(n: number) {
@@ -15,22 +15,21 @@ function fmtDate(iso: string) {
   });
 }
 
-export function TrackStatusForm() {
-  const [query, setQuery] = useState("");
+export function TrackStatusForm({ initialQuery }: { initialQuery?: string } = {}) {
+  const [query, setQuery] = useState(initialQuery ?? "");
   const [website, setWebsite] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [items, setItems] = useState<TrackedItem[] | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim() || loading) return;
+  const runSearch = async (q: string) => {
+    if (!q.trim() || loading) return;
 
     setLoading(true);
     setError("");
     setItems(null);
 
-    const result = await trackStatus({ query: query.trim(), website });
+    const result = await trackStatus({ query: q.trim(), website });
     setLoading(false);
 
     if (!result.success) {
@@ -39,6 +38,18 @@ export function TrackStatusForm() {
     }
     setItems(result.items);
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await runSearch(query);
+  };
+
+  useEffect(() => {
+    if (initialQuery?.trim()) {
+      runSearch(initialQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col gap-6">
