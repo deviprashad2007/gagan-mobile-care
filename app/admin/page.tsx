@@ -58,15 +58,15 @@ export default async function AdminPage() {
           { label: "Ready to pick up", value: stats.readyRepairs, sub: "Notify customers" },
           { label: "Earned today", value: fmt(stats.todayEarnings), sub: "Picked-up repairs" },
         ].map((s) => (
-          <div key={s.label} className="card-surface border rounded-2xl p-4 transition-colors hover:border-[var(--color-ink-4)]">
-            <p className="text-xs text-[var(--color-ink-3)] mb-1">{s.label}</p>
+          <div key={s.label} className="card-surface border rounded-2xl p-4 overflow-hidden transition-colors hover:border-[var(--color-ink-4)]">
+            <p className="text-xs text-[var(--color-ink-3)] mb-1 truncate">{s.label}</p>
             <p
-              className="font-serif text-3xl leading-none tracking-tight"
+              className="font-serif text-2xl md:text-3xl leading-none tracking-tight truncate"
               style={{ color: s.accent && stats.newBookings > 0 ? "var(--color-accent)" : "var(--color-ink)" }}
             >
               {s.value}
             </p>
-            <p className="text-[11px] text-[var(--color-ink-3)] mt-1">{s.sub}</p>
+            <p className="text-[11px] text-[var(--color-ink-3)] mt-1 truncate">{s.sub}</p>
           </div>
         ))}
       </div>

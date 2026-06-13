@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { signOut } from "@/lib/actions/sign-out";
 
 interface Props {
@@ -134,9 +134,14 @@ const ownerLinks = [
 export function AdminNav({ role }: Props) {
   const pathname = usePathname();
   const links = role === "owner" ? [...baseLinks, ...ownerLinks] : baseLinks;
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+
+  const primaryLinks = links.slice(0, 4);
+  const moreLinks = links.slice(4);
+  const isMoreActive = moreLinks.some((link) => isActive(link.href));
 
   return (
     <>
@@ -180,11 +185,11 @@ export function AdminNav({ role }: Props) {
 
       {/* Mobile bottom nav */}
       <nav className="no-print md:hidden fixed bottom-0 left-0 right-0 bg-[var(--color-bg-card)] border-t border-[var(--color-line)] z-40 flex">
-        {links.map((link) => (
+        {primaryLinks.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors ${
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-medium transition-colors ${
               isActive(link.href)
                 ? "text-[var(--color-ink)]"
                 : "text-[var(--color-ink-3)]"
@@ -194,7 +199,69 @@ export function AdminNav({ role }: Props) {
             {link.label}
           </Link>
         ))}
+        <button
+          type="button"
+          onClick={() => setMoreOpen(true)}
+          className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 text-[10px] font-medium transition-colors ${
+            isMoreActive ? "text-[var(--color-ink)]" : "text-[var(--color-ink-3)]"
+          }`}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <circle cx="5" cy="12" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="19" cy="12" r="2" />
+          </svg>
+          More
+        </button>
       </nav>
+
+      {/* Mobile slide-up "More" menu */}
+      <div
+        className={`no-print md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${
+          moreOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="absolute inset-0 bg-black/40" onClick={() => setMoreOpen(false)} aria-hidden="true" />
+        <div
+          className={`absolute bottom-0 left-0 right-0 bg-[var(--color-bg-card)] rounded-t-2xl border-t border-[var(--color-line)] transition-transform duration-300 ${
+            moreOpen ? "translate-y-0" : "translate-y-full"
+          }`}
+        >
+          <div className="px-5 py-4 border-b border-[var(--color-line)] flex items-center justify-between">
+            <p className="text-sm font-semibold text-[var(--color-ink)]">More</p>
+            <button
+              type="button"
+              onClick={() => setMoreOpen(false)}
+              aria-label="Close menu"
+              className="text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div className="p-2 pb-4 max-h-[60vh] overflow-y-auto">
+            {moreLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMoreOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? "bg-[var(--color-ink)] text-[var(--color-bg)]"
+                    : "text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:bg-[var(--color-bg-soft)]"
+                }`}
+              >
+                {link.icon}
+                {link.label}
+              </Link>
+            ))}
+            <div className="px-4 py-3 mt-1 border-t border-[var(--color-line)]">
+              <SignOutButton />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
