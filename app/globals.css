@@ -31,6 +31,10 @@
   /* Colors — status */
   --color-success:  #22A06B;
   --color-info:     #0A66C2;
+  --color-warning:  #D97706;
+
+  /* Colors — admin dashboard surfaces */
+  --color-admin-bg: var(--admin-bg);
 
   /* Colors — brand / third-party */
   --color-wa:       #25D366;
@@ -153,6 +157,8 @@
   --accent-soft:  #FDE3E1;  /* pale red tint (badges, hover) */
   --accent-deep:  #B5241D;  /* darker red (hover/pressed) */
 
+  --admin-bg:     #F6F6F7;  /* admin dashboard page background */
+
   /* ── shadcn semantic tokens — LIGHT ───────────────────────────────────────── */
   --background:             #FFFFFF;
   --foreground:             #0A0A0A;
@@ -205,6 +211,8 @@
   --accent:       #E63329;  /* 30% — brand red, LOCKED hue */
   --accent-soft:  #3A1512;  /* 30% — deep red tint (badges, hover bg) */
   --accent-deep:  #FF6B5E;  /* 30% — bright red (hover/links on black) */
+
+  --admin-bg:     #141414;  /* admin dashboard page background */
 
   /* ── shadcn semantic tokens — DARK ─────────────────────────────────────────── */
   --background:             #0A0A0A;

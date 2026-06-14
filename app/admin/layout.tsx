@@ -10,11 +10,13 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   let role: "owner" | "staff" | null = null;
+  let email: string | null = null;
 
   try {
     const authClient = await createClient();
     const { data: { user } } = await authClient.auth.getUser();
     if (user?.email) {
+      email = user.email;
       const supabase = createServiceClient();
       const { data } = await supabase
         .from("admin_users")
@@ -29,9 +31,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg-soft)]">
-      <AdminNav role={role} />
-      <div className="md:ml-56 pb-20 md:pb-0">
+    <div className="min-h-screen bg-[var(--color-admin-bg)]">
+      <AdminNav role={role} email={email} />
+      <div className="md:ml-60 pb-20 md:pb-0">
         {children}
       </div>
     </div>
