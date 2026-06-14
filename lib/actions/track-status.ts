@@ -1,7 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
 import { trackStatusSchema } from "@/lib/validations/track-status";
 import { createServiceClient } from "@/lib/supabase/service";
+import { rateLimit } from "@/lib/utils/rate-limit";
 
 export interface TrackedItem {
   ref: string;
@@ -44,6 +46,14 @@ export async function trackStatus(data: unknown): Promise<TrackResult> {
   // Honeypot tripped — pretend nothing was found.
   if (website) {
     return { success: false, error: "No booking found. Check your code or phone number and try again." };
+  }
+
+  // Rate limit: max 15 lookups per IP per hour — protects against phone-number
+  // enumeration and keeps DB load bounded under abuse.
+  const hdrs = await headers();
+  const ip = hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() || hdrs.get("x-real-ip") || "unknown";
+  if (!rateLimit(`track:${ip}`, 15, 60 * 60 * 1000)) {
+    return { success: false, error: "Too many lookups. Please wait a while and try again." };
   }
 
   const trimmed = query.trim();

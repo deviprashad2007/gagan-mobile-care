@@ -1,7 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import type { Database } from "@/lib/supabase/types";
-import { createServiceClient } from "@/lib/supabase/service";
 
 function db() {
   return createClient<Database>(
@@ -74,9 +73,7 @@ export const getGalleryImages = unstable_cache(
 
 export const getCategories = unstable_cache(
   async (): Promise<Category[]> => {
-    // Uses the service client because the anon role lacks EXECUTE on is_admin(),
-    // which the categories RLS policy depends on for SELECT.
-    const { data, error } = await createServiceClient()
+    const { data, error } = await db()
       .from("categories")
       .select("*")
       .is("deleted_at", null)
