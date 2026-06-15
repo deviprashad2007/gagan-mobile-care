@@ -4,10 +4,19 @@ import { createClient } from "@/lib/supabase/server";
 import { getBookingById, getRepairByBookingId } from "@/lib/admin";
 import { BookingStatusForm } from "./booking-status-form";
 import { StartRepairButton } from "./start-repair-button";
+import { Avatar } from "@/components/admin/ui/avatar";
+import { StatusPill, type StatusTone } from "@/components/admin/ui/status-pill";
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
 }
+
+const STATUS_LABELS: Record<string, { label: string; tone: StatusTone }> = {
+  new: { label: "New", tone: "accent" },
+  called: { label: "Called", tone: "info" },
+  booked: { label: "Booked", tone: "success" },
+  lost: { label: "Lost", tone: "neutral" },
+};
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -21,6 +30,7 @@ export default async function BookingDetailPage({ params }: Props) {
   if (!booking) notFound();
 
   const repair = booking.status === "booked" ? await getRepairByBookingId(booking.id) : null;
+  const st = STATUS_LABELS[booking.status] ?? STATUS_LABELS.new;
 
   const createdAt = new Date(booking.created_at).toLocaleString("en-IN", {
     day: "numeric", month: "short", year: "numeric",
@@ -30,7 +40,7 @@ export default async function BookingDetailPage({ params }: Props) {
   return (
     <div className="px-4 md:px-8 py-6 max-w-2xl mx-auto">
       <nav className="flex items-center gap-2 text-xs text-[var(--color-ink-3)] mb-5">
-        <Link href="/admin/bookings" className="hover:text-[var(--color-ink)] transition-colors">
+        <Link href="/admin/bookings" className="hover:text-[var(--color-accent)] transition-colors">
           Bookings
         </Link>
         <span>/</span>
@@ -38,16 +48,22 @@ export default async function BookingDetailPage({ params }: Props) {
       </nav>
 
       <div className="flex items-start justify-between gap-4 mb-6">
-        <div>
-          <h1 className="font-serif text-2xl md:text-3xl tracking-tight text-[var(--color-ink)]">
-            {booking.customer_name}
-          </h1>
-          <p className="font-mono text-sm text-[var(--color-ink-3)] mt-0.5">{booking.customer_phone}</p>
+        <div className="flex items-center gap-3">
+          <Avatar name={booking.customer_name} tone={st.tone} size="md" />
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-serif text-2xl md:text-3xl tracking-tight text-[var(--color-ink)]">
+                {booking.customer_name}
+              </h1>
+              <StatusPill label={st.label} tone={st.tone} />
+            </div>
+            <p className="font-mono text-sm text-[var(--color-ink-3)] mt-0.5">{booking.customer_phone}</p>
+          </div>
         </div>
         <div className="flex gap-2 shrink-0">
           <a
             href={`tel:+91${booking.customer_phone}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium bg-[var(--color-ink)] text-[var(--color-bg)] rounded-full px-4 py-2 hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-1.5 text-sm font-medium bg-[var(--color-accent)] text-white rounded-full px-4 py-2 hover:opacity-90 transition-opacity"
           >
             Call
           </a>
@@ -80,7 +96,7 @@ export default async function BookingDetailPage({ params }: Props) {
           }
         />
         <Row label="Problem" value={booking.issue_names.length > 0 ? booking.issue_names.join(", ") : "—"} />
-        <Row label="Service" value={booking.service_type === "post" ? "📦 Send by post" : "🏪 Walk-in"} />
+        <Row label="Service" value={<StatusPill label={booking.service_type === "post" ? "Send by post" : "Walk-in"} tone="neutral" />} />
         <Row
           label="Estimate"
           value={
@@ -104,7 +120,7 @@ export default async function BookingDetailPage({ params }: Props) {
             <Row
               label="Repair"
               value={
-                <Link href="/admin/repairs" className="font-mono text-[var(--color-ink)] hover:underline">
+                <Link href="/admin/repairs" className="font-mono text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors">
                   {repair.repair_ref} · {repair.status}
                 </Link>
               }
