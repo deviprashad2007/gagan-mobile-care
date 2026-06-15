@@ -4,21 +4,26 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import type { Repair } from "@/lib/admin";
 import { updateRepairStatus } from "@/lib/actions/update-repair-status";
+import { Avatar } from "@/components/admin/ui/avatar";
+import type { StatusTone } from "@/components/admin/ui/status-pill";
 
-const STATUSES = [
-  { id: "received", label: "Received", color: "#6B7280" },
-  { id: "working", label: "Working", color: "#2563EB" },
-  { id: "ready", label: "Ready", color: "#16A34A" },
-  { id: "picked", label: "Picked up", color: "#9CA3AF" },
-] as const;
+const STATUSES: { id: string; label: string; tone: StatusTone }[] = [
+  { id: "received", label: "Received", tone: "neutral" },
+  { id: "working", label: "Working", tone: "info" },
+  { id: "ready", label: "Ready", tone: "success" },
+  { id: "picked", label: "Picked up", tone: "neutral" },
+];
 
+const TONE_STYLES: Record<StatusTone, { bg: string; fg: string; dot: string }> = {
+  accent: { bg: "var(--color-accent-soft)", fg: "var(--color-accent)", dot: "var(--color-accent)" },
+  success: { bg: "color-mix(in srgb, var(--color-success) 14%, transparent)", fg: "var(--color-success)", dot: "var(--color-success)" },
+  info: { bg: "color-mix(in srgb, var(--color-info) 14%, transparent)", fg: "var(--color-info)", dot: "var(--color-info)" },
+  warning: { bg: "color-mix(in srgb, var(--color-warning) 14%, transparent)", fg: "var(--color-warning)", dot: "var(--color-warning)" },
+  neutral: { bg: "var(--color-bg-soft)", fg: "var(--color-ink-3)", dot: "var(--color-ink-4)" },
+};
 
 function fmt(n: number) {
   return "₹" + n.toLocaleString("en-IN");
-}
-
-function initials(name: string) {
-  return name.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 }
 
 export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
@@ -49,12 +54,13 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
       {STATUSES.map((col) => {
         const items = repairs.filter((r) => r.status === col.id);
         const nextCol = STATUSES[STATUSES.findIndex((s) => s.id === col.id) + 1];
+        const colTone = TONE_STYLES[col.tone];
 
         return (
           <div key={col.id} className="flex flex-col gap-2">
             {/* Column header */}
             <div className="flex items-center gap-2 px-1 mb-1">
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: col.color }} />
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: colTone.dot }} />
               <span className="text-sm font-semibold text-[var(--color-ink)]">{col.label}</span>
               <span className="font-mono text-xs text-[var(--color-ink-3)]">{items.length}</span>
             </div>
@@ -71,9 +77,7 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
                 className="card-surface border rounded-2xl p-4 flex flex-col gap-3 transition-colors hover:border-[var(--color-ink-4)]"
               >
                 <div className="flex items-start gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-[var(--color-bg-soft)] flex items-center justify-center text-[10px] font-bold text-[var(--color-ink)] shrink-0">
-                    {initials(r.customer_name)}
-                  </div>
+                  <Avatar name={r.customer_name} tone={col.tone} size="sm" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-[var(--color-ink)] truncate">{r.customer_name}</p>
                     <p className="text-xs text-[var(--color-ink-3)] truncate">{r.model_text ?? "—"}</p>
@@ -96,7 +100,7 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
                   <div className="flex items-center gap-1">
                     <a
                       href={`tel:+91${r.customer_phone}`}
-                      className="w-7 h-7 flex items-center justify-center rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+                      className="w-7 h-7 flex items-center justify-center rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
                       aria-label="Call"
                     >
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
@@ -105,7 +109,7 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
                     </a>
                     <Link
                       href={`/admin/invoices/new?repairId=${r.id}`}
-                      className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
                     >
                       Bill
                     </Link>
@@ -114,9 +118,9 @@ export function RepairsBoard({ initialRepairs }: { initialRepairs: Repair[] }) {
                         onClick={() => advance(r)}
                         className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border transition-colors"
                         style={{
-                          borderColor: nextCol.color,
-                          color: nextCol.color,
-                          background: nextCol.color + "12",
+                          borderColor: TONE_STYLES[nextCol.tone].fg,
+                          color: TONE_STYLES[nextCol.tone].fg,
+                          background: TONE_STYLES[nextCol.tone].bg,
                         }}
                       >
                         → {nextCol.label}
