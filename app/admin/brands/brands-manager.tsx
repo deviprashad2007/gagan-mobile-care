@@ -9,6 +9,7 @@ import { createBrand } from "@/lib/actions/create-brand";
 import { updateBrand } from "@/lib/actions/update-brand";
 import { deleteBrand } from "@/lib/actions/delete-brand";
 import { uploadBrandLogo } from "@/lib/actions/upload-brand-logo";
+import { EmptyState } from "@/components/admin/ui/empty-state";
 
 const BRAND_COLORS = [
   "#1a1a1a", "#2563eb", "#16a34a", "#dc2626",
@@ -145,7 +146,7 @@ export function BrandsManager({ categories, brands }: Props) {
             onClick={() => { setActiveCategoryId(cat.id); setShowAddBrand(false); }}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
               activeCategoryId === cat.id
-                ? "bg-[var(--color-ink)] text-[var(--color-bg)] border-[var(--color-ink)]"
+                ? "bg-[var(--color-accent-soft)] text-[var(--color-accent)] border-[var(--color-accent-soft)]"
                 : "bg-[var(--color-bg-card)] text-[var(--color-ink-3)] border-[var(--color-line)] hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
             }`}
           >
@@ -166,7 +167,7 @@ export function BrandsManager({ categories, brands }: Props) {
                   key={ic}
                   onClick={() => setCatIcon(ic)}
                   className={`text-base px-1.5 py-0.5 rounded-lg transition-colors ${
-                    catIcon === ic ? "bg-[var(--color-ink)] text-[var(--color-bg)]" : "hover:bg-[var(--color-bg-soft)]"
+                    catIcon === ic ? "bg-[var(--color-accent-soft)] text-[var(--color-accent)]" : "hover:bg-[var(--color-bg-soft)]"
                   }`}
                 >
                   {ic}
@@ -182,13 +183,13 @@ export function BrandsManager({ categories, brands }: Props) {
                 if (e.key === "Enter") handleAddCategory();
                 if (e.key === "Escape") { setShowAddCategory(false); setCatError(""); }
               }}
-              className="w-36 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+              className="w-36 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
             />
-            {catError && <p className="text-xs text-red-500">{catError}</p>}
+            {catError && <p className="text-xs text-[var(--color-accent)]">{catError}</p>}
             <button
               onClick={handleAddCategory}
               disabled={addingCat || !catName.trim()}
-              className="px-3 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
+              className="px-3 py-1.5 bg-[var(--color-accent)] text-white text-xs rounded-lg disabled:opacity-40"
             >
               {addingCat ? "…" : "Add"}
             </button>
@@ -200,7 +201,7 @@ export function BrandsManager({ categories, brands }: Props) {
         ) : (
           <button
             onClick={() => setShowAddCategory(true)}
-            className="flex items-center gap-1 px-4 py-2 rounded-full text-sm border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+            className="flex items-center gap-1 px-4 py-2 rounded-full text-sm border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
           >
             + Add category
           </button>
@@ -209,7 +210,7 @@ export function BrandsManager({ categories, brands }: Props) {
 
       {/* ── Brand grid ────────────────────────────────────────────────────── */}
       {categories.length === 0 ? (
-        <p className="text-sm text-[var(--color-ink-3)]">Create a category first.</p>
+        <EmptyState title="No categories yet" description="Create a category first to start adding brands." />
       ) : (
         <div>
           <div className="flex items-center justify-between mb-4">
@@ -240,7 +241,7 @@ export function BrandsManager({ categories, brands }: Props) {
                         if (e.key === "Enter") handleSaveBrand(brand);
                         if (e.key === "Escape") setEditingBrandId(null);
                       }}
-                      className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                      className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
                     />
                     <div className="flex flex-wrap gap-1.5">
                       {BRAND_COLORS.map((c) => (
@@ -248,16 +249,16 @@ export function BrandsManager({ categories, brands }: Props) {
                           key={c}
                           onClick={() => setEditTone(c)}
                           className="w-5 h-5 rounded-full border-2 transition-all"
-                          style={{ background: c, borderColor: editTone === c ? "#000" : "transparent" }}
+                          style={{ background: c, borderColor: editTone === c ? "var(--color-accent)" : "transparent" }}
                         />
                       ))}
                     </div>
-                    {editError && <p className="text-[10px] text-red-500">{editError}</p>}
+                    {editError && <p className="text-[10px] text-[var(--color-accent)]">{editError}</p>}
                     <div className="flex gap-1.5">
                       <button
                         onClick={() => handleSaveBrand(brand)}
                         disabled={savingEdit || !editName.trim()}
-                        className="flex-1 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
+                        className="flex-1 py-1.5 bg-[var(--color-accent)] text-white text-xs rounded-lg disabled:opacity-40"
                       >
                         {savingEdit ? "Saving…" : "Save"}
                       </button>
@@ -278,7 +279,7 @@ export function BrandsManager({ categories, brands }: Props) {
                   <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => startEditBrand(brand)}
-                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors text-xs"
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors text-xs"
                       aria-label={`Edit ${brand.name}`}
                       title={`Edit ${brand.name}`}
                     >
@@ -287,7 +288,7 @@ export function BrandsManager({ categories, brands }: Props) {
                     <button
                       onClick={() => handleRemoveBrand(brand)}
                       disabled={removingBrandId === brand.id}
-                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-red-500 transition-colors text-xs disabled:opacity-50"
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-[var(--color-bg-card)] border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors text-xs disabled:opacity-50"
                       aria-label={`Remove ${brand.name}`}
                       title={`Remove ${brand.name}`}
                     >
@@ -307,7 +308,7 @@ export function BrandsManager({ categories, brands }: Props) {
                     {brand.name}
                   </p>
 
-                  {err && <p className="text-[10px] text-red-500 text-center">{err}</p>}
+                  {err && <p className="text-[10px] text-[var(--color-accent)] text-center">{err}</p>}
 
                   <input
                     ref={(el) => { fileInputRefs.current[brand.id] = el; }}
@@ -323,7 +324,7 @@ export function BrandsManager({ categories, brands }: Props) {
                   <button
                     onClick={() => fileInputRefs.current[brand.id]?.click()}
                     disabled={isUploading}
-                    className="w-full text-xs text-center py-1.5 px-3 rounded-xl border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:border-[var(--color-ink-3)] transition-colors disabled:opacity-50"
+                    className="w-full text-xs text-center py-1.5 px-3 rounded-xl border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors disabled:opacity-50"
                   >
                     {isUploading ? "Uploading…" : logoUrl ? "Change logo" : "Upload logo"}
                   </button>
@@ -343,7 +344,7 @@ export function BrandsManager({ categories, brands }: Props) {
                     if (e.key === "Enter") handleAddBrand();
                     if (e.key === "Escape") { setShowAddBrand(false); setBrandError(""); }
                   }}
-                  className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                  className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
                 />
                 <div>
                   <p className="text-[10px] text-[var(--color-ink-3)] mb-1.5">Colour</p>
@@ -353,17 +354,17 @@ export function BrandsManager({ categories, brands }: Props) {
                         key={c}
                         onClick={() => setBrandTone(c)}
                         className="w-5 h-5 rounded-full border-2 transition-all"
-                        style={{ background: c, borderColor: brandTone === c ? "#000" : "transparent" }}
+                        style={{ background: c, borderColor: brandTone === c ? "var(--color-accent)" : "transparent" }}
                       />
                     ))}
                   </div>
                 </div>
-                {brandError && <p className="text-[10px] text-red-500">{brandError}</p>}
+                {brandError && <p className="text-[10px] text-[var(--color-accent)]">{brandError}</p>}
                 <div className="flex gap-1.5">
                   <button
                     onClick={handleAddBrand}
                     disabled={addingBrand || !brandName.trim()}
-                    className="flex-1 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
+                    className="flex-1 py-1.5 bg-[var(--color-accent)] text-white text-xs rounded-lg disabled:opacity-40"
                   >
                     {addingBrand ? "Adding…" : "Add"}
                   </button>
@@ -376,7 +377,7 @@ export function BrandsManager({ categories, brands }: Props) {
             ) : (
               <button
                 onClick={() => setShowAddBrand(true)}
-                className="flex flex-col items-center justify-center gap-2 card-surface border border-dashed rounded-2xl p-4 text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:border-[var(--color-ink-3)] transition-colors min-h-[160px]"
+                className="flex flex-col items-center justify-center gap-2 card-surface border border-dashed rounded-2xl p-4 text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors min-h-[160px]"
               >
                 <span className="text-3xl font-light leading-none">+</span>
                 <span className="text-sm">Add brand</span>

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import type { Brand, Category } from "@/lib/repairs";
 import { BrandsManager } from "./brands-manager";
+import { PageHeader } from "@/components/admin/ui/page-header";
 
 export default async function BrandsPage() {
   const supabase = await createClient();
@@ -17,12 +18,7 @@ export default async function BrandsPage() {
 
   return (
     <div className="px-4 md:px-8 py-6 max-w-5xl mx-auto">
-      <h1 className="font-serif text-2xl md:text-3xl tracking-tight text-[var(--color-ink)] mb-1">
-        Brands & Categories
-      </h1>
-      <p className="text-sm text-[var(--color-ink-3)] mb-6">
-        Manage device categories, brands, and upload logos.
-      </p>
+      <PageHeader title="Brands & Categories" subtitle="Manage device categories, brands, and upload logos." />
       <BrandsManager
         categories={(categories ?? []) as Category[]}
         brands={(brands ?? []) as Brand[]}

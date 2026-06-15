@@ -6,6 +6,8 @@ import Image from "next/image";
 import { uploadGalleryImage } from "@/lib/actions/upload-gallery-image";
 import { deleteGalleryImage } from "@/lib/actions/delete-gallery-image";
 import type { GalleryImage } from "@/lib/repairs";
+import { EmptyState } from "@/components/admin/ui/empty-state";
+import { InlineAlert } from "@/components/admin/ui/inline-alert";
 
 interface Props {
   images: GalleryImage[];
@@ -72,7 +74,7 @@ export function GalleryManager({ images }: Props) {
         {/* Drop zone */}
         <div
           onClick={() => fileRef.current?.click()}
-          className="relative border-2 border-dashed border-[var(--color-line)] rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[var(--color-ink)] transition-colors"
+          className="relative border-2 border-dashed border-[var(--color-line)] rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[var(--color-accent)] transition-colors"
           style={{ minHeight: preview ? "auto" : 160 }}
         >
           {preview ? (
@@ -106,13 +108,13 @@ export function GalleryManager({ images }: Props) {
               placeholder="Caption (optional)"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)]"
+              className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-accent)]"
             />
             <div className="flex gap-2">
               <button
                 onClick={handleUpload}
                 disabled={uploading}
-                className="flex-1 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl disabled:opacity-50"
+                className="flex-1 py-2 bg-[var(--color-accent)] text-white text-sm font-medium rounded-xl disabled:opacity-50"
               >
                 {uploading ? "Uploading…" : "Upload photo"}
               </button>
@@ -127,7 +129,9 @@ export function GalleryManager({ images }: Props) {
         )}
 
         {uploadError && (
-          <p className="text-xs text-red-500 mt-2">{uploadError}</p>
+          <div className="mt-2">
+            <InlineAlert tone="error" message={uploadError} />
+          </div>
         )}
       </div>
 
@@ -160,10 +164,7 @@ export function GalleryManager({ images }: Props) {
           ))}
         </div>
       ) : (
-        <div className="card-surface border rounded-2xl p-10 flex flex-col items-center gap-2 text-center">
-          <p className="text-sm font-medium text-[var(--color-ink)]">No photos yet</p>
-          <p className="text-xs text-[var(--color-ink-3)]">Upload photos of your shop, repairs, and team above.</p>
-        </div>
+        <EmptyState title="No photos yet" description="Upload photos of your shop, repairs, and team above." />
       )}
     </div>
   );
