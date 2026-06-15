@@ -108,9 +108,11 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
     if (isNaN(price) || price < 0) { setEditingCell(null); return; }
     setSaving(true);
     startTransition(async () => {
-      await upsertPrice({ modelId: editingCell.modelId, issueId: editingCell.issueId, price });
+      const result = await upsertPrice({ modelId: editingCell.modelId, issueId: editingCell.issueId, price });
       setSaving(false);
       setEditingCell(null);
+      if (!result.success) { window.alert(result.error); return; }
+      router.refresh();
     });
   };
 
