@@ -1,17 +1,19 @@
 import { Resend } from "resend";
 import { BUSINESS_NAME } from "@/lib/seo/business-info";
 
-export async function sendAdminInviteEmail(to: string, actionLink: string, role: "owner" | "staff") {
+export type SendAdminInviteEmailResult = { success: true } | { success: false; error: string };
+
+export async function sendAdminInviteEmail(to: string, actionLink: string, role: "owner" | "staff"): Promise<SendAdminInviteEmailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.warn("sendAdminInviteEmail: RESEND_API_KEY not set, skipping email send");
-    return;
+    return { success: false, error: "Email service is not configured." };
   }
 
   const resend = new Resend(apiKey);
 
   try {
-    await resend.emails.send({
+    const result = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL ?? "Gagan Mobile Care <onboarding@resend.dev>",
       to,
       subject: `You've been added to the ${BUSINESS_NAME} admin dashboard`,
@@ -31,7 +33,14 @@ export async function sendAdminInviteEmail(to: string, actionLink: string, role:
         </div>
       `,
     });
+
+    if (result.error) {
+      console.error("sendAdminInviteEmail: failed to send", result.error);
+      return { success: false, error: "Failed to send the invite email." };
+    }
+    return { success: true };
   } catch (err) {
     console.error("sendAdminInviteEmail: failed to send", err);
+    return { success: false, error: "Failed to send the invite email." };
   }
 }

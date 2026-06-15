@@ -11,7 +11,9 @@ const schema = z.object({
   role: z.enum(["owner", "staff"]),
 });
 
-export type AddAdminUserResult = { success: true } | { success: false; error: string };
+export type AddAdminUserResult =
+  | { success: true; emailSent: boolean }
+  | { success: false; error: string };
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gaganmobilecare.com";
 
@@ -67,8 +69,8 @@ export async function addAdminUser(data: unknown): Promise<AddAdminUserResult> {
     return { success: false, error: "Failed to add user." };
   }
 
-  await sendAdminInviteEmail(email, link.data.properties.action_link, role);
+  const emailResult = await sendAdminInviteEmail(email, link.data.properties.action_link, role);
 
   revalidatePath("/admin/users");
-  return { success: true };
+  return { success: true, emailSent: emailResult.success };
 }
