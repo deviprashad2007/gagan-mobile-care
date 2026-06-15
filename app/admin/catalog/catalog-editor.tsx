@@ -12,6 +12,7 @@ import { createIssue } from "@/lib/actions/create-issue";
 import { deleteIssue } from "@/lib/actions/delete-issue";
 import { createCategory } from "@/lib/actions/create-category";
 import { BrandIcon } from "@/components/marketing/brand-icon";
+import { EmptyState } from "@/components/admin/ui/empty-state";
 
 type Model = Database["public"]["Tables"]["models"]["Row"];
 type Price = Database["public"]["Tables"]["prices"]["Row"];
@@ -183,7 +184,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               onClick={() => handleSelectCategory(cat.id)}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm whitespace-nowrap border transition-colors shrink-0 ${
                 activeCategoryId === cat.id
-                  ? "bg-[var(--color-ink)] text-[var(--color-bg)] border-[var(--color-ink)]"
+                  ? "bg-[var(--color-accent-soft)] text-[var(--color-accent)] border-[var(--color-accent-soft)]"
                   : "bg-[var(--color-bg-card)] border-[var(--color-line)] text-[var(--color-ink)] hover:border-[var(--color-ink-3)]"
               }`}
             >
@@ -197,7 +198,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
         })}
         <button
           onClick={() => setShowAddCategory((v) => !v)}
-          className="flex items-center gap-1 px-3.5 py-2 rounded-full text-sm whitespace-nowrap border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] shrink-0"
+          className="flex items-center gap-1 px-3.5 py-2 rounded-full text-sm whitespace-nowrap border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors shrink-0"
         >
           + Add device
         </button>
@@ -216,7 +217,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                 if (e.key === "Enter") handleAddCategory();
                 if (e.key === "Escape") { setShowAddCategory(false); setCategoryError(""); }
               }}
-              className="flex-1 px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)]"
+              className="flex-1 px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-accent)]"
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -226,20 +227,20 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                 onClick={() => setNewCategoryIcon(icon)}
                 className="w-8 h-8 rounded-lg border flex items-center justify-center text-base transition-colors"
                 style={{
-                  borderColor: newCategoryIcon === icon ? "var(--color-ink)" : "var(--color-line)",
-                  background: newCategoryIcon === icon ? "var(--color-bg-soft)" : "var(--color-bg-card)",
+                  borderColor: newCategoryIcon === icon ? "var(--color-accent)" : "var(--color-line)",
+                  background: newCategoryIcon === icon ? "var(--color-accent-soft)" : "var(--color-bg-card)",
                 }}
               >
                 {icon}
               </button>
             ))}
           </div>
-          {categoryError && <p className="text-xs text-red-500">{categoryError}</p>}
+          {categoryError && <p className="text-xs text-[var(--color-accent)]">{categoryError}</p>}
           <div className="flex gap-2">
             <button
               onClick={handleAddCategory}
               disabled={addingCategory || !newCategoryName.trim()}
-              className="flex-1 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-xl disabled:opacity-40"
+              className="flex-1 py-2 bg-[var(--color-accent)] text-white text-sm rounded-xl disabled:opacity-40"
             >
               {addingCategory ? "Adding…" : "Add device type"}
             </button>
@@ -268,7 +269,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               <button
                 onClick={() => handleRemoveIssue(issue)}
                 disabled={removingIssueId === issue.id}
-                className="w-5 h-5 flex items-center justify-center rounded-full text-[var(--color-ink-3)] hover:text-red-500 transition-colors disabled:opacity-50"
+                className="w-5 h-5 flex items-center justify-center rounded-full text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors disabled:opacity-50"
                 aria-label={`Remove ${issue.name}`}
                 title={`Remove ${issue.name}`}
               >
@@ -288,24 +289,24 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                   if (e.key === "Enter") handleAddIssue();
                   if (e.key === "Escape") { setShowAddIssue(false); setIssueError(""); }
                 }}
-                className="w-32 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                className="w-32 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
               />
               <input
                 placeholder="Min ₹"
                 value={newIssueMin}
                 onChange={(e) => setNewIssueMin(e.target.value.replace(/\D/g, ""))}
-                className="w-20 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                className="w-20 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
               />
               <input
                 placeholder="Max ₹"
                 value={newIssueMax}
                 onChange={(e) => setNewIssueMax(e.target.value.replace(/\D/g, ""))}
-                className="w-20 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                className="w-20 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
               />
               <button
                 onClick={handleAddIssue}
                 disabled={addingIssue || !newIssueName.trim()}
-                className="px-3 py-1 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-lg disabled:opacity-40"
+                className="px-3 py-1 bg-[var(--color-accent)] text-white text-sm rounded-lg disabled:opacity-40"
               >
                 {addingIssue ? "…" : "Add"}
               </button>
@@ -315,12 +316,12 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               >
                 ✕
               </button>
-              {issueError && <p className="text-xs text-red-500 w-full">{issueError}</p>}
+              {issueError && <p className="text-xs text-[var(--color-accent)] w-full">{issueError}</p>}
             </div>
           ) : (
             <button
               onClick={() => setShowAddIssue(true)}
-              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-sm border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+              className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-sm border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
             >
               + Add issue
             </button>
@@ -350,7 +351,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
         ))}
         <button
           onClick={() => setShowAddBrand(true)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm whitespace-nowrap border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] shrink-0"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-full text-sm whitespace-nowrap border border-dashed border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors shrink-0"
         >
           + Add
         </button>
@@ -367,7 +368,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               onClick={() => { setSelectedBrandId(brand.id); setShowAddModel(false); }}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-left text-sm transition-colors border-b border-[var(--color-line)] ${
                 selectedBrandId === brand.id
-                  ? "bg-[var(--color-ink)] text-[var(--color-bg)]"
+                  ? "bg-[var(--color-accent-soft)] text-[var(--color-accent)]"
                   : "hover:bg-[var(--color-bg-soft)] text-[var(--color-ink)]"
               }`}
             >
@@ -390,7 +391,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                   if (e.key === "Enter") handleAddBrand();
                   if (e.key === "Escape") { setShowAddBrand(false); setBrandError(""); }
                 }}
-                className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-xs outline-none focus:border-[var(--color-ink)]"
+                className="w-full px-2 py-1.5 border border-[var(--color-line)] rounded-lg text-xs outline-none focus:border-[var(--color-accent)]"
               />
               <div className="flex flex-wrap gap-1.5">
                 {BRAND_COLORS.map((c) => (
@@ -402,12 +403,12 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                   />
                 ))}
               </div>
-              {brandError && <p className="text-[10px] text-red-500">{brandError}</p>}
+              {brandError && <p className="text-[10px] text-[var(--color-accent)]">{brandError}</p>}
               <div className="flex gap-1.5">
                 <button
                   onClick={handleAddBrand}
                   disabled={addingBrand || !newBrandName.trim()}
-                  className="flex-1 py-1.5 bg-[var(--color-ink)] text-[var(--color-bg)] text-xs rounded-lg disabled:opacity-40"
+                  className="flex-1 py-1.5 bg-[var(--color-accent)] text-white text-xs rounded-lg disabled:opacity-40"
                 >
                   {addingBrand ? "Adding…" : "Add"}
                 </button>
@@ -422,7 +423,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
           ) : (
             <button
               onClick={() => setShowAddBrand(true)}
-              className="w-full flex items-center gap-1.5 px-3 py-2.5 text-xs text-[var(--color-ink-3)] hover:text-[var(--color-ink)] hover:bg-[var(--color-bg-soft)] transition-colors border-t border-[var(--color-line)]"
+              className="w-full flex items-center gap-1.5 px-3 py-2.5 text-xs text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-soft)] transition-colors border-t border-[var(--color-line)]"
             >
               <span className="text-base leading-none font-light">+</span> Add brand
             </button>
@@ -442,7 +443,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                 if (e.key === "Enter") handleAddBrand();
                 if (e.key === "Escape") { setShowAddBrand(false); setBrandError(""); }
               }}
-              className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)]"
+              className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-accent)]"
             />
             <div className="flex flex-wrap gap-2">
               {BRAND_COLORS.map((c) => (
@@ -454,12 +455,12 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                 />
               ))}
             </div>
-            {brandError && <p className="text-xs text-red-500">{brandError}</p>}
+            {brandError && <p className="text-xs text-[var(--color-accent)]">{brandError}</p>}
             <div className="flex gap-2">
               <button
                 onClick={handleAddBrand}
                 disabled={addingBrand || !newBrandName.trim()}
-                className="flex-1 py-2 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-xl disabled:opacity-40"
+                className="flex-1 py-2 bg-[var(--color-accent)] text-white text-sm rounded-xl disabled:opacity-40"
               >
                 {addingBrand ? "Adding…" : "Add brand"}
               </button>
@@ -476,7 +477,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
         {/* ── Price grid ──────────────────────────────────────────────────── */}
         <div className="flex-1 card-surface border rounded-2xl overflow-hidden min-w-0">
           {!selectedBrand ? (
-            <p className="text-center text-sm text-[var(--color-ink-3)] py-16">Select a brand</p>
+            <EmptyState title="Select a brand" description="Choose a brand from the list to view and edit its price grid." />
           ) : (
             <>
               {/* Grid header */}
@@ -497,20 +498,20 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                           if (e.key === "Enter") handleAddModel();
                           if (e.key === "Escape") { setShowAddModel(false); setModelError(""); }
                         }}
-                        className="flex-1 sm:w-44 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                        className="flex-1 sm:w-44 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
                       />
                       <input
                         placeholder="Year"
                         value={newModelYear}
                         onChange={(e) => setNewModelYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                        className="w-16 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-ink)]"
+                        className="w-16 px-2 py-1 border border-[var(--color-line)] rounded-lg text-sm outline-none focus:border-[var(--color-accent)]"
                       />
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={handleAddModel}
                         disabled={addingModel || !newModelName.trim()}
-                        className="px-3 py-1 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm rounded-lg disabled:opacity-40"
+                        className="px-3 py-1 bg-[var(--color-accent)] text-white text-sm rounded-lg disabled:opacity-40"
                       >
                         {addingModel ? "…" : "Add"}
                       </button>
@@ -521,12 +522,12 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                         ✕
                       </button>
                     </div>
-                    {modelError && <p className="text-xs text-red-500 w-full">{modelError}</p>}
+                    {modelError && <p className="text-xs text-[var(--color-accent)] w-full">{modelError}</p>}
                   </div>
                 ) : (
                   <button
                     onClick={() => setShowAddModel(true)}
-                    className="flex items-center gap-1 text-sm text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+                    className="flex items-center gap-1 text-sm text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors"
                   >
                     <span className="text-base leading-none font-light">+</span> Add model
                   </button>
@@ -534,9 +535,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
               </div>
 
               {brandModels.length === 0 ? (
-                <p className="text-center text-sm text-[var(--color-ink-3)] py-16">
-                  No models yet — tap &ldquo;Add model&rdquo; above
-                </p>
+                <EmptyState title="No models yet" description="Tap “Add model” above to add the first one." />
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -571,7 +570,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                             <button
                               onClick={() => handleRemoveModel(model)}
                               disabled={removingModelId === model.id}
-                              className="w-6 h-6 flex items-center justify-center rounded-lg text-[var(--color-ink-3)] opacity-0 group-hover:opacity-100 hover:text-red-500 transition-colors disabled:opacity-50"
+                              className="w-6 h-6 flex items-center justify-center rounded-lg text-[var(--color-ink-3)] opacity-0 group-hover:opacity-100 hover:text-[var(--color-accent)] transition-colors disabled:opacity-50"
                               aria-label={`Remove ${model.name}`}
                               title={`Remove ${model.name}`}
                             >
@@ -598,7 +597,7 @@ export function CatalogEditor({ categories, brands, issues, models, prices }: Pr
                                         if (e.key === "Escape") setEditingCell(null);
                                       }}
                                       onBlur={saveEdit}
-                                      className="w-20 px-2 py-1 border border-[var(--color-ink)] rounded-lg text-sm text-center outline-none"
+                                      className="w-20 px-2 py-1 border border-[var(--color-accent)] rounded-lg text-sm text-center outline-none"
                                       disabled={saving}
                                     />
                                   </div>
