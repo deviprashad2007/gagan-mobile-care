@@ -24,7 +24,7 @@ export function DeleteInvoiceButton({ id }: { id: string }) {
     <button
       onClick={handleDelete}
       disabled={isPending}
-      className="no-print inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--color-line)] text-[var(--color-ink-3)] rounded-full px-4 py-2 hover:text-red-600 hover:border-red-200 transition-colors disabled:opacity-50"
+      className="no-print inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--color-line)] text-[var(--color-ink-3)] rounded-full px-4 py-2 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors disabled:opacity-50"
     >
       {isPending ? "Deleting…" : "Delete"}
     </button>

@@ -6,6 +6,7 @@ import type { Repair, Invoice } from "@/lib/admin";
 import { createInvoice } from "@/lib/actions/create-invoice";
 import { updateInvoice } from "@/lib/actions/update-invoice";
 import type { InvoiceItem } from "@/lib/validations/invoice";
+import { InlineAlert } from "@/components/admin/ui/inline-alert";
 
 const PAYMENT_METHODS = [
   { id: "cash", label: "Cash" },
@@ -121,7 +122,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
           <input
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
           />
         </div>
         <div>
@@ -131,7 +132,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
           <input
             value={customerPhone ?? ""}
             onChange={(e) => setCustomerPhone(e.target.value)}
-            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
           />
         </div>
       </div>
@@ -144,7 +145,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
           value={modelText ?? ""}
           onChange={(e) => setModelText(e.target.value)}
           placeholder="e.g. iPhone 13"
-          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
         />
       </div>
 
@@ -158,7 +159,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
               value={issueText}
               onChange={(e) => setIssueText(e.target.value)}
               placeholder="e.g. Screen replacement"
-              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+              className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
             />
           </div>
 
@@ -173,7 +174,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
                 min={0}
                 value={partCost}
                 onChange={(e) => setPartCost(Number(e.target.value) || 0)}
-                className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+                className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
               />
             </div>
             <div>
@@ -185,7 +186,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
                 min={0}
                 value={serviceCost}
                 onChange={(e) => setServiceCost(Number(e.target.value) || 0)}
-                className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+                className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
               />
             </div>
           </div>
@@ -211,7 +212,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
                   min={0}
                   value={repostCost}
                   onChange={(e) => setRepostCost(Number(e.target.value) || 0)}
-                  className="w-full sm:w-1/2 px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+                  className="w-full sm:w-1/2 px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
                 />
               </div>
             )}
@@ -231,26 +232,26 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
                 value={item.description}
                 onChange={(e) => updateExtraItem(i, { description: e.target.value })}
                 placeholder="Description"
-                className="flex-1 px-3 py-2.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+                className="flex-1 px-3 py-2.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
               />
               <input
                 type="number"
                 min={1}
                 value={item.qty}
                 onChange={(e) => updateExtraItem(i, { qty: Number(e.target.value) || 1 })}
-                className="w-16 px-2 py-2.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors text-center"
+                className="w-16 px-2 py-2.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors text-center"
               />
               <input
                 type="number"
                 min={0}
                 value={item.price}
                 onChange={(e) => updateExtraItem(i, { price: Number(e.target.value) || 0 })}
-                className="w-24 px-2 py-2.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors text-right"
+                className="w-24 px-2 py-2.5 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors text-right"
               />
               <button
                 type="button"
                 onClick={() => removeExtraItem(i)}
-                className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+                className="w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
                 aria-label="Remove item"
               >
                 ✕
@@ -261,7 +262,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
         <button
           type="button"
           onClick={addExtraItem}
-          className="mt-2 text-sm font-medium text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
+          className="mt-2 text-sm font-medium text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors"
         >
           + Add item
         </button>
@@ -277,7 +278,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
             min={0}
             value={discount}
             onChange={(e) => setDiscount(Number(e.target.value) || 0)}
-            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors"
+            className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors"
           />
         </div>
         <div>
@@ -292,9 +293,9 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
                 onClick={() => setPaymentMethod(m.id)}
                 className="px-3 py-2 rounded-full text-sm font-medium border transition-colors"
                 style={{
-                  borderColor: paymentMethod === m.id ? "var(--color-ink)" : "var(--color-line)",
-                  background: paymentMethod === m.id ? "var(--color-ink)" : "transparent",
-                  color: paymentMethod === m.id ? "var(--color-bg)" : "var(--color-ink-3)",
+                  borderColor: paymentMethod === m.id ? "var(--color-accent)" : "var(--color-line)",
+                  background: paymentMethod === m.id ? "var(--color-accent-soft)" : "transparent",
+                  color: paymentMethod === m.id ? "var(--color-accent)" : "var(--color-ink-3)",
                 }}
               >
                 {m.label}
@@ -313,7 +314,7 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
           placeholder="e.g. warranty terms"
-          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-ink)] focus:bg-[var(--color-bg-card)] transition-colors resize-none"
+          className="w-full px-4 py-3 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-soft)] outline-none focus:border-[var(--color-accent)] focus:bg-[var(--color-bg-card)] transition-colors resize-none"
         />
       </div>
 
@@ -341,16 +342,12 @@ export function InvoiceForm({ repair, invoice }: { repair?: Repair | null; invoi
         </div>
       </div>
 
-      {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-2">
-          {error}
-        </p>
-      )}
+      {error && <InlineAlert tone="error" message={error} />}
 
       <button
         onClick={handleSubmit}
         disabled={isPending || !customerName.trim()}
-        className="w-full bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40"
+        className="w-full bg-[var(--color-accent)] text-white text-sm font-medium rounded-full py-3 hover:opacity-90 transition-opacity disabled:opacity-40"
       >
         {isPending ? "Saving…" : isEdit ? "Save changes" : "Create invoice"}
       </button>

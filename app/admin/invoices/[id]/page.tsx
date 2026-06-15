@@ -39,7 +39,7 @@ export default async function InvoiceDetailPage({ params }: Props) {
     <div className="px-4 md:px-8 py-6 max-w-2xl mx-auto">
       <div className="no-print flex items-center justify-between gap-4 mb-5">
         <nav className="flex items-center gap-2 text-xs text-[var(--color-ink-3)]">
-          <Link href="/admin/invoices" className="hover:text-[var(--color-ink)] transition-colors">
+          <Link href="/admin/invoices" className="hover:text-[var(--color-accent)] transition-colors">
             Invoices
           </Link>
           <span>/</span>
@@ -48,7 +48,7 @@ export default async function InvoiceDetailPage({ params }: Props) {
         <div className="flex items-center gap-2">
           <Link
             href={`/admin/invoices/${invoice.id}/edit`}
-            className="no-print inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--color-line)] text-[var(--color-ink-3)] rounded-full px-4 py-2 hover:text-[var(--color-ink)] transition-colors"
+            className="no-print inline-flex items-center gap-1.5 text-sm font-medium border border-[var(--color-line)] text-[var(--color-ink-3)] rounded-full px-4 py-2 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
           >
             Edit
           </Link>
