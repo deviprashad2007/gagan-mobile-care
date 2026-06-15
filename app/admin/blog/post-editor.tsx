@@ -6,6 +6,7 @@ import Image from "next/image";
 import { saveBlogPost } from "@/lib/actions/save-blog-post";
 import { uploadBlogCover } from "@/lib/actions/upload-blog-cover";
 import type { Database } from "@/lib/supabase/types";
+import { InlineAlert } from "@/components/admin/ui/inline-alert";
 
 type Post = Database["public"]["Tables"]["blog_posts"]["Row"];
 
@@ -79,7 +80,7 @@ export function PostEditor({ post }: Props) {
         <p className="text-sm font-semibold text-[var(--color-ink)] mb-3">Cover image</p>
         <div
           onClick={() => fileRef.current?.click()}
-          className="relative border-2 border-dashed border-[var(--color-line)] rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[var(--color-ink)] transition-colors overflow-hidden"
+          className="relative border-2 border-dashed border-[var(--color-line)] rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-[var(--color-accent)] transition-colors overflow-hidden"
           style={{ minHeight: coverUrl ? "auto" : 140 }}
         >
           {coverUrl ? (
@@ -115,7 +116,7 @@ export function PostEditor({ post }: Props) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="e.g. 5 signs your phone battery needs replacing"
-          className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)]"
+          className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-accent)]"
         />
       </div>
 
@@ -130,7 +131,7 @@ export function PostEditor({ post }: Props) {
           rows={2}
           maxLength={300}
           placeholder="One or two sentences summarising the post"
-          className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)] resize-none"
+          className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-accent)] resize-none"
         />
       </div>
 
@@ -144,25 +145,25 @@ export function PostEditor({ post }: Props) {
           onChange={(e) => setContent(e.target.value)}
           rows={16}
           placeholder={"Write your post here.\n\nLeave a blank line to start a new paragraph."}
-          className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-ink)] resize-y font-mono leading-relaxed"
+          className="w-full px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm outline-none focus:border-[var(--color-accent)] resize-y font-mono leading-relaxed"
         />
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <InlineAlert tone="error" message={error} />}
 
       {/* Actions */}
       <div className="flex gap-3">
         <button
           onClick={() => handleSave(true)}
           disabled={saving || uploadingCover}
-          className="flex-1 py-3 bg-[var(--color-ink)] text-[var(--color-bg)] text-sm font-medium rounded-xl disabled:opacity-50"
+          className="flex-1 py-3 bg-[var(--color-accent)] text-white text-sm font-medium rounded-xl disabled:opacity-50"
         >
           {saving ? "Saving…" : post?.published ? "Save changes" : "Publish post"}
         </button>
         <button
           onClick={() => handleSave(false)}
           disabled={saving || uploadingCover}
-          className="px-5 py-3 border border-[var(--color-line)] text-[var(--color-ink-3)] text-sm font-medium rounded-xl disabled:opacity-50 transition-colors hover:border-[var(--color-ink-3)] hover:text-[var(--color-ink)]"
+          className="px-5 py-3 border border-[var(--color-line)] text-[var(--color-ink-3)] text-sm font-medium rounded-xl disabled:opacity-50 transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
         >
           Save as draft
         </button>

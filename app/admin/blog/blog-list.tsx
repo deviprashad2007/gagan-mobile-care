@@ -5,6 +5,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { deleteBlogPost } from "@/lib/actions/delete-blog-post";
 import type { Database } from "@/lib/supabase/types";
+import { StatusPill } from "@/components/admin/ui/status-pill";
+import { EmptyState } from "@/components/admin/ui/empty-state";
 
 type Post = Database["public"]["Tables"]["blog_posts"]["Row"];
 
@@ -30,10 +32,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
 
   if (posts.length === 0) {
     return (
-      <div className="card-surface border rounded-2xl p-10 flex flex-col items-center gap-2 text-center">
-        <p className="text-sm font-medium text-[var(--color-ink)]">No posts yet</p>
-        <p className="text-xs text-[var(--color-ink-3)]">Write your first post to start showing up in Google searches.</p>
-      </div>
+      <EmptyState title="No posts yet" description="Write your first post to start showing up in Google searches." />
     );
   }
 
@@ -44,15 +43,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-sm font-medium text-[var(--color-ink)] truncate">{post.title}</p>
-              <span
-                className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full shrink-0 ${
-                  post.published
-                    ? "bg-[var(--color-success)]/10 text-[var(--color-success)]"
-                    : "bg-[var(--color-bg-soft)] text-[var(--color-ink-3)]"
-                }`}
-              >
-                {post.published ? "Published" : "Draft"}
-              </span>
+              <StatusPill label={post.published ? "Published" : "Draft"} tone={post.published ? "success" : "neutral"} />
             </div>
             <p className="text-xs text-[var(--color-ink-3)] mt-0.5">
               {post.published ? `Published ${formatDate(post.published_at)}` : `Created ${formatDate(post.created_at)}`}
@@ -60,14 +51,14 @@ export function BlogList({ posts }: { posts: Post[] }) {
           </div>
           <Link
             href={`/admin/blog/${post.id}`}
-            className="text-xs font-medium text-[var(--color-ink)] hover:opacity-70 transition-opacity shrink-0"
+            className="text-xs font-medium text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors shrink-0"
           >
             Edit
           </Link>
           <button
             onClick={() => handleDelete(post.id)}
             disabled={deletingId === post.id}
-            className="text-xs text-red-500 hover:text-red-700 transition-colors disabled:opacity-40 shrink-0"
+            className="text-xs text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors disabled:opacity-40 shrink-0"
           >
             {deletingId === post.id ? "Deleting…" : "Delete"}
           </button>
