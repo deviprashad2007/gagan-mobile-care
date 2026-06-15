@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import type { Brand, Category, Issue, Model } from "@/lib/repairs";
+import type { Brand, Category, Issue, Model, PriceEntry } from "@/lib/repairs";
 import { BrandIcon } from "./brand-icon";
 import { createBooking } from "@/lib/actions/create-booking";
 import { WHATSAPP_URL, BUSINESS_PHONE } from "@/lib/seo/business-info";
@@ -22,10 +22,11 @@ interface Props {
   issues: Issue[];
   models: Model[];
   categories: Category[];
+  prices: PriceEntry[];
   onClose: () => void;
 }
 
-export function BookingFlow({ brands, issues, models, categories, onClose }: Props) {
+export function BookingFlow({ brands, issues, models, categories, prices, onClose }: Props) {
   const [step, setStep] = useState<Step>("category");
   const [category, setCategory] = useState<Category | null>(null);
   const [brand, setBrand] = useState<Brand | null>(null);
@@ -43,8 +44,17 @@ export function BookingFlow({ brands, issues, models, categories, onClose }: Pro
 
   const stepIndex = STEPS.indexOf(step);
   const selectedIssues = issues.filter((i) => issueIds.includes(i.id));
-  const estimatedMin = selectedIssues.reduce((s, i) => s + i.range_min, 0);
-  const estimatedMax = selectedIssues.reduce((s, i) => s + i.range_max, 0);
+
+  const getIssuePrice = (issue: Issue): { min: number; max: number } => {
+    if (model) {
+      const exact = prices.find((p) => p.model_id === model.id && p.issue_id === issue.id);
+      if (exact) return { min: exact.price, max: exact.price };
+    }
+    return { min: issue.range_min, max: issue.range_max };
+  };
+
+  const estimatedMin = selectedIssues.reduce((s, i) => s + getIssuePrice(i).min, 0);
+  const estimatedMax = selectedIssues.reduce((s, i) => s + getIssuePrice(i).max, 0);
 
   const goBack = () => {
     if (stepIndex === 0) return;
@@ -206,6 +216,7 @@ export function BookingFlow({ brands, issues, models, categories, onClose }: Pro
                   issues={issues}
                   brand={brand!}
                   selected={issueIds}
+                  getPrice={getIssuePrice}
                   onToggle={(id) =>
                     setIssueIds((prev) =>
                       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
@@ -226,6 +237,7 @@ export function BookingFlow({ brands, issues, models, categories, onClose }: Pro
                   brand={brand!}
                   modelLabel={model ? model.name : modelText.trim()}
                   issues={selectedIssues}
+                  getPrice={getIssuePrice}
                   serviceType={serviceType!}
                   estimatedMin={estimatedMin}
                   estimatedMax={estimatedMax}
@@ -477,12 +489,14 @@ function StepIssue({
   issues,
   brand,
   selected,
+  getPrice,
   onToggle,
   onContinue,
 }: {
   issues: Issue[];
   brand: Brand;
   selected: string[];
+  getPrice: (issue: Issue) => { min: number; max: number };
   onToggle: (id: string) => void;
   onContinue: () => void;
 }) {
@@ -526,7 +540,12 @@ function StepIssue({
                 <p className="text-[12px] opacity-70">{issue.description}</p>
               )}
               <p className="text-[12px] font-medium mt-1" style={{ color: on ? "var(--color-accent)" : "var(--color-ink)" }}>
-                ₹{issue.range_min.toLocaleString("en-IN")} – ₹{issue.range_max.toLocaleString("en-IN")}
+                {(() => {
+                  const { min, max } = getPrice(issue);
+                  return min === max
+                    ? `₹${min.toLocaleString("en-IN")}`
+                    : `₹${min.toLocaleString("en-IN")} – ₹${max.toLocaleString("en-IN")}`;
+                })()}
               </p>
             </button>
           );
@@ -652,6 +671,7 @@ function StepContact({
   brand,
   modelLabel,
   issues,
+  getPrice,
   serviceType,
   estimatedMin,
   estimatedMax,
@@ -670,6 +690,7 @@ function StepContact({
   brand: Brand;
   modelLabel: string;
   issues: Issue[];
+  getPrice: (issue: Issue) => { min: number; max: number };
   serviceType: "walkin" | "post";
   estimatedMin: number;
   estimatedMax: number;
@@ -802,14 +823,17 @@ function StepContact({
         </div>
 
         <div className="space-y-2 pb-4 border-b border-[var(--color-line)]">
-          {issues.map((issue) => (
-            <div key={issue.id} className="flex justify-between text-[13px]">
-              <span className="text-[var(--color-ink)]">{issue.name}</span>
-              <span className="font-mono text-[var(--color-ink-3)]">
-                ₹{issue.range_min.toLocaleString("en-IN")}+
-              </span>
-            </div>
-          ))}
+          {issues.map((issue) => {
+            const { min, max } = getPrice(issue);
+            return (
+              <div key={issue.id} className="flex justify-between text-[13px]">
+                <span className="text-[var(--color-ink)]">{issue.name}</span>
+                <span className="font-mono text-[var(--color-ink-3)]">
+                  {min === max ? `₹${min.toLocaleString("en-IN")}` : `₹${min.toLocaleString("en-IN")}+`}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         <div className="flex items-center gap-2 text-[13px] text-[var(--color-ink)] pb-4 border-b border-[var(--color-line)]">

@@ -203,6 +203,21 @@ export const getModelsWithPrices = unstable_cache(
   { revalidate: 3600, tags: ["catalog"] }
 );
 
+export type PriceEntry = { model_id: string; issue_id: string; price: number };
+
+export const getAllPrices = unstable_cache(
+  async (): Promise<PriceEntry[]> => {
+    const { data, error } = await db()
+      .from("prices")
+      .select("model_id, issue_id, price")
+      .is("deleted_at", null);
+    if (error) throw error;
+    return data;
+  },
+  ["all-prices"],
+  { revalidate: 3600, tags: ["catalog"] }
+);
+
 export const getAllBrandIssueSlugs = unstable_cache(
   async (): Promise<{ brand: string; issue: string }[]> => {
     const client = db();
