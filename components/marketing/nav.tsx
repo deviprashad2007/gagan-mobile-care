@@ -45,10 +45,10 @@ export default function Nav() {
           <Link
             href="/"
             className="flex items-center gap-2.5 min-w-0 no-underline text-inherit"
-            aria-label="Gagan Mobile Hospital — home"
+            aria-label="Gagan Mobile Care — home"
           >
             {/* Logo mark */}
-            <div className="relative w-8 h-8 bg-ink rounded-lg flex-shrink-0 flex items-center justify-center">
+            <div className="relative w-8 h-8 bg-[#0A0A0A] rounded-lg flex-shrink-0 flex items-center justify-center">
               <span
                 className="text-white text-sm leading-none"
                 style={{ fontFamily: "var(--font-body)", fontWeight: 700 }}
@@ -69,7 +69,7 @@ export default function Nav() {
                   fontSize: 15,
                 }}
               >
-                Gagan Mobile Hospital
+                Gagan Mobile Care
               </div>
 
               {/* Status badge — desktop only */}
