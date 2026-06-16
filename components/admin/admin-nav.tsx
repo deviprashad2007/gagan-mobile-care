@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { signOut } from "@/lib/actions/sign-out";
 import { Avatar } from "@/components/admin/ui/avatar";
 
@@ -12,15 +12,15 @@ interface Props {
 }
 
 function SignOutButton() {
-  const [isPending, startTransition] = useTransition();
   return (
-    <button
-      onClick={() => startTransition(() => signOut())}
-      disabled={isPending}
-      className="text-xs text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors disabled:opacity-50"
-    >
-      {isPending ? "Signing out…" : "Sign out"}
-    </button>
+    <form action={signOut}>
+      <button
+        type="submit"
+        className="text-xs text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors"
+      >
+        Sign out
+      </button>
+    </form>
   );
 }
 
