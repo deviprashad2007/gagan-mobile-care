@@ -234,13 +234,17 @@ export async function getInvoices() {
 
 export async function getInvoiceById(id: string) {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data: invoice } = await supabase
     .from("invoices")
-    .select("*")
+    .select("*, repairs(booking_id, bookings(booking_ref))")
     .eq("id", id)
     .is("deleted_at", null)
     .single();
-  return data;
+  if (!invoice) return null;
+  // Flatten the nested booking_ref for easy access
+  const repairs = invoice.repairs as { booking_id: string | null; bookings: { booking_ref: string } | null } | null;
+  const bookingRef: string | null = repairs?.bookings?.booking_ref ?? null;
+  return { ...invoice, bookingRef };
 }
 
 export async function getCatalog() {

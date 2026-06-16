@@ -126,6 +126,11 @@ export default async function InvoiceDetailPage({ params }: Props) {
             {invoice.model_text && (
               <p className="text-xs text-[var(--color-ink-3)] mt-0.5">{invoice.model_text}</p>
             )}
+            {invoice.bookingRef && (
+              <p className="text-xs text-[var(--color-ink-3)] mt-1 font-mono">
+                Token / Tracking: <span className="font-semibold text-[var(--color-accent)]">{invoice.bookingRef}</span>
+              </p>
+            )}
           </div>
 
           {/* Items */}
@@ -210,6 +215,12 @@ export default async function InvoiceDetailPage({ params }: Props) {
           <div style={{ fontWeight: 700 }}>{invoice.customer_name}</div>
           {invoice.customer_phone && <div style={{ fontSize: 11, color: "#555" }}>Contact: {invoice.customer_phone}</div>}
           {invoice.model_text && <div style={{ fontSize: 11, color: "#555" }}>{invoice.model_text}</div>}
+          {invoice.bookingRef && (
+            <div style={{ fontSize: 11, marginTop: 4 }}>
+              <span style={{ color: "#888" }}>Token / Tracking No.: </span>
+              <strong style={{ fontFamily: "monospace", fontSize: 12 }}>{invoice.bookingRef}</strong>
+            </div>
+          )}
         </div>
 
         <table style={{ width: "100%", borderCollapse: "collapse", borderBottom: "1px solid #ccc" }}>
