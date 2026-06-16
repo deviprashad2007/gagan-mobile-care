@@ -1,4 +1,4 @@
-# Gagan Mobile Hospital — Claude Code Project Rules
+# Gagan Mobile Care — Claude Code Project Rules
 
 Read this file at the start of every session. Source of truth for how this codebase is built.
 

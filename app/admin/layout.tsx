@@ -4,7 +4,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { AdminNav } from "@/components/admin/admin-nav";
 
 export const metadata: Metadata = {
-  title: { default: "Admin — Gagan Mobile Hospital", template: "%s — GMH Admin" },
+  title: { default: "Admin — Gagan Mobile Care", template: "%s — GMC Admin" },
   robots: { index: false, follow: false },
 };
 
