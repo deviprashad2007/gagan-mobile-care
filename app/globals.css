@@ -247,8 +247,16 @@
   --sidebar-ring:           #E63329;
 }
 
+/* ─── Print utilities ───────────────────────────────────────────────────── */
+.print-only {
+  display: none !important;
+}
+
 /* ─── Print — invoice pages ──────────────────────────────────────────────── */
 @media print {
+  .print-only {
+    display: block !important;
+  }
   /* Hide everything, then reveal only the print-area */
   body * {
     visibility: hidden !important;
