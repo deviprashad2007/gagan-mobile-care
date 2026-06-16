@@ -1,11 +1,21 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getInvoiceById } from "@/lib/admin";
 import { BUSINESS_NAME, BUSINESS_ADDRESS, BUSINESS_PHONE, BUSINESS_GSTIN } from "@/lib/seo/business-info";
 import type { InvoiceItem } from "@/lib/validations/invoice";
 import { PrintButton } from "./print-button";
 import { DeleteInvoiceButton } from "./delete-invoice-button";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const invoice = await getInvoiceById(id);
+  if (!invoice) return { title: "Invoice" };
+  const parts = [invoice.invoice_number, invoice.customer_name];
+  if (invoice.bookingRef) parts.push(invoice.bookingRef);
+  return { title: parts.join(" · ") };
+}
 
 const PAYMENT_LABELS: Record<string, string> = {
   cash: "Cash",
