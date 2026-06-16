@@ -3,6 +3,7 @@
 import { bookingSchema } from "@/lib/validations/booking";
 import { createServiceClient } from "@/lib/supabase/service";
 import { sendTrackingEmail } from "@/lib/email/send-tracking-email";
+import { sendBookingNotificationEmail } from "@/lib/email/send-booking-notification-email";
 
 export type BookingResult =
   | {
@@ -96,6 +97,30 @@ export async function createBooking(data: unknown): Promise<BookingResult> {
     return { success: false, error: "Failed to save booking. Please try again." };
   }
 
+  // Fetch issue names for the notification email
+  const { data: issueRows } = await supabase
+    .from("issues")
+    .select("name")
+    .in("id", issueIds)
+    .is("deleted_at", null);
+  const issueNames = issueRows?.map((r) => r.name) ?? [];
+
+  // Notify the owner
+  await sendBookingNotificationEmail({
+    bookingRef,
+    customerName,
+    customerPhone,
+    customerEmail,
+    brandName,
+    modelText,
+    issueIds,
+    issueNames,
+    serviceType,
+    estimatedPriceMin,
+    estimatedPriceMax,
+  });
+
+  // Send tracking code to customer (if they provided email)
   if (customerEmail) {
     await sendTrackingEmail(customerEmail, customerName, bookingRef);
   }
