@@ -103,8 +103,8 @@ export default async function InvoiceDetailPage({ params }: Props) {
           {/* Header */}
           <div className="flex items-start justify-between gap-4 px-6 py-5 border-b border-[var(--color-line)]">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1">Invoice</p>
-              <p className="text-2xl font-mono font-semibold text-[var(--color-ink)]">{invoice.invoice_number}</p>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1">Bill No.</p>
+              <p className="text-2xl font-mono font-bold text-[var(--color-ink)]">{invoice.invoice_number}</p>
               <p className="text-xs text-[var(--color-ink-3)] mt-1">{fmtDate(invoice.created_at)}</p>
             </div>
             <div className="text-right">
@@ -202,11 +202,18 @@ export default async function InvoiceDetailPage({ params }: Props) {
               <div style={{ fontSize: 11, fontWeight: 600, marginTop: 1 }}>GSTIN : {BUSINESS_GSTIN}</div>
             )}
           </div>
-          <div style={{ padding: 12, textAlign: "right", minWidth: 150 }}>
-            <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase" }}>Invoice No.</div>
-            <div style={{ fontWeight: 700, marginTop: 2 }}>{invoice.invoice_number}</div>
-            <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", marginTop: 10 }}>Date</div>
-            <div style={{ fontWeight: 600, marginTop: 2 }}>{fmtDatePrint(invoice.created_at)}</div>
+          <div style={{ minWidth: 180, display: "flex", flexDirection: "column", borderLeft: "1px solid #ccc" }}>
+            {/* Bill No — prominent box */}
+            <div style={{ padding: "8px 12px", borderBottom: "1px solid #ccc", background: "#f9f9f9" }}>
+              <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: 0.5 }}>Bill No.</div>
+              <div style={{ fontWeight: 800, fontSize: 18, fontFamily: "monospace", marginTop: 2, letterSpacing: 1 }}>
+                {invoice.invoice_number}
+              </div>
+            </div>
+            <div style={{ padding: "8px 12px" }}>
+              <div style={{ fontSize: 10, color: "#888", textTransform: "uppercase", letterSpacing: 0.5 }}>Date</div>
+              <div style={{ fontWeight: 600, fontSize: 13, marginTop: 2 }}>{fmtDatePrint(invoice.created_at)}</div>
+            </div>
           </div>
         </div>
 
