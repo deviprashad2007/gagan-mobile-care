@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { renderToBuffer } = require("@react-pdf/renderer");
+import { renderToBuffer } from "@react-pdf/renderer";
 import { createElement } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { getInvoiceById } from "@/lib/admin";
@@ -25,8 +24,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     .replace(/[^a-zA-Z0-9_\-]/g, "");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const buffer: Buffer = await renderToBuffer(
-    createElement(InvoicePDF as any, {
+  const buffer: Buffer = await (renderToBuffer as any)(
+    createElement(InvoicePDF, {
       invoiceNumber: invoice.invoice_number,
       createdAt: invoice.created_at,
       customerName: invoice.customer_name,
