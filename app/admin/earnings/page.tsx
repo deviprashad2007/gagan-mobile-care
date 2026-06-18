@@ -7,6 +7,7 @@ import { StatCard } from "@/components/admin/ui/stat-card";
 import { StatusPill, type StatusTone } from "@/components/admin/ui/status-pill";
 import { EmptyState } from "@/components/admin/ui/empty-state";
 import { PeriodTabs } from "./period-tabs";
+import { RevenueChart } from "./revenue-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,42 +100,14 @@ const ICONS = {
 
 // ─── sub-components ───────────────────────────────────────────────────────────
 
-function BarChart({ data }: { data: MonthlyBar[] }) {
-  const max = Math.max(...data.map((d) => d.total), 1);
-  const BAR_H = 80;
-
+function RevenueChartCard({ data }: { data: MonthlyBar[] }) {
   return (
     <Card className="rounded-2xl mb-4 gap-0">
       <CardHeader className="border-b border-[var(--color-line)] pb-3">
         <CardTitle className="text-sm font-semibold">Revenue — last 6 months</CardTitle>
       </CardHeader>
       <CardContent className="pt-4 pb-3">
-        <div className="flex items-end gap-2 h-24">
-          {data.map((bar) => {
-            const barH = max > 0 ? Math.round((bar.total / max) * BAR_H) : 0;
-            const isEmpty = bar.total === 0;
-            return (
-              <div key={bar.key} className="flex flex-col items-center gap-1 flex-1 min-w-0">
-                <span className="text-[9px] font-mono text-[var(--color-ink-3)] truncate w-full text-center leading-none">
-                  {isEmpty ? "" : fmt(bar.total)}
-                </span>
-                <div className="w-full flex items-end" style={{ height: BAR_H }}>
-                  <div
-                    className="w-full rounded-t-md transition-all"
-                    style={{
-                      height: isEmpty ? 4 : barH,
-                      background: isEmpty ? "var(--color-line)" : "var(--color-accent)",
-                      opacity: isEmpty ? 0.3 : 1,
-                    }}
-                  />
-                </div>
-                <span className="text-[9px] text-[var(--color-ink-3)] truncate w-full text-center leading-none">
-                  {bar.month.split(" ")[0]}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        <RevenueChart data={data} />
       </CardContent>
     </Card>
   );
@@ -342,7 +315,7 @@ export default async function EarningsPage({ searchParams }: Props) {
       </div>
 
       {/* ── Monthly bar chart ── */}
-      <BarChart data={data.chartData} />
+      <RevenueChartCard data={data.chartData} />
 
       {/* ── Period tabs ── */}
       <Card className="rounded-2xl mb-4 gap-0 overflow-hidden">
