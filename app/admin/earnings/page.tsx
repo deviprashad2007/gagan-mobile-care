@@ -6,6 +6,19 @@ import { PageHeader } from "@/components/admin/ui/page-header";
 import { StatCard } from "@/components/admin/ui/stat-card";
 import { StatusPill, type StatusTone } from "@/components/admin/ui/status-pill";
 import { EmptyState } from "@/components/admin/ui/empty-state";
+import { PeriodTabs } from "./period-tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type { MonthlyBar, PaymentBreakdown } from "@/lib/admin";
 import type { Invoice } from "@/lib/admin";
 
@@ -42,14 +55,6 @@ const STATUS_LABELS: Record<string, { label: string; tone: StatusTone }> = {
   working:  { label: "Working",  tone: "info" },
   ready:    { label: "Ready",    tone: "success" },
 };
-
-const PERIOD_TABS = [
-  { id: "today",      label: "Today" },
-  { id: "week",       label: "This week" },
-  { id: "month",      label: "This month" },
-  { id: "last_month", label: "Last month" },
-  { id: "custom",     label: "Custom" },
-] as const;
 
 // ─── icons ────────────────────────────────────────────────────────────────────
 
@@ -90,12 +95,6 @@ const ICONS = {
       <circle cx="12" cy="12" r="10" /><path d="M8 12h8M12 8v8" />
     </svg>
   ),
-  edit: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-    </svg>
-  ),
 };
 
 // ─── sub-components ───────────────────────────────────────────────────────────
@@ -105,11 +104,11 @@ function BarChart({ data }: { data: MonthlyBar[] }) {
   const BAR_H = 80;
 
   return (
-    <div className="card-surface border rounded-2xl overflow-hidden mb-4">
-      <div className="px-4 py-3 border-b border-[var(--color-line)]">
-        <h2 className="text-sm font-semibold text-[var(--color-ink)]">Revenue — last 6 months</h2>
-      </div>
-      <div className="px-4 pt-4 pb-3">
+    <Card className="rounded-2xl mb-4 gap-0">
+      <CardHeader className="border-b border-[var(--color-line)] pb-3">
+        <CardTitle className="text-sm font-semibold">Revenue — last 6 months</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4 pb-3">
         <div className="flex items-end gap-2 h-24">
           {data.map((bar) => {
             const barH = max > 0 ? Math.round((bar.total / max) * BAR_H) : 0;
@@ -124,9 +123,7 @@ function BarChart({ data }: { data: MonthlyBar[] }) {
                     className="w-full rounded-t-md transition-all"
                     style={{
                       height: isEmpty ? 4 : barH,
-                      background: isEmpty
-                        ? "var(--color-line)"
-                        : "var(--color-accent)",
+                      background: isEmpty ? "var(--color-line)" : "var(--color-accent)",
                       opacity: isEmpty ? 0.3 : 1,
                     }}
                   />
@@ -138,46 +135,41 @@ function BarChart({ data }: { data: MonthlyBar[] }) {
             );
           })}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function PaymentBreakdownStrip({ b }: { b: PaymentBreakdown }) {
   if (b.total === 0) return null;
   const items = [
-    { key: "cash",  label: "Cash",  value: b.cash  },
-    { key: "upi",   label: "UPI",   value: b.upi   },
-    { key: "card",  label: "Card",  value: b.card  },
+    { key: "cash", label: "Cash", value: b.cash },
+    { key: "upi", label: "UPI", value: b.upi },
+    { key: "card", label: "Card", value: b.card },
     { key: "other", label: "Other", value: b.other },
   ].filter((i) => i.value > 0);
 
   const COLORS: Record<string, string> = {
-    cash:  "#22A06B",
-    upi:   "#0A66C2",
-    card:  "#E63329",
+    cash: "#22A06B",
+    upi: "#0A66C2",
+    card: "#E63329",
     other: "#888",
   };
 
   return (
-    <div className="card-surface border rounded-2xl overflow-hidden mb-4">
-      <div className="px-4 py-3 border-b border-[var(--color-line)]">
-        <h2 className="text-sm font-semibold text-[var(--color-ink)]">Payment method breakdown</h2>
-      </div>
-      <div className="px-4 py-3 space-y-2.5">
-        {/* Progress bar */}
+    <Card className="rounded-2xl mb-4 gap-0">
+      <CardHeader className="border-b border-[var(--color-line)] pb-3">
+        <CardTitle className="text-sm font-semibold">Payment method breakdown</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2.5 py-3">
         <div className="flex h-2.5 rounded-full overflow-hidden gap-px">
           {items.map((item) => (
             <div
               key={item.key}
-              style={{
-                width: `${(item.value / b.total) * 100}%`,
-                background: COLORS[item.key],
-              }}
+              style={{ width: `${(item.value / b.total) * 100}%`, background: COLORS[item.key] }}
             />
           ))}
         </div>
-        {/* Legend */}
         <div className="flex flex-wrap gap-x-5 gap-y-1.5">
           {items.map((item) => (
             <div key={item.key} className="flex items-center gap-1.5">
@@ -190,97 +182,85 @@ function PaymentBreakdownStrip({ b }: { b: PaymentBreakdown }) {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function TransactionTable({ invoices }: { invoices: Invoice[] }) {
   if (invoices.length === 0) {
     return (
-      <div className="card-surface border rounded-2xl overflow-hidden mb-4">
+      <Card className="rounded-2xl mb-4">
         <EmptyState icon={ICONS.receipt} title="No transactions in this period" />
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div className="card-surface border rounded-2xl overflow-hidden mb-4">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-line)]">
-        <h2 className="text-sm font-semibold text-[var(--color-ink)]">
+    <Card className="rounded-2xl mb-4 gap-0 overflow-hidden">
+      <CardHeader className="flex-row items-center justify-between border-b border-[var(--color-line)] pb-3">
+        <CardTitle className="text-sm font-semibold">
           Transactions
           <span className="ml-2 text-[var(--color-ink-3)] font-normal">({invoices.length})</span>
-        </h2>
+        </CardTitle>
         <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
           {fmt(invoices.reduce((s, i) => s + i.total, 0))}
         </span>
-      </div>
+      </CardHeader>
 
       {/* Desktop table */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[var(--color-line)] bg-[var(--color-bg-soft)]">
-              <th className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">Bill No.</th>
-              <th className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">Date</th>
-              <th className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">Customer</th>
-              <th className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">Device</th>
-              <th className="px-4 py-2.5 text-left font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">Payment</th>
-              <th className="px-4 py-2.5 text-right font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]">Amount</th>
-              <th className="px-4 py-2.5 text-right font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)]"></th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--color-line)]">
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-[var(--color-bg-soft)]">
+              <TableHead className="font-mono text-[10px] uppercase tracking-widest px-4">Bill No.</TableHead>
+              <TableHead className="font-mono text-[10px] uppercase tracking-widest">Date</TableHead>
+              <TableHead className="font-mono text-[10px] uppercase tracking-widest">Customer</TableHead>
+              <TableHead className="font-mono text-[10px] uppercase tracking-widest">Device</TableHead>
+              <TableHead className="font-mono text-[10px] uppercase tracking-widest">Payment</TableHead>
+              <TableHead className="font-mono text-[10px] uppercase tracking-widest text-right">Amount</TableHead>
+              <TableHead className="px-4"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {invoices.map((inv) => (
-              <tr key={inv.id} className="hover:bg-[var(--color-bg-soft)] transition-colors">
-                <td className="px-4 py-3 font-mono text-xs text-[var(--color-accent)] font-semibold whitespace-nowrap">
+              <TableRow key={inv.id}>
+                <TableCell className="px-4 font-mono text-xs text-[var(--color-accent)] font-semibold">
                   {inv.invoice_number}
-                </td>
-                <td className="px-4 py-3 text-xs text-[var(--color-ink-3)] whitespace-nowrap">
-                  {fmtDate(inv.created_at)}
-                </td>
-                <td className="px-4 py-3 text-sm font-medium text-[var(--color-ink)] max-w-[140px] truncate">
+                </TableCell>
+                <TableCell className="text-xs text-[var(--color-ink-3)]">{fmtDate(inv.created_at)}</TableCell>
+                <TableCell className="text-sm font-medium text-[var(--color-ink)] max-w-[140px] truncate">
                   {inv.customer_name}
-                </td>
-                <td className="px-4 py-3 text-xs text-[var(--color-ink-3)] max-w-[120px] truncate">
+                </TableCell>
+                <TableCell className="text-xs text-[var(--color-ink-3)] max-w-[120px] truncate">
                   {inv.model_text ?? "—"}
-                </td>
-                <td className="px-4 py-3">
+                </TableCell>
+                <TableCell>
                   <StatusPill
                     label={PAYMENT_LABELS[inv.payment_method] ?? inv.payment_method}
                     tone={PAYMENT_TONES[inv.payment_method] ?? "neutral"}
                   />
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <div>
-                    <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">
-                      {fmt(inv.total)}
-                    </span>
-                    {inv.discount > 0 && (
-                      <div className="text-[10px] text-[var(--color-ink-3)]">−{fmt(inv.discount)} disc.</div>
-                    )}
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-right whitespace-nowrap">
+                </TableCell>
+                <TableCell className="text-right">
+                  <span className="font-mono text-sm font-semibold text-[var(--color-ink)]">{fmt(inv.total)}</span>
+                  {inv.discount > 0 && (
+                    <div className="text-[10px] text-[var(--color-ink-3)]">−{fmt(inv.discount)} disc.</div>
+                  )}
+                </TableCell>
+                <TableCell className="px-4">
                   <div className="flex items-center justify-end gap-1.5">
-                    <Link
-                      href={`/admin/invoices/${inv.id}/edit`}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors"
-                    >
-                      {ICONS.edit} Edit
-                    </Link>
-                    <Link
-                      href={`/admin/invoices/${inv.id}`}
-                      className="inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] transition-colors"
-                    >
+                    <Button variant="outline" size="sm" render={<Link href={`/admin/invoices/${inv.id}/edit`} />}>
+                      Edit
+                    </Button>
+                    <Button variant="ghost" size="sm" render={<Link href={`/admin/invoices/${inv.id}`} />}>
                       View
-                    </Link>
+                    </Button>
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {/* Mobile list */}
@@ -302,19 +282,20 @@ function TransactionTable({ invoices }: { invoices: Invoice[] }) {
             </div>
             <div className="text-right shrink-0">
               <p className="font-mono text-sm font-semibold text-[var(--color-ink)]">{fmt(inv.total)}</p>
-              {inv.discount > 0 && (
-                <p className="text-[10px] text-[var(--color-ink-3)]">−{fmt(inv.discount)}</p>
-              )}
-              <div className="flex gap-1 mt-1">
-                <Link href={`/admin/invoices/${inv.id}/edit`} className="text-[10px] text-[var(--color-accent)] font-semibold">Edit</Link>
-                <span className="text-[10px] text-[var(--color-line)]">·</span>
-                <Link href={`/admin/invoices/${inv.id}`} className="text-[10px] text-[var(--color-ink-3)]">View</Link>
+              {inv.discount > 0 && <p className="text-[10px] text-[var(--color-ink-3)]">−{fmt(inv.discount)}</p>}
+              <div className="flex gap-2 mt-1 justify-end">
+                <Button variant="link" size="sm" className="h-auto p-0 text-[10px]" render={<Link href={`/admin/invoices/${inv.id}/edit`} />}>
+                  Edit
+                </Button>
+                <Button variant="link" size="sm" className="h-auto p-0 text-[10px] text-[var(--color-ink-3)]" render={<Link href={`/admin/invoices/${inv.id}`} />}>
+                  View
+                </Button>
               </div>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -333,10 +314,10 @@ export default async function EarningsPage({ searchParams }: Props) {
   const data = await getEarningsPageData(period, from, to);
 
   const periodLabel =
-    period === "today"      ? "today" :
-    period === "week"       ? "this week" :
+    period === "today" ? "today" :
+    period === "week" ? "this week" :
     period === "last_month" ? "last month" :
-    period === "custom"     ? "custom range" :
+    period === "custom" ? "custom range" :
     "this month";
 
   return (
@@ -345,96 +326,64 @@ export default async function EarningsPage({ searchParams }: Props) {
         title="Earnings"
         subtitle={`${data.stats.invoiceCount} invoice${data.stats.invoiceCount === 1 ? "" : "s"} · ${fmt(data.stats.allTime)} all time`}
         actions={
-          <Link
-            href="/admin/invoices/new"
-            className="inline-flex items-center gap-1.5 text-sm font-medium bg-[var(--color-accent)] text-white rounded-full px-4 py-2 hover:opacity-90 transition-opacity"
-          >
+          <Button render={<Link href="/admin/invoices/new" />}>
             + Record income
-          </Link>
+          </Button>
         }
       />
 
       {/* ── Stats row ── */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-        <StatCard label="Today"        value={fmt(data.stats.today)}      sub="Billed today"       icon={ICONS.rupee}    tone="accent"  />
-        <StatCard label="This week"    value={fmt(data.stats.week)}       sub="Billed this week"   icon={ICONS.week}     tone="neutral" />
-        <StatCard label="This month"   value={fmt(data.stats.month)}      sub="Billed this month"  icon={ICONS.calendar} tone="info"    />
-        <StatCard label="All time"     value={fmt(data.stats.allTime)}    sub="Total invoiced"     icon={ICONS.trending} tone="success" />
-        <StatCard label="Avg. invoice" value={fmt(data.stats.avgInvoice)} sub="Per bill average"   icon={ICONS.avg}      tone="neutral" />
+        <StatCard label="Today" value={fmt(data.stats.today)} sub="Billed today" icon={ICONS.rupee} tone="accent" />
+        <StatCard label="This week" value={fmt(data.stats.week)} sub="Billed this week" icon={ICONS.week} tone="neutral" />
+        <StatCard label="This month" value={fmt(data.stats.month)} sub="Billed this month" icon={ICONS.calendar} tone="info" />
+        <StatCard label="All time" value={fmt(data.stats.allTime)} sub="Total invoiced" icon={ICONS.trending} tone="success" />
+        <StatCard label="Avg. invoice" value={fmt(data.stats.avgInvoice)} sub="Per bill average" icon={ICONS.avg} tone="neutral" />
       </div>
 
       {/* ── Monthly bar chart ── */}
       <BarChart data={data.chartData} />
 
       {/* ── Period tabs ── */}
-      <div className="card-surface border rounded-2xl overflow-hidden mb-4">
-        {/* Tabs */}
-        <div className="flex border-b border-[var(--color-line)] overflow-x-auto">
-          {PERIOD_TABS.map((tab) => {
-            const isActive = period === tab.id;
-            return (
-              <Link
-                key={tab.id}
-                href={`/admin/earnings?period=${tab.id}`}
-                className="px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors border-b-2 -mb-px"
-                style={{
-                  borderBottomColor: isActive ? "var(--color-accent)" : "transparent",
-                  color: isActive ? "var(--color-accent)" : "var(--color-ink-3)",
-                }}
-              >
-                {tab.label}
-              </Link>
-            );
-          })}
-        </div>
+      <Card className="rounded-2xl mb-4 gap-0 overflow-hidden">
+        <CardContent className="p-0">
+          <div className="px-2 pt-2">
+            <PeriodTabs period={period} />
+          </div>
 
-        {/* Custom date pickers */}
-        {period === "custom" && (
-          <div className="px-4 py-3 border-b border-[var(--color-line)] bg-[var(--color-bg-soft)]">
-            <form method="get" className="flex flex-wrap items-end gap-3">
+          {period === "custom" && (
+            <form method="get" className="flex flex-wrap items-end gap-3 px-4 py-3 border-t border-[var(--color-line)] bg-[var(--color-bg-soft)]">
               <input type="hidden" name="period" value="custom" />
               <div>
-                <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">From</label>
-                <input
-                  type="date"
-                  name="from"
-                  defaultValue={from}
-                  className="px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-card)] outline-none focus:border-[var(--color-accent)] transition-colors"
-                />
+                <Label htmlFor="from" className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5 block">
+                  From
+                </Label>
+                <Input id="from" type="date" name="from" defaultValue={from} className="h-9 w-auto" />
               </div>
               <div>
-                <label className="block font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5">To</label>
-                <input
-                  type="date"
-                  name="to"
-                  defaultValue={to}
-                  className="px-3 py-2 border border-[var(--color-line)] rounded-xl text-sm bg-[var(--color-bg-card)] outline-none focus:border-[var(--color-accent)] transition-colors"
-                />
+                <Label htmlFor="to" className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-ink-3)] mb-1.5 block">
+                  To
+                </Label>
+                <Input id="to" type="date" name="to" defaultValue={to} className="h-9 w-auto" />
               </div>
-              <button
-                type="submit"
-                className="px-4 py-2 rounded-xl text-sm font-medium bg-[var(--color-accent)] text-white hover:opacity-90 transition-opacity"
-              >
-                View report
-              </button>
+              <Button type="submit" size="lg">View report</Button>
             </form>
-          </div>
-        )}
+          )}
 
-        {/* Period summary line */}
-        <div className="px-4 py-2.5 bg-[var(--color-bg-soft)] border-b border-[var(--color-line)]">
-          <p className="text-xs text-[var(--color-ink-3)]">
-            Showing <span className="font-semibold text-[var(--color-ink)]">{periodLabel}</span>
-            {" — "}
-            <span className="font-mono font-semibold text-[var(--color-ink)]">
-              {fmt(data.invoices.reduce((s, i) => s + i.total, 0))}
-            </span>
-            {" across "}
-            <span className="font-semibold text-[var(--color-ink)]">{data.invoices.length}</span>
-            {" invoice"}{data.invoices.length === 1 ? "" : "s"}
-          </p>
-        </div>
-      </div>
+          <div className="px-4 py-2.5 bg-[var(--color-bg-soft)] border-t border-[var(--color-line)]">
+            <p className="text-xs text-[var(--color-ink-3)]">
+              Showing <span className="font-semibold text-[var(--color-ink)]">{periodLabel}</span>
+              {" — "}
+              <span className="font-mono font-semibold text-[var(--color-ink)]">
+                {fmt(data.invoices.reduce((s, i) => s + i.total, 0))}
+              </span>
+              {" across "}
+              <span className="font-semibold text-[var(--color-ink)]">{data.invoices.length}</span>
+              {" invoice"}{data.invoices.length === 1 ? "" : "s"}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* ── Payment breakdown ── */}
       <PaymentBreakdownStrip b={data.breakdown} />
@@ -443,57 +392,53 @@ export default async function EarningsPage({ searchParams }: Props) {
       <TransactionTable invoices={data.invoices} />
 
       {/* ── Pending ── */}
-      <div className="card-surface border rounded-2xl overflow-hidden mb-4">
-        <div className="flex items-center justify-between gap-4 px-4 py-3 border-b border-[var(--color-line)]">
-          <h2 className="text-sm font-semibold text-[var(--color-ink)]">
+      <Card className="rounded-2xl mb-4 gap-0 overflow-hidden">
+        <CardHeader className="flex-row items-center justify-between border-b border-[var(--color-line)] pb-3">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
             Pending — not yet billed
             {data.pendingRepairs.length > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold text-white bg-[var(--color-accent)]">
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold text-white bg-[var(--color-accent)]">
                 {data.pendingRepairs.length}
               </span>
             )}
-          </h2>
+          </CardTitle>
           {data.pendingRepairs.length > 0 && (
             <p className="font-mono text-sm font-semibold text-[var(--color-ink)]">{fmt(data.pendingTotal)}</p>
           )}
-        </div>
-        {data.pendingRepairs.length === 0 ? (
-          <EmptyState icon={ICONS.check} title="All billed" description="Every repair in the pipeline has been billed." />
-        ) : (
-          <div className="divide-y divide-[var(--color-line)]">
-            {data.pendingRepairs.map((r) => {
-              const st = STATUS_LABELS[r.status] ?? { label: r.status, tone: "neutral" as StatusTone };
-              return (
-                <div key={r.id} className="flex items-center gap-3 px-4 py-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-[var(--color-ink)] truncate">{r.customer_name}</p>
-                    <p className="text-xs text-[var(--color-ink-3)] truncate">{r.issue_text}</p>
+        </CardHeader>
+        <CardContent className="p-0">
+          {data.pendingRepairs.length === 0 ? (
+            <EmptyState icon={ICONS.check} title="All billed" description="Every repair in the pipeline has been billed." />
+          ) : (
+            <div className="divide-y divide-[var(--color-line)]">
+              {data.pendingRepairs.map((r) => {
+                const st = STATUS_LABELS[r.status] ?? { label: r.status, tone: "neutral" as StatusTone };
+                return (
+                  <div key={r.id} className="flex items-center gap-3 px-4 py-3">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[var(--color-ink)] truncate">{r.customer_name}</p>
+                      <p className="text-xs text-[var(--color-ink-3)] truncate">{r.issue_text}</p>
+                    </div>
+                    <StatusPill label={st.label} tone={st.tone} />
+                    {r.amount != null && (
+                      <p className="text-sm font-mono font-semibold text-[var(--color-ink)] w-20 text-right shrink-0">
+                        {fmt(r.amount)}
+                      </p>
+                    )}
+                    <Button variant="outline" size="sm" className="shrink-0" render={<Link href={`/admin/invoices/new?repairId=${r.id}`} />}>
+                      Bill
+                    </Button>
                   </div>
-                  <StatusPill label={st.label} tone={st.tone} />
-                  {r.amount != null && (
-                    <p className="text-sm font-mono font-semibold text-[var(--color-ink)] w-20 text-right shrink-0">
-                      {fmt(r.amount)}
-                    </p>
-                  )}
-                  <Link
-                    href={`/admin/invoices/new?repairId=${r.id}`}
-                    className="text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-[var(--color-line)] text-[var(--color-ink-3)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors shrink-0"
-                  >
-                    Bill
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-      <Link
-        href="/admin/invoices"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-ink-3)] hover:text-[var(--color-accent)] transition-colors"
-      >
+      <Button variant="link" className="px-0" render={<Link href="/admin/invoices" />}>
         View all invoices →
-      </Link>
+      </Button>
     </div>
   );
 }
