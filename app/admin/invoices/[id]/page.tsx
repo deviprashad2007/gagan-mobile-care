@@ -6,6 +6,7 @@ import { getInvoiceById } from "@/lib/admin";
 import { BUSINESS_NAME, BUSINESS_ADDRESS, BUSINESS_PHONE, BUSINESS_GSTIN } from "@/lib/seo/business-info";
 import type { InvoiceItem } from "@/lib/validations/invoice";
 import { PrintButton } from "./print-button";
+import { DownloadButton } from "./download-button";
 import { DeleteInvoiceButton } from "./delete-invoice-button";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -103,6 +104,7 @@ export default async function InvoiceDetailPage({ params }: Props) {
               Edit
             </Link>
             <DeleteInvoiceButton id={invoice.id} />
+            <DownloadButton invoiceId={invoice.id} />
             <PrintButton />
           </div>
         </div>
