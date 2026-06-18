@@ -46,6 +46,146 @@ export async function getAdminStats() {
   };
 }
 
+export interface MonthlyBar {
+  key: string;
+  month: string;
+  total: number;
+}
+
+export interface PaymentBreakdown {
+  cash: number;
+  upi: number;
+  card: number;
+  other: number;
+  total: number;
+}
+
+export async function getEarningsPageData(
+  period: string,
+  customFrom?: string,
+  customTo?: string,
+) {
+  const supabase = await createClient();
+  const now = new Date();
+
+  const todayStart = new Date(now);
+  todayStart.setHours(0, 0, 0, 0);
+
+  const weekStart = new Date(now);
+  const dow = weekStart.getDay();
+  weekStart.setDate(weekStart.getDate() - (dow === 0 ? 6 : dow - 1));
+  weekStart.setHours(0, 0, 0, 0);
+
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+  let rangeStart: Date = monthStart;
+  let rangeEnd: Date = new Date(now);
+  rangeEnd.setHours(23, 59, 59, 999);
+
+  switch (period) {
+    case "today":   rangeStart = todayStart; break;
+    case "week":    rangeStart = weekStart; break;
+    case "last_month": rangeStart = lastMonthStart; rangeEnd = lastMonthEnd; break;
+    case "custom":
+      if (customFrom && customTo) {
+        rangeStart = new Date(customFrom); rangeStart.setHours(0, 0, 0, 0);
+        rangeEnd   = new Date(customTo);   rangeEnd.setHours(23, 59, 59, 999);
+      }
+      break;
+    default: rangeStart = monthStart; // "month"
+  }
+
+  const [
+    { data: periodInvoices },
+    { data: todayInvoices },
+    { data: weekInvoices },
+    { data: monthInvoices },
+    { data: allInvoices },
+    { data: chartInvoices },
+    { data: repairs },
+    { data: invoiceLinks },
+  ] = await Promise.all([
+    supabase.from("invoices").select("*").is("deleted_at", null)
+      .gte("created_at", rangeStart.toISOString())
+      .lte("created_at", rangeEnd.toISOString())
+      .order("created_at", { ascending: false }),
+    supabase.from("invoices").select("total").is("deleted_at", null)
+      .gte("created_at", todayStart.toISOString()),
+    supabase.from("invoices").select("total").is("deleted_at", null)
+      .gte("created_at", weekStart.toISOString()),
+    supabase.from("invoices").select("total").is("deleted_at", null)
+      .gte("created_at", monthStart.toISOString()),
+    supabase.from("invoices").select("total, created_at").is("deleted_at", null),
+    supabase.from("invoices").select("total, created_at").is("deleted_at", null)
+      .gte("created_at", sixMonthsAgo.toISOString()),
+    supabase.from("repairs")
+      .select("id, repair_ref, customer_name, customer_phone, issue_text, amount, status")
+      .is("deleted_at", null).neq("status", "picked").order("intake_at", { ascending: false }),
+    supabase.from("invoices").select("repair_id").is("deleted_at", null)
+      .not("repair_id", "is", null),
+  ]);
+
+  const sum = (rows: { total: number }[] | null) =>
+    (rows ?? []).reduce((s, r) => s + r.total, 0);
+
+  const allList = allInvoices ?? [];
+
+  // Payment breakdown for selected period
+  const periodList = periodInvoices ?? [];
+  const breakdown: PaymentBreakdown = { cash: 0, upi: 0, card: 0, other: 0, total: 0 };
+  for (const inv of periodList) {
+    breakdown.total += inv.total;
+    if (inv.payment_method === "cash")       breakdown.cash  += inv.total;
+    else if (inv.payment_method === "upi")   breakdown.upi   += inv.total;
+    else if (inv.payment_method === "card")  breakdown.card  += inv.total;
+    else                                     breakdown.other += inv.total;
+  }
+
+  // Monthly chart — last 6 months
+  const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const monthlyMap = new Map<string, number>();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    monthlyMap.set(key, 0);
+  }
+  for (const inv of (chartInvoices ?? [])) {
+    const d = new Date(inv.created_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    if (monthlyMap.has(key)) monthlyMap.set(key, (monthlyMap.get(key) ?? 0) + inv.total);
+  }
+  const chartData: MonthlyBar[] = Array.from(monthlyMap.entries()).map(([key, total]) => {
+    const [y, m] = key.split("-");
+    return { key, month: `${MONTH_NAMES[parseInt(m) - 1]} ${y}`, total };
+  });
+
+  // Pending (not yet billed)
+  const billedRepairIds = new Set((invoiceLinks ?? []).map((i) => i.repair_id));
+  const pendingRepairs = (repairs ?? []).filter((r) => !billedRepairIds.has(r.id));
+
+  return {
+    invoices: periodList,
+    stats: {
+      today: sum(todayInvoices),
+      week: sum(weekInvoices),
+      month: sum(monthInvoices),
+      allTime: sum(allList as { total: number }[]),
+      avgInvoice:
+        allList.length > 0
+          ? Math.round(sum(allList as { total: number }[]) / allList.length)
+          : 0,
+      invoiceCount: allList.length,
+    },
+    breakdown,
+    chartData,
+    pendingRepairs,
+    pendingTotal: pendingRepairs.reduce((s, r) => s + (r.amount ?? 0), 0),
+  };
+}
+
 export async function getEarningsStats() {
   const supabase = await createClient();
   const now = new Date();
